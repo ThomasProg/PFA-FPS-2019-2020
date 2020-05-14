@@ -270,7 +270,7 @@ void Core::DataStructure::Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADER
 template<typename DATA_TYPE, typename UPDATE_FUNCTOR, typename DATA_SAVER_AND_LOADER, typename KEY_TYPE>
 Core::DataStructure::Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADER, KEY_TYPE>::~Graph()
 {
-    for (std::pair<KEY_TYPE, CURRENT_GRAPH_TYPE*> child : children)
+    for (std::pair<const KEY_TYPE, CURRENT_GRAPH_TYPE*>& child : children)
     {
         child.second->parent = nullptr;
         delete child.second;

@@ -18,6 +18,7 @@
 #include "enemy.hpp"
 
 #include <list>
+#include <unordered_map>
 
 class Game;
 
@@ -65,14 +66,18 @@ class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
     Game& game;
+    Renderer::RendererSystem rendererSystem;
 
     Save::SaveSystem saveSystem;
     Physics::TransformGraph root; 
 
     Entity::Player player;
     Entity::BasicEntity sphere2;
-    std::list<Entity::BasicEntity> grounds;
-    std::list<Entity::Enemy> enemies;
+    // std::list<Entity::BasicEntity> grounds;
+    // std::list<Entity::Enemy> enemies;
+
+    std::unordered_map<Entity::Entity, Entity::BasicEntity> grounds;
+    std::unordered_map<Entity::Entity, Entity::Enemy> enemies;
     // Entity::BasicEntity ground;
     // Entity::BasicEntity ground2;
     // Entity::BasicEntity ground3;
@@ -121,6 +126,8 @@ public:
 
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
+
+    void getEntityFromID();
 };
 
 #endif
