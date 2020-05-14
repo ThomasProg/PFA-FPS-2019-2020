@@ -7,14 +7,54 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "primitives.hpp"
+
 Game::Game()
 {
+    loadResources();
     loadMenu();
 
-    // init 
-    init();
-
     run();
+}
+
+void Game::loadResources()
+{
+    // ===== Set up resources ===== //
+    {
+        Resources::Model m(Primitives::CreateSphere(20, 20));
+        m.setupModel();
+        engine.resourceManager.add(std::move(m), E_Model::E_SPHERE);
+    }
+    {
+        engine.resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
+    }
+    {
+        Resources::Model model;
+        model.loadOBJ("resources/obj/dog.obj");
+        for (Core::Maths::Vec3& pos : model.positions)
+        {
+            pos /= 10.f;
+            float temp = pos.z;
+            pos.z = pos.y;
+            pos.y = temp;
+
+            pos.y -= 1.1f;
+            pos.z /= 2.f;
+            pos.y /= 1.3f;
+
+            pos.x *= -1;
+        }
+        model.setupModel();
+        engine.resourceManager.add(std::move(model), E_Model::E_DOG);
+        engine.resourceManager.add(Resources::Texture{"resources/obj/Dog_diffuse.jpg"}, E_Texture::E_DOG_TEXTURE);
+    }
+    {
+        Resources::Model m(Primitives::CreateCube());
+        m.setupModel();
+        engine.resourceManager.add(std::move(m), E_Model::E_BOX);
+    }
+    engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
+    engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
 }
 
 void Game::loadMenu()
@@ -30,11 +70,6 @@ void Game::loadLevel(bool isLoaded, bool isEditorMode)
 void Game::quitGame()
 {
     currentScene = nullptr;
-}
-
-void Game::init()
-{
-    
 }
 
 void Game::run()

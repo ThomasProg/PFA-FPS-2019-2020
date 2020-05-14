@@ -90,43 +90,6 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    // ===== Set up resources ===== //
-    {
-        Resources::Model m(Primitives::CreateSphere(20, 20));
-        m.setupModel();
-        game.engine.resourceManager.add(std::move(m), E_Model::E_SPHERE);
-    }
-    {
-        game.engine.resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
-    }
-    {
-        Resources::Model model;
-        model.loadOBJ("resources/obj/dog.obj");
-        for (Core::Maths::Vec3& pos : model.positions)
-        {
-            pos /= 10.f;
-            float temp = pos.z;
-            pos.z = pos.y;
-            pos.y = temp;
-
-            pos.y -= 1.1f;
-            pos.z /= 2.f;
-            pos.y /= 1.3f;
-
-            pos.x *= -1;
-        }
-        model.setupModel();
-        game.engine.resourceManager.add(std::move(model), E_Model::E_DOG);
-        game.engine.resourceManager.add(Resources::Texture{"resources/obj/Dog_diffuse.jpg"}, E_Texture::E_DOG_TEXTURE);
-    }
-    {
-        Resources::Model m(Primitives::CreateCube());
-        m.setupModel();
-        game.engine.resourceManager.add(std::move(m), E_Model::E_BOX);
-    }
-    game.engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
-    game.engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
-
     saveSystem.add(this);
     saveSystem.add(&root);
     saveSystem.add(&rendererSystem);

@@ -24,14 +24,14 @@ public:
 public:
     Game();
 
+    void loadResources();
+
     void loadMenu();
     void loadLevel(bool isLoaded, bool isEditorMode = false);
     void quitGame();
 
     void run();
     void inputs();
-    //int the world
-    void init();
 
     void update() override;
     void renderUI() override;
