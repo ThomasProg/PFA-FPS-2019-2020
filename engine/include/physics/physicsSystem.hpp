@@ -94,6 +94,10 @@ namespace Physics
 
         bool isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward);
 
+
+        bool raycast(const Segment3D& seg, SegmentHit& hit, Entity::Entity& touchedEntity) const;
+
+
         void reset();
     };
 }

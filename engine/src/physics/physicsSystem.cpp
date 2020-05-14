@@ -228,6 +228,26 @@ bool Physics::PhysicsSystem::isSegmentColliding(Renderer::Camera& camera, const 
     return false;
 }
 
+bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Entity::Entity& touchedEntity) const
+{
+    hit.t = 2.f;
+
+    for (const std::pair<const Entity::Entity, const Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    {
+        SegmentHit tempHit;
+        if (Collisions::boxSegmentCollision(boxCollider.second.worldCollider, seg, tempHit))
+        {
+            if (tempHit.t < hit.t)
+            {
+                touchedEntity = boxCollider.first;
+                hit = tempHit;
+            }
+        }
+    }
+
+    return hit.t >= 0.f && hit.t <= 1.f;
+}
+
 void Physics::PhysicsSystem::reset()
 {
     boxes.clear();
