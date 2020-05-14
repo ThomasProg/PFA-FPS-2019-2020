@@ -248,7 +248,6 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
 
 World::~World()
 {
-    game.engine.resourceManager.clear();
     game.engine.physicsSystem.reset();
 }
 
