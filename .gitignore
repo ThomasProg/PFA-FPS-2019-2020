@@ -1,0 +1,7 @@
+*.o
+*.d
+exe
+*.exe
+.vscode
+imgui.ini
+*.dat
