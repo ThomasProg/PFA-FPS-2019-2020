@@ -30,6 +30,13 @@ namespace Resources
         inline void add(Shader&& shader,   ContainerCapacityType key);
         inline void add(Model&& model,     ContainerCapacityType key);
         inline void add(Texture&& texture, ContainerCapacityType key);
+
+        void clear()
+        {
+            models.clear();
+            textures.clear();
+            shaders.clear();    
+        }
     };
 }
 

@@ -94,10 +94,10 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     {
         Resources::Model m(Primitives::CreateSphere(20, 20));
         m.setupModel();
-        resourceManager.add(std::move(m), E_Model::E_SPHERE);
+        game.engine.resourceManager.add(std::move(m), E_Model::E_SPHERE);
     }
     {
-        resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
+        game.engine.resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
     }
     {
         Resources::Model model;
@@ -116,16 +116,16 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
             pos.x *= -1;
         }
         model.setupModel();
-        resourceManager.add(std::move(model), E_Model::E_DOG);
-        resourceManager.add(Resources::Texture{"resources/obj/Dog_diffuse.jpg"}, E_Texture::E_DOG_TEXTURE);
+        game.engine.resourceManager.add(std::move(model), E_Model::E_DOG);
+        game.engine.resourceManager.add(Resources::Texture{"resources/obj/Dog_diffuse.jpg"}, E_Texture::E_DOG_TEXTURE);
     }
     {
         Resources::Model m(Primitives::CreateCube());
         m.setupModel();
-        resourceManager.add(std::move(m), E_Model::E_BOX);
+        game.engine.resourceManager.add(std::move(m), E_Model::E_BOX);
     }
-    resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
-    resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
+    game.engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
+    game.engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
 
     saveSystem.add(this);
     saveSystem.add(&root);
@@ -155,14 +155,14 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
 
     // ===== Set up Entity ===== //
     player.setup(rendererSystem, 
-                &resourceManager.get(E_Model::E_DOG), 
-                &resourceManager.get(E_Shader::E_TEXTURED), 
-                &resourceManager.get(E_Texture::E_DOG_TEXTURE), 
+                &game.engine.resourceManager.get(E_Model::E_DOG), 
+                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
 
     sphere2.setup(rendererSystem, 
-                &resourceManager.get(E_Model::E_SPHERE), 
-                &resourceManager.get(E_Shader::E_FLAT), 
+                &game.engine.resourceManager.get(E_Model::E_SPHERE), 
+                &game.engine.resourceManager.get(E_Shader::E_FLAT), 
                 root);
 
     if (!isLoaded)
@@ -171,9 +171,9 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     auto lambda = [&](Entity::BasicEntity& ent, Core::Maths::Vec3 location = {0.f,0,0}, Core::Maths::Vec3 scale = {1,1,1}, float zRot = 0)
     {
         ent.setup(rendererSystem, 
-                &resourceManager.get(E_Model::E_BOX), 
-                &resourceManager.get(E_Shader::E_TEXTURED), 
-                &resourceManager.get(E_Texture::E_GROUND), 
+                &game.engine.resourceManager.get(E_Model::E_BOX), 
+                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
 
         // ent.mesh->transform.transform.rotation.x = M_PI / 2 * 0.90;
@@ -187,7 +187,7 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
         }
         ent.mesh->transform.UpdateLocalTransformMatrix();
         ent.mesh->transform.transformMatrixNode->updateSelf();
-        ent.colliderCompo = physicsSystem.addComponentTo(ent);
+        ent.colliderCompo = game.engine.physicsSystem.addComponentTo(ent);
         // ent.colliderCompo->second.aabb.size = Core::Maths::Vec3{1.f/0.5f,1.f/0.5f,1.f/0.5f};
     };
 
@@ -209,9 +209,9 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     for (Entity::Enemy& enemy : enemies)
     {
         enemy.setup(rendererSystem, 
-                    &resourceManager.get(E_Model::E_DOG), 
-                    &resourceManager.get(E_Shader::E_TEXTURED), 
-                    &resourceManager.get(E_Texture::E_DOG_TEXTURE), 
+                    &game.engine.resourceManager.get(E_Model::E_DOG), 
+                    &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                    &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                     root);
 
         enemy.physicComponent.collider.worldCollider.radius = 1.f;
@@ -232,10 +232,10 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     for (Entity::Enemy& enemy : enemies)
     {
         enemy.setup2({0,-10,0}, {0.f,0,0});
-        enemy.colliderCompo = physicsSystem.addComponentTo(enemy);
+        enemy.colliderCompo = game.engine.physicsSystem.addComponentTo(enemy);
     }
 
-    player.colliderCompo = physicsSystem.addComponentTo(player);
+    player.colliderCompo = game.engine.physicsSystem.addComponentTo(player);
 
     updateCameraProjection();
 
@@ -244,6 +244,12 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
         controller = &fpsCamera;
         camera = &fpsCamera;
     }
+}
+
+World::~World()
+{
+    game.engine.resourceManager.clear();
+    game.engine.physicsSystem.reset();
 }
 
 void World::inputs()
@@ -273,9 +279,9 @@ void World::addGround(const Core::Maths::Vec3& v)
     saveSystem.add(&ground);
 
     ground.setup(rendererSystem, 
-            &resourceManager.get(E_Model::E_BOX), 
-            &resourceManager.get(E_Shader::E_TEXTURED), 
-            &resourceManager.get(E_Texture::E_GROUND), 
+            &game.engine.resourceManager.get(E_Model::E_BOX), 
+            &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+            &game.engine.resourceManager.get(E_Texture::E_GROUND), 
             root);
 
     ground.mesh->transform.transform.location = v;
@@ -283,7 +289,7 @@ void World::addGround(const Core::Maths::Vec3& v)
 
     ground.mesh->transform.UpdateLocalTransformMatrix();
     ground.mesh->transform.transformMatrixNode->updateSelf();
-    ground.colliderCompo = physicsSystem.addComponentTo(ground);
+    ground.colliderCompo = game.engine.physicsSystem.addComponentTo(ground);
 }
 
 void World::addEnemy(const Core::Maths::Vec3& v)
@@ -293,9 +299,9 @@ void World::addEnemy(const Core::Maths::Vec3& v)
     saveSystem.add(&enemy);
 
     enemy.setup(rendererSystem, 
-            &resourceManager.get(E_Model::E_DOG), 
-            &resourceManager.get(E_Shader::E_TEXTURED), 
-            &resourceManager.get(E_Texture::E_DOG_TEXTURE), 
+            &game.engine.resourceManager.get(E_Model::E_DOG), 
+            &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+            &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
             root);
 
     enemy.patrolTarget = v;
@@ -305,7 +311,7 @@ void World::addEnemy(const Core::Maths::Vec3& v)
 
     enemy.mesh->transform.UpdateLocalTransformMatrix();
     enemy.mesh->transform.transformMatrixNode->updateSelf();
-    enemy.colliderCompo = physicsSystem.addComponentTo(enemy);
+    enemy.colliderCompo = game.engine.physicsSystem.addComponentTo(enemy);
 }
 
 void World::updateEditorFunctions()
@@ -418,18 +424,18 @@ void World::updateEditorFunctions()
         {
             if (newSelection != editorSelectedEntity)
             {
-                newSelection->mesh->shader = &resourceManager.get(E_Shader::E_TEXTURED);
+                newSelection->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_TEXTURED);
 
                 editorSelectedEntity = newSelection;
                 editorSelectedEntity->mesh->color = {0, 0.4, 0.4, 0.5};
-                editorSelectedEntity->mesh->shader = &resourceManager.get(E_Shader::E_FLAT);
+                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_FLAT);
             }
         }
         else 
         {
             if (editorSelectedEntity != nullptr)
             {
-                editorSelectedEntity->mesh->shader = &resourceManager.get(E_Shader::E_TEXTURED);
+                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_TEXTURED);
             }
             editorSelectedEntity = nullptr;
         }
@@ -500,8 +506,8 @@ void World::updatePhysics()
     Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
     playerIgnoreData.ignoredEntities.emplace(player);
     if (player.mesh.isValid())
-        player.mesh->transform.transform.location = physicsSystem.simulatePhysics(player.physicComponent, player.mesh->transform.transform.location, playerIgnoreData);
-    physicsSystem.simulateGravity(player.physicComponent, game.engine);
+        player.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(player.physicComponent, player.mesh->transform.transform.location, playerIgnoreData);
+    game.engine.physicsSystem.simulateGravity(player.physicComponent, game.engine);
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid()) 
     {
@@ -514,8 +520,8 @@ void World::updatePhysics()
         Physics::PhysicsSystem::PhysicsAdditionalData enemyIgnoreData;
         enemyIgnoreData.ignoredEntities.emplace(enemy);
         if (enemy.mesh.isValid())
-            enemy.mesh->transform.transform.location = physicsSystem.simulatePhysics(enemy.physicComponent, enemy.mesh->transform.transform.location, enemyIgnoreData);
-        physicsSystem.simulateGravity(enemy.physicComponent, game.engine);
+            enemy.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(enemy.physicComponent, enemy.mesh->transform.transform.location, enemyIgnoreData);
+        game.engine.physicsSystem.simulateGravity(enemy.physicComponent, game.engine);
 
         if (enemy.mesh.isValid() && enemy.mesh->transform.transformMatrixNode.isValid())
         {

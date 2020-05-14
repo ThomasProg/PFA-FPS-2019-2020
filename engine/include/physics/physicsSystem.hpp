@@ -93,6 +93,8 @@ namespace Physics
                                          const PhysicsAdditionalData& data);
 
         bool isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward);
+
+        void reset();
     };
 }
 

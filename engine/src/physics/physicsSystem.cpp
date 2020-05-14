@@ -228,4 +228,7 @@ bool Physics::PhysicsSystem::isSegmentColliding(Renderer::Camera& camera, const 
     return false;
 }
 
-
+void Physics::PhysicsSystem::reset()
+{
+    boxes.clear();
+}

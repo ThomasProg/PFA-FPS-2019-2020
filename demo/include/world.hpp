@@ -21,6 +21,7 @@
 
 class Game;
 
+// @Obsolete
 class EditorMode
 {
 public:
@@ -58,16 +59,15 @@ public:
     }
 };
 
+
+
 class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
     Game& game;
-    EnumedResourceManager resourceManager;
 
-    Physics::TransformGraph root; 
-
-    Physics::PhysicsSystem physicsSystem;
     Save::SaveSystem saveSystem;
+    Physics::TransformGraph root; 
 
     Entity::Player player;
     Entity::BasicEntity sphere2;
@@ -101,6 +101,7 @@ private:
 
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
+    ~World();
     void inputs() override;
     void update() override;
     void renderUI() override;

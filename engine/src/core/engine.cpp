@@ -59,6 +59,10 @@ Core::Engine::~Engine()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     
+    // We have to destruct models before glfwTeminate(),
+    // or we won't be able to use glDeleteVertexArrays and other free functions.
+    resourceManager.clear();
+
     glfwDestroyWindow(window);
     glfwTerminate();
 }

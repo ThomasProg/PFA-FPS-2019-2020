@@ -7,13 +7,24 @@
 
 #include "vec2.hpp"
 
+#include "enumedResourceManager.hpp"
+#include "physicsSystem.hpp"
+#include "saveSystem.hpp"
+
+
 struct GLFWwindow;
 
 namespace Core
 {
     class Engine
     {   
+    private:
+        Save::SaveSystem saveSystem;
+
     public:
+        EnumedResourceManager resourceManager;
+        Physics::PhysicsSystem physicsSystem;
+
         /* data */
         GLFWwindow* window;
         float lastTime = 0.f;
