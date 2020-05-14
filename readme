@@ -1,0 +1,54 @@
+////////////////////////////
+        Plateformer
+////////////////////////////
+
+////////////////////////////
+        Authors
+////////////////////////////
+- Jérémy Grondin
+- Thomas Dallard 
+- Amélie Pichard
+
+////////////////////////////
+        Build
+////////////////////////////
+- Type the command "make run" in the root of the project
+
+////////////////////////////
+        How to use
+////////////////////////////
+- mouse or keyboard to navigate in menu
+- ESC to close or open the in-game menu
+
+////////////////////////////
+        Features
+////////////////////////////
+- A world, with collisions
+- A player, controllable with TPS / FPS camera
+- Enemy patrols around a point and chases the player when he is in range
+- if player jump over the enemy, the enemy dies
+- if the player touches the the enemy on the rear, the player loses hp
+- Collisions applied to player and enemies
+- Gliding
+- Menu (naviguation with mouse or keyboard)
+- In-game menu
+- UX (progress bar displaying the player's life)
+- Inputs rebinding
+- Save and load
+- Editing: 
+    - The editor loads the saved level
+    - Add an enemy with O 
+    - Add a wall with P 
+    - Transform a wall by clicking on it and moving the mouse 
+        - E = next mode 
+        - C = translation mode 
+        - V = next rotation mode 
+        - B = next scale mode
+
+////////////////////////////
+        KNOWN BUGS
+////////////////////////////
+When the player or an enemy is colliding with two walls at the same time,
+it will go through one of them. 
+The reason is that the physics response is done for only one of the collisions,
+so we should have a recursion function.
