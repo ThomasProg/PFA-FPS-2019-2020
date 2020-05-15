@@ -87,3 +87,31 @@ void Entity::Player::dealDamages(float damages)
         onPlayerDeath();
     }
 }
+
+
+
+void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
+{
+    state.playerState = PlayerState::E_IDLE;
+}
+
+void Entity::Player::onCollisionExit() 
+{
+    state.playerState = PlayerState::E_JUMPING;
+}
+
+void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
+{
+    if (hit.normal.y < 0.5)
+    {
+        dealDamages(1.f);
+    }
+}
+
+void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+{
+    if (hit.normal.y > - 0.5)
+    {
+        dealDamages(1.f);
+    }
+}

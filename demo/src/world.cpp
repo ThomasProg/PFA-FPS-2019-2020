@@ -16,18 +16,21 @@
 
 void World::save(Save::Saver& saver) 
 {
+    saver.save(nextEntity);
     saver.save(grounds.size());
     saver.save(enemies.size());
 }
 
 void World::loadData(Save::Loader& loader) 
 {
+    loader.load(nextEntity);
+
     std::size_t nbGrounds;
     loader.load(nbGrounds);
 
     for (std::size_t i = 0; i < nbGrounds; i++)
     {
-        std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace();
+        std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace(Entity::EntityID{i}, Entity::EntityID{i});
         if (it.second) // if insertion took place
         {
             saveSystem.add(&it.first->second);
@@ -42,7 +45,7 @@ void World::loadData(Save::Loader& loader)
     {
         // enemies.emplace_back();
         // saveSystem.add(&enemies.back());
-        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace();
+        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace(Entity::EntityID{i}, Entity::EntityID{i});
         if (it.second) // if insertion took place
         {
             saveSystem.add(&it.first->second);
@@ -664,23 +667,5 @@ void World::CollisionsCallbacks::onOverlap(Physics::PhysicsSystem::CollisionsCal
     {
         collisionComp->onOverlapEnterAnotherHit(collisionData.hit);
     }
-
-    // if (world.player == collisionData.movingEntityID)
-    // {
-    //     world.player.onOverlapEnterSelfHit(collisionData.hit);
-    // }
-    // else if (world.player == collisionData.encounteredEntityID)
-    // {
-    //     world.player.onOverlapEnterAnotherHit(collisionData.hit);
-    // }
-
-    // if (world.player == collisionData.movingEntityID)
-    // {
-    //     world.player.onOverlapEnterSelfHit(collisionData.hit);
-    // }
-    // else if (world.player == collisionData.encounteredEntityID)
-    // {
-    //     world.player.onOverlapEnterAnotherHit(collisionData.hit);
-    // }
 }
 

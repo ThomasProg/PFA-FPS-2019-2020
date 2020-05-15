@@ -96,31 +96,10 @@ namespace Entity
 
 
 
-        virtual void onCollisionEnter        (const SegmentHit& hit) override
-        {
-            state.playerState = PlayerState::E_IDLE;
-        }
-
-        virtual void onCollisionExit         () override
-        {
-            state.playerState = PlayerState::E_JUMPING;
-        }
-
-        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override
-        {
-            if (hit.normal.y < 0.5)
-            {
-                dealDamages(1.f);
-            }
-        }
-
-        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override
-        {
-            if (hit.normal.y > - 0.5)
-            {
-                dealDamages(1.f);
-            }
-        }
+        virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        virtual void onCollisionExit         () override;
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
     };
 }
 

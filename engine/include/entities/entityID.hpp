@@ -6,27 +6,17 @@
 namespace Entity
 {
     class EntityID
-    {
-    private:
-        static unsigned int nbEntities;
-        
+    {       
     public:
         unsigned int entityID = 0;
 
-        inline EntityID();
+        inline EntityID() = default;
         inline EntityID(unsigned int id);
         inline bool operator==(const EntityID&) const;
-        inline bool operator<(const EntityID& rhs) const
-        {
-            return entityID < rhs.entityID;
-        }
-
+        inline bool operator<(const EntityID& rhs) const;
         EntityID& operator=(const EntityID&) = default;
 
-        void next()
-        {
-            ++entityID;
-        }
+        inline void next();
     };
 }
 

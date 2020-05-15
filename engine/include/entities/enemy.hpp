@@ -80,31 +80,10 @@ namespace Entity
         void loadData(Save::Loader& loader) override;
 
 
-        virtual void onCollisionEnter        (const SegmentHit& hit) override
-        {
-
-        }
-
-        virtual void onCollisionExit         () override
-        {
-
-        }
-
-        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override
-        {
-            if (hit.normal.y < -0.5)
-            {
-                kill();
-            }
-        }
-
-        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override
-        {    
-            if (hit.normal.y > 0.5)
-            {
-                kill();
-            }
-        }
+        virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        virtual void onCollisionExit         () override;
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
     };
 }
 

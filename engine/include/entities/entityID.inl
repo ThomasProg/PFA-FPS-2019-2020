@@ -1,11 +1,5 @@
 #include "entityID.hpp"
 
-inline Entity::EntityID::EntityID()
-{
-    // entityID = nbEntities;
-    // nbEntities++;
-}
-
 inline Entity::EntityID::EntityID(unsigned int id) 
     : entityID(id)
 {
@@ -15,6 +9,16 @@ inline Entity::EntityID::EntityID(unsigned int id)
 inline bool Entity::EntityID::operator==(const EntityID& rhs) const
 {
     return entityID == rhs.entityID;
+}
+
+inline bool Entity::EntityID::operator<(const EntityID& rhs) const
+{
+    return entityID < rhs.entityID;
+}
+
+inline void Entity::EntityID::next()
+{
+    ++entityID;
 }
 
 namespace std
