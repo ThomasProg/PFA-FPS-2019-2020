@@ -1,7 +1,7 @@
 #ifndef _PLAYER_HPP_
 #define _PLAYER_HPP_
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "rendererSystem.hpp"
 #include "resourceManager.hpp"
 

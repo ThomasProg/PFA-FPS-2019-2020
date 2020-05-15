@@ -4,7 +4,7 @@
 
 constexpr size_t Renderer::RendererSystem::maxChildrenAtLoad;
 
-Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponentTo(Entity::Entity& entity)
+Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponentTo(Entity::EntityID& entity)
 {
     meshes.emplace(entity, Mesh());
     iterator it {entity, this};
@@ -14,7 +14,7 @@ Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponentTo(Enti
 
 void Renderer::RendererSystem::draw(const Camera& camera)
 {
-    for (std::pair<const Entity::Entity, Mesh>& pair : meshes)
+    for (std::pair<const Entity::EntityID, Mesh>& pair : meshes)
     {
         pair.second.draw(camera);
     }
@@ -24,7 +24,7 @@ void Renderer::RendererSystem::draw(const Camera& camera)
 void Renderer::RendererSystem::save(Save::Saver& saver) 
 {
     saver.save(meshes.size());
-    for (std::pair<const Entity::Entity, Mesh> pair : meshes)
+    for (std::pair<const Entity::EntityID, Mesh> pair : meshes)
     {
         saver.save(pair.first);
         saver.save(pair.second.transform.transform);
@@ -39,7 +39,7 @@ void Renderer::RendererSystem::loadData(Save::Loader& loader)
     nbMeshes = std::min(nbMeshes, maxChildrenAtLoad);
     for (size_t i = 0; i < nbMeshes; i++)
     {
-        std::pair<Entity::Entity, Mesh> pair;
+        std::pair<Entity::EntityID, Mesh> pair;
         loader.load(pair.first);
         loader.load(pair.second.transform.transform);
         loader.load(pair.second.isDrawn);

@@ -15,7 +15,7 @@ void Physics::PhysicsSystem::remove(decltype(Physics::PhysicsSystem::boxes)::ite
     boxes.erase(it);
 }
 
-decltype(Physics::PhysicsSystem::boxes)::iterator Physics::PhysicsSystem::addComponentTo(Entity::Entity& entity)
+decltype(Physics::PhysicsSystem::boxes)::iterator Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
 {
     std::pair<decltype(Physics::PhysicsSystem::boxes)::iterator, bool> pair =  boxes.emplace(entity, Physics::CollisionComponent<Box>());
     return pair.first;
@@ -161,8 +161,8 @@ bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent&
     
     Segment3D seg{startLoc, startLoc + physicComp.velocity};
 
-    Entity::Entity collidedEntity;
-    for (std::pair<const Entity::Entity, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    Entity::EntityID collidedEntity;
+    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
         if (!boxCollider.second.isEnabled || boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
             continue;
@@ -192,7 +192,7 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
     Segment3D seg{startLoc, endLoc};
     SegmentHit hit;
 
-    for (std::pair<const Entity::Entity, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
         if (!boxCollider.second.isEnabled || !boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
             continue;
@@ -211,7 +211,7 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
 
 bool Physics::PhysicsSystem::isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward)
 {
-    for (std::pair<const Entity::Entity, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
         SegmentHit hit;
         Segment3D seg;

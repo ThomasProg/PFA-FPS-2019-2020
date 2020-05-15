@@ -4,7 +4,7 @@
 #include "vec3.hpp"
 #include "collisionComponent.hpp"
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include <unordered_map>
 
 #include "sphere.hpp"
@@ -46,18 +46,18 @@ namespace Physics
         bool isEnabled = true;
     };
 
-    using ColliderIt = std::unordered_map<Entity::Entity, Physics::CollisionComponent<Box>>::iterator;
+    using ColliderIt = std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>>::iterator;
     
     class PhysicsSystem
     {
     public:
         struct PhysicsAdditionalData
         {
-            std::unordered_set<Entity::Entity> ignoredEntities;
+            std::unordered_set<Entity::EntityID> ignoredEntities;
         };
 
     private:
-        std::unordered_map<Entity::Entity, Physics::CollisionComponent<Box>> boxes;
+        std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>> boxes;
 
         static constexpr float gravityAcc = 9.81f * 0.01; 
         static constexpr float linearDamping  = 0.98f;
@@ -69,7 +69,7 @@ namespace Physics
     public:
         PhysicsSystem() = default;
 
-        decltype(boxes)::iterator addComponentTo(Entity::Entity& entity);
+        decltype(boxes)::iterator addComponentTo(Entity::EntityID& entity);
 
         void remove(decltype(boxes)::iterator& it);
 

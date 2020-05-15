@@ -1,7 +1,7 @@
 #ifndef _BASIC_ENTITY_HPP_
 #define _BASIC_ENTITY_HPP_
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "rendererSystem.hpp"
 #include "physicsSystem.hpp"
 #include "resourceManager.hpp"
@@ -12,7 +12,7 @@
 namespace Entity
 {
     // Example Class for rendering an object
-    class BasicEntity : public Entity, public Save::SaveInterface
+    class BasicEntity : public EntityID, public Save::SaveInterface
     {
     public:
         Physics::GraphKey key;

@@ -76,8 +76,8 @@ private:
     // std::list<Entity::BasicEntity> grounds;
     // std::list<Entity::Enemy> enemies;
 
-    std::unordered_map<Entity::Entity, Entity::BasicEntity> grounds;
-    std::unordered_map<Entity::Entity, Entity::Enemy> enemies;
+    std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
+    std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
     // Entity::BasicEntity ground;
     // Entity::BasicEntity ground2;
     // Entity::BasicEntity ground3;
@@ -127,7 +127,7 @@ public:
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
 
-    void getEntityFromID();
+    void getEntityFromID(const Entity::EntityID& entity);
 };
 
 #endif
