@@ -2,8 +2,14 @@
 
 inline Entity::EntityID::EntityID()
 {
-    entityID = nbEntities;
-    nbEntities++;
+    // entityID = nbEntities;
+    // nbEntities++;
+}
+
+inline Entity::EntityID::EntityID(unsigned int id) 
+    : entityID(id)
+{
+
 }
 
 inline bool Entity::EntityID::operator==(const EntityID& rhs) const

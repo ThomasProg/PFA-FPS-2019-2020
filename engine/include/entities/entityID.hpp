@@ -14,6 +14,7 @@ namespace Entity
         unsigned int entityID = 0;
 
         inline EntityID();
+        inline EntityID(unsigned int id);
         inline bool operator==(const EntityID&) const;
         inline bool operator<(const EntityID& rhs) const
         {
@@ -21,6 +22,11 @@ namespace Entity
         }
 
         EntityID& operator=(const EntityID&) = default;
+
+        void next()
+        {
+            ++entityID;
+        }
     };
 }
 

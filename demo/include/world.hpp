@@ -65,6 +65,8 @@ public:
 class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
+    Entity::EntityID nextEntity = 10u;
+
     Game& game;
     Renderer::RendererSystem rendererSystem;
 
@@ -72,16 +74,11 @@ private:
     Physics::TransformGraph root; 
 
     Entity::Player player;
-    Entity::BasicEntity sphere2;
     // std::list<Entity::BasicEntity> grounds;
     // std::list<Entity::Enemy> enemies;
 
     std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
     std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
-    // Entity::BasicEntity ground;
-    // Entity::BasicEntity ground2;
-    // Entity::BasicEntity ground3;
-    Entity::BasicEntity dog;
 
     // Entity::Enemy enemy;
 

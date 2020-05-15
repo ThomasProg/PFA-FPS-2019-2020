@@ -52,6 +52,14 @@ namespace Entity
         Core::Maths::Vec3 patrolTarget;
         Core::Maths::Vec3 chaseTarget;
         
+        Enemy() = default;
+        Enemy(const EntityID& id)
+            : BasicEntity(id)
+        {
+
+        }
+        ~Enemy() = default;
+
         inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
 
         inline void setup(Renderer::RendererSystem& renderer, 
@@ -86,16 +94,14 @@ namespace Entity
         {
             if (hit.normal.y < -0.5)
             {
-                std::cout << "kill" <<std::endl;
                 kill();
             }
         }
 
         virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override
-        {
+        {    
             if (hit.normal.y > 0.5)
             {
-                std::cout << "kill" <<std::endl;
                 kill();
             }
         }

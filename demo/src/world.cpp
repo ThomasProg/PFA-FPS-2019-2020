@@ -29,7 +29,10 @@ void World::loadData(Save::Loader& loader)
     {
         std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace();
         if (it.second) // if insertion took place
+        {
             saveSystem.add(&it.first->second);
+            nextEntity.next();
+        }
     }
 
     std::size_t nbEnemies;
@@ -41,7 +44,10 @@ void World::loadData(Save::Loader& loader)
         // saveSystem.add(&enemies.back());
         std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace();
         if (it.second) // if insertion took place
+        {
             saveSystem.add(&it.first->second);
+            nextEntity.next();
+        }
     }
 }
 
@@ -98,8 +104,6 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     saveSystem.add(&root);
     saveSystem.add(&rendererSystem);
     saveSystem.add(&player);
-    saveSystem.add(&sphere2);
-    saveSystem.add(&dog);
 
 
     if (isLoaded)
@@ -112,14 +116,24 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     {
         for (unsigned int i = 0; i < 3; i++)
         {
-            std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> newGroundIt = grounds.emplace();
+            std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> newGroundIt 
+                = grounds.emplace(nextEntity, nextEntity);
+            
             if (newGroundIt.second) // if insertion took place
+            {
+                nextEntity.next();
                 saveSystem.add(&newGroundIt.first->second);
+            }
         }
 
-        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> newEnemyIt = enemies.emplace();
+        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> newEnemyIt 
+            = enemies.emplace(nextEntity, nextEntity);
+
         if (newEnemyIt.second) // if insertion took place
+        {
+            nextEntity.next();
             saveSystem.add(&newEnemyIt.first->second);
+        }
     }
 
     // ===== Set up Entity ===== //
@@ -128,14 +142,6 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
                 &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
-
-    sphere2.setup(rendererSystem, 
-                &game.engine.resourceManager.get(E_Model::E_SPHERE), 
-                &game.engine.resourceManager.get(E_Shader::E_FLAT), 
-                root);
-
-    if (!isLoaded)
-        sphere2.mesh->transform.transform.location.x = 2;
 
     auto lambda = [&](Entity::BasicEntity& ent, Core::Maths::Vec3 location = {0.f,0,0}, Core::Maths::Vec3 scale = {1,1,1}, float zRot = 0)
     {
@@ -163,6 +169,7 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     if (!isLoaded) 
     {
         std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator it = grounds.begin();
+
         lambda((*it++).second, Core::Maths::Vec3(22+10, -100, 0+10), Core::Maths::Vec3(10,20, 9), M_PI / 2 * 0.5);
         lambda((*it++).second, Core::Maths::Vec3(-5, -20, 6-6), Core::Maths::Vec3(20, 4, 30), 0.f);//M_PI / 2 * 0.5);
         lambda((*it++).second, Core::Maths::Vec3(130+10, -40, 0), Core::Maths::Vec3(25, 4, 9));
@@ -243,9 +250,12 @@ void World::updateCameraProjection()
 
 void World::addGround(const Core::Maths::Vec3& v)
 {
-    std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> groundIt = grounds.emplace();
+    std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> groundIt 
+            = grounds.emplace(nextEntity, nextEntity);
     if (groundIt.second) // if insertion took place
     {
+        nextEntity.next();
+
         saveSystem.add(&groundIt.first->second);
 
         groundIt.first->second.setup(rendererSystem, 
@@ -266,9 +276,12 @@ void World::addGround(const Core::Maths::Vec3& v)
 
 void World::addEnemy(const Core::Maths::Vec3& v)
 {
-    std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> enemyIt = enemies.emplace();
+    std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> enemyIt
+            = enemies.emplace(nextEntity, nextEntity);
     if (enemyIt.second) // if insertion took place
     {
+        nextEntity.next();
+
         saveSystem.add(&enemyIt.first->second);
 
         enemyIt.first->second.setup(rendererSystem, 
@@ -450,11 +463,14 @@ void World::updatePhysics()
     Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
     playerIgnoreData.ignoredEntities.emplace(player);
     if (player.mesh.isValid())
+    {
         player.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(player.physicComponent, 
                                                                                               player.mesh->transform.transform.location, 
                                                                                               playerIgnoreData, 
                                                                                               collisionsCallbacks, 
                                                                                               player);
+        nextEntity.next();
+    }
     game.engine.physicsSystem.simulateGravity(player.physicComponent, game.engine);
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid()) 
@@ -468,11 +484,14 @@ void World::updatePhysics()
         Physics::PhysicsSystem::PhysicsAdditionalData enemyIgnoreData;
         enemyIgnoreData.ignoredEntities.emplace(enemy.second);
         if (enemy.second.mesh.isValid())
+        {
             enemy.second.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(enemy.second.physicComponent, 
                                                                                                         enemy.second.mesh->transform.transform.location, 
                                                                                                         enemyIgnoreData, 
                                                                                                         collisionsCallbacks, 
                                                                                                         enemy.first);
+            nextEntity.next();
+        }
         game.engine.physicsSystem.simulateGravity(enemy.second.physicComponent, game.engine);
 
         if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
@@ -493,8 +512,11 @@ void World::update()
         // Update entities
         for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
         {
-            enemy.second.chaseTarget = player.mesh->transform.transformMatrixNode->worldData.getTranslationVector();
-            enemy.second.update(game.engine);
+            if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid())
+            {
+                enemy.second.chaseTarget = player.mesh->transform.transformMatrixNode->worldData.getTranslationVector();
+                enemy.second.update(game.engine);
+            }
         }
 
         // Save game
@@ -505,9 +527,6 @@ void World::update()
         }
 
         updatePhysics();
-
-        if (sphere2.mesh.isValid() && sphere2.mesh->transform.transformMatrixNode.isValid())
-            sphere2.mesh->transform.transformMatrixNode.erase();
 
         if (isEditorMode)
             updateEditorFunctions();
@@ -612,12 +631,13 @@ Physics::CollisionComponentInterface* World::getCollisionComponentEntityFromID(c
     {
         return &it->second;
     }
+
+    return nullptr;
 }
 
 
 void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
 {
-    Physics::CollisionComponentInterface* collisionComp = nullptr;
     if (world.player == collisionData.movingEntityID)
     {
         world.player.onCollisionEnter(collisionData.hit);

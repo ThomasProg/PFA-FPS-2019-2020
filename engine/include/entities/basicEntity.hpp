@@ -23,6 +23,14 @@ namespace Entity
 
     public:
 
+        BasicEntity() = default;
+        BasicEntity(const EntityID& id)
+            : EntityID(id)
+        {
+
+        }
+        ~BasicEntity() = default;
+
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 
                     const Resources::Shader* shader, 
