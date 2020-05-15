@@ -1,7 +1,7 @@
 #ifndef _TRANSFORM_GRAPH_HPP_
 #define _TRANSFORM_GRAPH_HPP_
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "graph.hpp"
 #include "matrix4x4.hpp"
 #include "transform.hpp"

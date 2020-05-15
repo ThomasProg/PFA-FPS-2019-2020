@@ -1,7 +1,7 @@
 #ifndef _ENEMY_HPP_
 #define _ENEMY_HPP_
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "basicEntity.hpp"
 
 #include "saveInterface.hpp"
