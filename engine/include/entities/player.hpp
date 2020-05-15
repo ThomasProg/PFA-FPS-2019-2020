@@ -46,6 +46,9 @@ namespace Entity
     public:
         float lifePoints    = 10.f;
         float maxLifePoints = 10.f;
+        unsigned int nbBullet = 60;
+        unsigned int maxNbBullet = 60;
+        
         Renderer::TPSCamera camera;
 
     private:

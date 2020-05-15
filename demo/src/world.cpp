@@ -225,6 +225,7 @@ void World::inputs()
         glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
         isPauseMenuOpen = true;
+        inGame = false;
     }
 }
 
@@ -541,24 +542,9 @@ void World::renderUI()
 {
     if (isPauseMenuOpen)
         pauseMenu();
-
-    // Renders Lifebar
-    Menu::preparePanel(ImVec2(0, 0), {game.engine.width * 0.3f, game.engine.height * 0.1f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
-
-    ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-    ImGui::Indent(400 / 2 - 50);
-    //ImGui::PushFont(font);
-    ImGui::SetCursorPosY(30.0f);
-
-    assert(player.maxLifePoints != 0.f);
-    ImGui::ProgressBar(player.lifePoints / player.maxLifePoints);
-
-    ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
-    ImGui::End();
-
-
+    else
+        hud();
+        
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -570,6 +556,28 @@ void World::render()
         rendererSystem.draw(*camera);
 }
 
+void World::hud()
+{
+    Menu::preparePanel(ImVec2(0, 0), {game.engine.width, game.engine.height}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+
+    ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
+    //ImGui::PushFont(font);
+    ImGui::SetCursorPosY(game.engine.height - 30.f);
+    assert(player.maxLifePoints != 0.f);
+    ImGui::SetWindowFontScale(1.0);
+    ImGui::ProgressBar(player.lifePoints / player.maxLifePoints, ImVec2(200,20));
+
+    ImGui::SetCursorPosY(game.engine.height - 30.f);
+    ImGui::SetCursorPosX(game.engine.width - 100.f);
+    ImGui::SetWindowFontScale(1.5);
+    ImGui::Text("%i / %i", player.nbBullet, player.maxNbBullet);
+
+    ImGui::PopStyleColor(5);
+    //ImGui::PopFont();
+    ImGui::End(); 
+}
+
 void World::pauseMenu()
 {
     Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, PURPLE, PINK, DARKERGREY);
@@ -577,12 +585,14 @@ void World::pauseMenu()
     ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoTitleBar);
     ImGui::Indent(400 / 2 - 50);
     //ImGui::PushFont(font);
+    ImGui::SetWindowFontScale(1.0);
     ImGui::SetCursorPosY(30.0f);
     if (ImGui::Button("Back to game", ImVec2(100, 50)))
     {
         ImGui::SetMouseCursor(ImGuiMouseCursor_None);
         glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);        
         isPauseMenuOpen = !isPauseMenuOpen;
+        inGame = true;
     }
 
     ImGui::SetCursorPosX(130.0f);
