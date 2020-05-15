@@ -98,11 +98,13 @@ namespace Entity
 
         virtual void onCollisionEnter        (const SegmentHit& hit) override
         {
+            std::cout << "player enter" << std::endl;
             state.playerState = PlayerState::E_IDLE;
         }
 
         virtual void onCollisionExit         (const SegmentHit& hit) override
         {
+            std::cout << "player exit" << std::endl;
             state.playerState = PlayerState::E_JUMPING;
         }
 
@@ -110,7 +112,6 @@ namespace Entity
         {
             if (hit.normal.y < 0.5)
             {
-                // std::cout << "self hit" << std::endl;
                 dealDamages(1.f);
             }
         }
@@ -119,7 +120,6 @@ namespace Entity
         {
             if (hit.normal.y > - 0.5)
             {
-                // std::cout << "another hit" << std::endl;
                 dealDamages(1.f);
             }
         }

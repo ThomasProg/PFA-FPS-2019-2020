@@ -35,8 +35,8 @@ public:
 
     static void preparePanel(ImVec2 pos, ImVec2 size, ImVec4 buttonColor, ImVec4 buttonColorActive, ImVec4 windowColor);
     void mainMenu();
-    void setupMainMenuButtons();
-    void renderPanelOptions();
+    bool setupMainMenuButtons(); // returns true if we quit the game, prevents memory error
+    void renderPanelOptions(); 
 };
 
 #endif

@@ -86,6 +86,7 @@ namespace Entity
         {
             if (hit.normal.y < -0.5)
             {
+                std::cout << "kill" <<std::endl;
                 kill();
             }
         }
@@ -94,6 +95,7 @@ namespace Entity
         {
             if (hit.normal.y > 0.5)
             {
+                std::cout << "kill" <<std::endl;
                 kill();
             }
         }
