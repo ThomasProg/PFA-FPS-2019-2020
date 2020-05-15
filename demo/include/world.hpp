@@ -91,6 +91,7 @@ private:
     Entity::BasicEntity* editorSelectedEntity = nullptr;
 
     bool isPauseMenuOpen {false};
+    bool inGame {true};
 
     // Searching if a file exists is expensive,
     // so at the start and each time we start the game,
@@ -130,7 +131,7 @@ public:
     void updateCameraProjection();
     
     void pauseMenu();
-
+    void hud();
     void gameOver();
 
     void addGround(const Core::Maths::Vec3&);
