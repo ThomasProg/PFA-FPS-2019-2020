@@ -8,17 +8,17 @@
 
 #include "box.hpp"
 #include "saveInterface.hpp"
+#include "collisionComponentInterface.hpp"
 
 namespace Entity
 {
     // Example Class for rendering an object
-    class BasicEntity : public EntityID, public Save::SaveInterface
+    class BasicEntity : public EntityID, public Physics::CollisionComponentInterface, public Save::SaveInterface
     {
     public:
         Physics::GraphKey key;
         Renderer::MeshIt mesh;
         Physics::PhysicComponent physicComponent; // moving sphere 
-        Physics::ColliderIt colliderCompo; // box
         bool isEnabled = true;
 
     public:
@@ -65,6 +65,27 @@ namespace Entity
         void loadData(Save::Loader& loader) override;
         // after loading data, this function will be called to set pointers, iterators, references...
         void loadLinks(Physics::TransformGraph& root);
+
+        virtual void onCollisionEnter        (const SegmentHit&) override
+        {
+
+        }
+
+        virtual void onCollisionExit         (const SegmentHit&) override
+        {
+
+        }
+
+        virtual void onOverlapEnterSelfHit   (const SegmentHit&) override
+        {
+
+        }
+
+        virtual void onOverlapEnterAnotherHit(const SegmentHit&) override
+        {
+
+        }
+
     };
 }
 

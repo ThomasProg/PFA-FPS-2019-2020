@@ -48,6 +48,8 @@ namespace Entity
         float maxLifePoints = 10.f;
         Renderer::TPSCamera camera;
 
+        std::function<void()> onPlayerDeath = nullptr;
+
     private:
         PlayerState state;
 
@@ -89,7 +91,38 @@ namespace Entity
         void inputs(const Core::Engine& engine) override;
 
         // Returns true if the player dies
-        bool dealDamages(float damages);
+        void dealDamages(float damages);
+
+
+
+
+        virtual void onCollisionEnter        (const SegmentHit& hit) override
+        {
+            state.playerState = PlayerState::E_IDLE;
+        }
+
+        virtual void onCollisionExit         (const SegmentHit& hit) override
+        {
+            state.playerState = PlayerState::E_JUMPING;
+        }
+
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override
+        {
+            if (hit.normal.y < 0.5)
+            {
+                // std::cout << "self hit" << std::endl;
+                dealDamages(1.f);
+            }
+        }
+
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override
+        {
+            if (hit.normal.y > - 0.5)
+            {
+                // std::cout << "another hit" << std::endl;
+                dealDamages(1.f);
+            }
+        }
     };
 }
 

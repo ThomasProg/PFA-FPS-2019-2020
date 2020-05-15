@@ -104,6 +104,21 @@ private:
     bool wasEditorKeyPressed = false;
     EditorMode editorMode {EditorMode::E_TRANSLATION};
 
+    class CollisionsCallbacks
+    {
+    private:
+        World& world;
+
+    public:
+        CollisionsCallbacks(World& world) : world(world) {}
+
+        void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+        void onCollisionExit  ();
+        void onOverlap        (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+    };
+    
+    CollisionsCallbacks collisionsCallbacks {*this};
+
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
@@ -127,7 +142,7 @@ public:
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
 
-    void getEntityFromID(const Entity::EntityID& entity);
+    Physics::CollisionComponentInterface* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
 };
 
 #endif

@@ -70,6 +70,33 @@ namespace Entity
 
         void save(Save::Saver& saver)       override;
         void loadData(Save::Loader& loader) override;
+
+
+        virtual void onCollisionEnter        (const SegmentHit& hit) override
+        {
+
+        }
+
+        virtual void onCollisionExit         (const SegmentHit& hit) override
+        {
+
+        }
+
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override
+        {
+            if (hit.normal.y < -0.5)
+            {
+                kill();
+            }
+        }
+
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override
+        {
+            if (hit.normal.y > 0.5)
+            {
+                kill();
+            }
+        }
     };
 }
 

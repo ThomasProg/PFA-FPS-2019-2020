@@ -50,12 +50,6 @@ namespace Physics
     
     class PhysicsSystem
     {
-    public:
-        struct PhysicsAdditionalData
-        {
-            std::unordered_set<Entity::EntityID> ignoredEntities;
-        };
-
     private:
         std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>> boxes;
 
@@ -65,6 +59,18 @@ namespace Physics
 
 
         // bool bHasCollided = false;
+    public:
+        struct PhysicsAdditionalData
+        {
+            std::unordered_set<Entity::EntityID> ignoredEntities;
+        };
+
+        struct CollisionsCallbacksSentData
+        {
+            const SegmentHit& hit;
+            const Entity::EntityID& movingEntityID; // PhysicComponent
+            const Entity::EntityID& encounteredEntityID; // CollisionComponent
+        };
 
     public:
         PhysicsSystem() = default;
@@ -80,22 +86,36 @@ namespace Physics
                                                     SegmentHit& hit);
 
         // returns new location
+        // COLLISIONS_CALLBACKS must implement :
+        // - void onCollisionEnter (CollisionsCallbacksSentData&);
+        // - void onCollisionExit  (); // TODO ?
+        // - void onOverlap        (CollisionsCallbacksSentData&);
+        // Warning : You shall NOT invalidate boxes iterators during the callbacks.
+        // If you want to add items during the callback, use boxes.reserve().
+        template<typename COLLISIONS_CALLBACKS>
         Core::Maths::Vec3 simulatePhysics(Physics::PhysicComponent& physicComp, 
                                           const Core::Maths::Vec3& startLoc, 
-                                          const PhysicsAdditionalData& data);
+                                          const PhysicsAdditionalData& data,
+                                          COLLISIONS_CALLBACKS& callbacks,
+                                          const Entity::EntityID& physicCompEntityID);
 
         bool staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
-                                       SegmentHit& hit, const PhysicsAdditionalData& data);
+                                       SegmentHit& hit, const PhysicsAdditionalData& data, Entity::EntityID& collidedEntityID);
 
+        template<typename COLLISIONS_CALLBACKS>
         void staticBoxesOverlapCollision(Physics::PhysicComponent& physicComp, 
                                          const Core::Maths::Vec3& startLoc, 
                                          const Core::Maths::Vec3& endLoc, 
-                                         const PhysicsAdditionalData& data);
+                                         const PhysicsAdditionalData& data,
+                                         const Entity::EntityID& physicCompEntityID,
+                                         COLLISIONS_CALLBACKS& callbacks);
 
         bool isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward);
 
         void reset();
     };
 }
+
+#include "physicsSystem.inl"
 
 #endif
