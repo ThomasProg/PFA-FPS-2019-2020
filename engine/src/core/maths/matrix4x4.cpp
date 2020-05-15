@@ -12,8 +12,12 @@
 using namespace Core::Maths;
 
 Matrix4x4::Matrix4x4() 
-    : Matrix(4, 4) //matrix = new...
 {
+    this->nbLines   = 4;
+    this->nbColumns = 4;
+
+    this->matrix = new float[nbLines * nbColumns];
+
     for (unsigned int i = 0; i < this->nbColumns * this->nbLines; i++)
         matrix[i] = 0;
     //set identity

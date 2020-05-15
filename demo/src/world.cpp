@@ -451,8 +451,10 @@ void World::updatePhysics()
     }
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid())
+    {
         player.colliderIt->second.worldCollider.transform = player.mesh->transform.transformMatrixNode->worldData;
-    player.colliderIt->second.isOverlap   = true;
+        player.colliderIt->second.isOverlap   = true;
+    }
 
     player.onPlayerDeath = [this](){ gameOver(); };
 

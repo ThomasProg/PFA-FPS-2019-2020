@@ -22,6 +22,8 @@ namespace Resources
         // TODO : remove render function
         // we can't render scenes in a good depth order if we have multiple scenes
         virtual void render()   = 0;
+
+        virtual ~Scene() = default;
     };
 
 }

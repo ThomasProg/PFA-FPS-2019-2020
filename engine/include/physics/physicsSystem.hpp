@@ -19,8 +19,6 @@
 #include <unordered_set>
 #include <functional>
 
-#include "renderDebug.hpp"
-
 namespace Core
 {
     class Engine;
