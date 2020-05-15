@@ -71,7 +71,7 @@ namespace Entity
 
         }
 
-        virtual void onCollisionExit         (const SegmentHit&) override
+        virtual void onCollisionExit         () override
         {
 
         }

@@ -113,7 +113,7 @@ private:
         CollisionsCallbacks(World& world) : world(world) {}
 
         void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
-        void onCollisionExit  ();
+        void onCollisionExit  (const Entity::EntityID& entityID);
         void onOverlap        (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
     };
     

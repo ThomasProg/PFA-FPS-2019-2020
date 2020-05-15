@@ -88,7 +88,7 @@ namespace Physics
         // returns new location
         // COLLISIONS_CALLBACKS must implement :
         // - void onCollisionEnter (CollisionsCallbacksSentData&);
-        // - void onCollisionExit  (); // TODO ?
+        // - void onCollisionExit  (const EntityID& entityID); // TODO ?
         // - void onOverlap        (CollisionsCallbacksSentData&);
         // Warning : You shall NOT invalidate boxes iterators during the callbacks.
         // If you want to add items during the callback, use boxes.reserve().

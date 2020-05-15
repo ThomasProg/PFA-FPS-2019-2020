@@ -61,7 +61,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicCompone
         physicComp.collider.isColliding = false;
 
         // Callback
-        callbacks.onCollisionExit();
+        callbacks.onCollisionExit(physicCompEntityID);
     }
 
     staticBoxesOverlapCollision(physicComp, startLoc, physicComp.velocity + startLoc, data, physicCompEntityID, callbacks);

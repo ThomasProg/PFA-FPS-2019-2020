@@ -624,9 +624,10 @@ void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::Collis
     }
 }
 
-void World::CollisionsCallbacks::onCollisionExit()
+void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityID)
 {
-
+    Physics::CollisionComponentInterface* ent = world.getCollisionComponentEntityFromID(entityID);
+    ent->onCollisionExit();
 }
 
 void World::CollisionsCallbacks::onOverlap(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)

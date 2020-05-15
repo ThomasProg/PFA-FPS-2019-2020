@@ -29,7 +29,7 @@ namespace Entity
         };
 
     public:
-        EPlayerState playerState = E_WALKING;
+        EPlayerState playerState = E_JUMPING;
 
     public:
         bool isOnGround() const noexcept;
@@ -98,13 +98,11 @@ namespace Entity
 
         virtual void onCollisionEnter        (const SegmentHit& hit) override
         {
-            std::cout << "player enter" << std::endl;
             state.playerState = PlayerState::E_IDLE;
         }
 
-        virtual void onCollisionExit         (const SegmentHit& hit) override
+        virtual void onCollisionExit         () override
         {
-            std::cout << "player exit" << std::endl;
             state.playerState = PlayerState::E_JUMPING;
         }
 
