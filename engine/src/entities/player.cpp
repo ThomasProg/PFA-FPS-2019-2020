@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "basicEntity.hpp"
 
 bool Entity::PlayerState::isOnGround() const noexcept
 {
@@ -83,6 +84,10 @@ void Entity::Player::inputs(const Core::Engine& engine)
         addedVelocity += - right; 
         hasMoved = true;
     }
+    /*if(engine.isMouseButtonDown(inputKeys.fire))
+    {
+        //shoot();
+    }*/
 
     if (hasMoved)
     {
@@ -100,6 +105,19 @@ void Entity::Player::inputs(const Core::Engine& engine)
     // }
 
     camera.inputs(engine);
+}
+
+Segment3D Entity::Player::shoot() const
+{
+    Core::Maths::Vec3 direction;
+    Segment3D seg;
+
+    seg.p1 = {0.f, 0, 0};
+    seg.p2 = {0.f, 0, -100};
+    seg.p1 = camera.transform.transformMatrixNode->worldData * seg.p1;
+    seg.p2 = camera.transform.transformMatrixNode->worldData * seg.p2;
+
+    return seg;
 }
 
 

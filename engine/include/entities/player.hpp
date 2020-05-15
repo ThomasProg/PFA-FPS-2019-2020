@@ -63,7 +63,8 @@ namespace Entity
                              backward = GLFW_KEY_S,
                              right    = GLFW_KEY_D,
                              left     = GLFW_KEY_A,
-                             jump     = GLFW_KEY_SPACE;
+                             jump     = GLFW_KEY_SPACE,
+                             fire     = GLFW_MOUSE_BUTTON_RIGHT;
             };
 
             std::array<unsigned int, nbInputKeys> keys;
@@ -90,6 +91,8 @@ namespace Entity
 
         // Returns true if the player dies
         bool dealDamages(float damages);
+
+        Segment3D shoot() const;
     };
 }
 

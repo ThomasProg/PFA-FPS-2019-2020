@@ -40,6 +40,8 @@ namespace Entity
             mesh->linkShaderWithModel();
         }
 
+        virtual void raycastCollide();
+
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 
                     const Resources::Shader* shader,

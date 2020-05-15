@@ -56,3 +56,7 @@ void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
     }
 }
 
+void Entity::BasicEntity::raycastCollide()
+{
+    
+}

@@ -8,6 +8,11 @@ inline bool Core::Engine::isKeyDown(const int key) const
     return glfwGetKey(window, key);
 }
 
+inline bool Core::Engine::isMouseButtonDown(const int buttonID) const
+{
+    return glfwGetMouseButton(window, buttonID);
+}
+
 inline void Core::Engine::endFrame()
 {
     float time = glfwGetTime();
