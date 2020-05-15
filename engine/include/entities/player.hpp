@@ -1,7 +1,7 @@
 #ifndef _PLAYER_HPP_
 #define _PLAYER_HPP_
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "rendererSystem.hpp"
 #include "resourceManager.hpp"
 
@@ -29,7 +29,7 @@ namespace Entity
         };
 
     public:
-        EPlayerState playerState = E_WALKING;
+        EPlayerState playerState = E_JUMPING;
 
     public:
         bool isOnGround() const noexcept;
@@ -47,6 +47,8 @@ namespace Entity
         float lifePoints    = 10.f;
         float maxLifePoints = 10.f;
         Renderer::TPSCamera camera;
+
+        std::function<void()> onPlayerDeath = nullptr;
 
     private:
         PlayerState state;
@@ -89,7 +91,15 @@ namespace Entity
         void inputs(const Core::Engine& engine) override;
 
         // Returns true if the player dies
-        bool dealDamages(float damages);
+        void dealDamages(float damages);
+
+
+
+
+        virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        virtual void onCollisionExit         () override;
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
     };
 }
 

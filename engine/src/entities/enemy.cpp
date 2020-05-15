@@ -17,7 +17,7 @@ void Entity::Enemy::update(const Core::Engine& engine)
             timeLeftTillRespawn = 0.f;
             if (mesh.isValid())
             {
-                colliderCompo->second.isEnabled = true;
+                colliderIt->second.isEnabled = true;
                 physicComponent.isEnabled = true;
                 mesh->isDrawn = true;
             }
@@ -136,7 +136,7 @@ void Entity::Enemy::kill()
     timeLeftTillRespawn = respawnCooldown;
     isDead = true;
 
-    colliderCompo->second.isEnabled = false;
+    colliderIt->second.isEnabled = false;
     physicComponent.isEnabled = false;
     if (mesh.isValid())
     {
@@ -165,5 +165,31 @@ void Entity::Enemy::loadData(Save::Loader& loader)
     loader.load(timeLeftTillRespawn);
 
     loader.tryToDisplayError(__FILE__);
+}
+
+void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
+{
+
+}
+
+void Entity::Enemy::onCollisionExit() 
+{
+
+}
+
+void Entity::Enemy::onOverlapEnterSelfHit(const SegmentHit& hit) 
+{
+    if (hit.normal.y < -0.5)
+    {
+        kill();
+    }
+}
+
+void Entity::Enemy::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+{    
+    if (hit.normal.y > 0.5)
+    {
+        kill();
+    }
 }
 

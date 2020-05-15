@@ -1,7 +1,7 @@
 #ifndef _ENEMY_HPP_
 #define _ENEMY_HPP_
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "basicEntity.hpp"
 
 #include "saveInterface.hpp"
@@ -52,6 +52,14 @@ namespace Entity
         Core::Maths::Vec3 patrolTarget;
         Core::Maths::Vec3 chaseTarget;
         
+        Enemy() = default;
+        Enemy(const EntityID& id)
+            : BasicEntity(id)
+        {
+
+        }
+        ~Enemy() = default;
+
         inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
 
         inline void setup(Renderer::RendererSystem& renderer, 
@@ -70,6 +78,12 @@ namespace Entity
 
         void save(Save::Saver& saver)       override;
         void loadData(Save::Loader& loader) override;
+
+
+        virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        virtual void onCollisionExit         () override;
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
     };
 }
 

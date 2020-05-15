@@ -18,6 +18,7 @@
 #include "enemy.hpp"
 
 #include <list>
+#include <unordered_map>
 
 class Game;
 
@@ -64,19 +65,20 @@ public:
 class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
+    Entity::EntityID nextEntity = 10u;
+
     Game& game;
+    Renderer::RendererSystem rendererSystem;
 
     Save::SaveSystem saveSystem;
     Physics::TransformGraph root; 
 
     Entity::Player player;
-    Entity::BasicEntity sphere2;
-    std::list<Entity::BasicEntity> grounds;
-    std::list<Entity::Enemy> enemies;
-    // Entity::BasicEntity ground;
-    // Entity::BasicEntity ground2;
-    // Entity::BasicEntity ground3;
-    Entity::BasicEntity dog;
+    // std::list<Entity::BasicEntity> grounds;
+    // std::list<Entity::Enemy> enemies;
+
+    std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
+    std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
 
     // Entity::Enemy enemy;
 
@@ -98,6 +100,21 @@ private:
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
     EditorMode editorMode {EditorMode::E_TRANSLATION};
+
+    class CollisionsCallbacks
+    {
+    private:
+        World& world;
+
+    public:
+        CollisionsCallbacks(World& world) : world(world) {}
+
+        void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+        void onCollisionExit  (const Entity::EntityID& entityID);
+        void onOverlap        (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+    };
+    
+    CollisionsCallbacks collisionsCallbacks {*this};
 
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
@@ -121,6 +138,8 @@ public:
 
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
+
+    Physics::CollisionComponentInterface* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
 };
 
 #endif

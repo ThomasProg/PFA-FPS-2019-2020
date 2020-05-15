@@ -12,18 +12,6 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 {
     BasicEntity::setup(renderer, model, shader, transformParent);
     camera.setup(mesh->transform);
-
-    physicComponent.collider.onCollisionEnter = [this](SegmentHit&)
-    {
-        // std::cout << "collision enter" << std::endl;
-        state.playerState = PlayerState::E_IDLE;
-    };
-
-    physicComponent.collider.onCollisionExit = [this]()
-    {
-        // std::cout << "collision exit" << std::endl;
-        state.playerState = PlayerState::E_JUMPING;
-    };
 }
 
 void Entity::Player::setup(Renderer::RendererSystem& renderer, 
@@ -34,18 +22,6 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 {
     BasicEntity::setup(renderer, model, shader, texture, transformParent);
     camera.setup(mesh->transform);
-
-    physicComponent.collider.onCollisionEnter = [this](SegmentHit&)
-    {
-        // std::cout << "collision enter" << std::endl;
-        state.playerState = PlayerState::E_IDLE;
-    };
-
-    physicComponent.collider.onCollisionExit = [this]()
-    {
-        // std::cout << "collision exit" << std::endl;
-        state.playerState = PlayerState::E_JUMPING;
-    };
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
@@ -103,8 +79,39 @@ void Entity::Player::inputs(const Core::Engine& engine)
 }
 
 
-bool Entity::Player::dealDamages(float damages)
+void Entity::Player::dealDamages(float damages)
 {
     lifePoints -= damages;
-    return (lifePoints <= 0.f);
+    if (onPlayerDeath && lifePoints <= 0.f)
+    {
+        onPlayerDeath();
+    }
+}
+
+
+
+void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
+{
+    state.playerState = PlayerState::E_IDLE;
+}
+
+void Entity::Player::onCollisionExit() 
+{
+    state.playerState = PlayerState::E_JUMPING;
+}
+
+void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
+{
+    if (hit.normal.y < 0.5)
+    {
+        dealDamages(1.f);
+    }
+}
+
+void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+{
+    if (hit.normal.y > - 0.5)
+    {
+        dealDamages(1.f);
+    }
 }

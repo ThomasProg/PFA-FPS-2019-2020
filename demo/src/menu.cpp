@@ -44,13 +44,15 @@ void Menu::preparePanel(ImVec2 pos, ImVec2 size, ImVec4 buttonColor, ImVec4 butt
 
 void Menu::mainMenu()
 {
-    setupMainMenuButtons();
+    bool bQuit = setupMainMenuButtons();
+    if (bQuit)
+        return;
 
     if (option)
         renderPanelOptions();
 }
 
-void Menu::setupMainMenuButtons()
+bool Menu::setupMainMenuButtons()
 {
     preparePanel({0.f, 0.f}, {float(game.engine.width), float(game.engine.height)}, PURPLE, PINK, GREY);
     ImGui::Begin("Game", &isMainMenuOpen, ImGuiWindowFlags_NoTitleBar);
@@ -95,13 +97,19 @@ void Menu::setupMainMenuButtons()
         //isMainMenuOpen = !isMainMenuOpen;
     }
 
+    bool bQuit = false;
     ImGui::SetCursorPosY(game.engine.height / 1.13);
     if (ImGui::Button("Quit", ImVec2(game.engine.width / 5, game.engine.height / 10)))
+    {
+        bQuit = true;
         game.quitGame();
+    }
 
     ImGui::PopStyleColor(4);
     //ImGui::PopFont();
     ImGui::End();
+
+    return bQuit;
 }
 
 void Menu::renderPanelOptions()
