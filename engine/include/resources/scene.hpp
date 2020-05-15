@@ -12,11 +12,7 @@ namespace Resources
 
     class Scene
     {
-    protected:
-        std::unordered_map<unsigned int, Entity::Entity> entities;
-
-        Renderer::RendererSystem rendererSystem;
-        // CollisionSystem 
+    protected: 
 
     public:
         virtual void inputs()   = 0;

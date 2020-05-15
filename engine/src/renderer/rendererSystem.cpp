@@ -6,7 +6,7 @@ constexpr size_t Renderer::RendererSystem::maxChildrenAtLoad;
 
 Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponentTo(Entity::Entity& entity)
 {
-    auto rit = meshes.emplace(entity, Mesh());
+    meshes.emplace(entity, Mesh());
     iterator it {entity, this};
 
     return it;
