@@ -19,6 +19,10 @@
 #include <unordered_set>
 #include <functional>
 
+
+#define DEBUG_PHYSIC_SYSTEM 0 
+
+
 namespace Core
 {
     class Engine;
@@ -55,9 +59,10 @@ namespace Physics
         static constexpr float linearDamping  = 0.98f;
         static constexpr float minimalDistToGround = 0.0001f;
 
-
-        // bool bHasCollided = false;
     public:
+        // reserve vector to prevent too much move
+        unsigned int nextNbOverlapHint = 0;
+
         struct PhysicsAdditionalData
         {
             std::unordered_set<Entity::EntityID> ignoredEntities;
@@ -68,6 +73,21 @@ namespace Physics
             const SegmentHit& hit;
             const Entity::EntityID& movingEntityID; // PhysicComponent
             const Entity::EntityID& encounteredEntityID; // CollisionComponent
+        };
+
+        struct CollisionsCallbacksSentDataCpy
+        {
+            const SegmentHit hit;
+            const Entity::EntityID movingEntityID; // PhysicComponent
+            const Entity::EntityID encounteredEntityID; // CollisionComponent
+
+            inline CollisionsCallbacksSentDataCpy(const SegmentHit& hit, 
+                                                  const Entity::EntityID& movingEntityID, 
+                                                  const Entity::EntityID& encounteredEntityID)
+                : hit(hit), movingEntityID(movingEntityID), encounteredEntityID(encounteredEntityID)
+            {
+
+            }
         };
 
     public:
@@ -113,6 +133,8 @@ namespace Physics
 
         bool raycast(const Segment3D& seg, SegmentHit& hit, Entity::EntityID& touchedEntity) const;
 
+        // TODO : custom iterators (current ones can be invalidated)
+        bool isValidIterator(const ColliderIt& it) const noexcept;
 
         void reset();
     };

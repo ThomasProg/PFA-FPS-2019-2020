@@ -15,6 +15,7 @@ namespace Resources
     protected: 
 
     public:
+        virtual void load()     {}
         virtual void inputs()   = 0;
         virtual void update()   = 0;
         virtual void renderUI() = 0;

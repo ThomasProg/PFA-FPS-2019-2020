@@ -1,5 +1,7 @@
 #include "physicsSystem.hpp"
 
+#include <vector>
+
 template<typename COLLISIONS_CALLBACKS>
 Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponent& physicComp, 
                                                           const Core::Maths::Vec3& startLoc, 
@@ -80,6 +82,9 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
     Segment3D seg{startLoc, endLoc};
     SegmentHit hit;
     
+    // // TODO : opti with reserve
+    // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
+    // collisionsCallbacksSentDataList.reserve(nextNbOverlapHint); 
 
     for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
@@ -90,19 +95,18 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
 
         if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, physicComp.collider.worldCollider, seg, hit))
         {
-            // Callback
-            CollisionsCallbacksSentData collisionsCallbacksSentData
-            {
-                std::move(hit),
-                physicCompEntityID,
-                boxCollider.first
-            };
-            callbacks.onOverlap(collisionsCallbacksSentData);
-
-            // if (physicComp.collider.onOverlapEnterSelfHit)
-            //     physicComp.collider.onOverlapEnterSelfHit(hit);
-            // if (boxCollider.second.onOverlapEnterAnotherHit)
-            //     boxCollider.second.onOverlapEnterAnotherHit(hit);
+            // // Add Callbacks to list
+            // collisionsCallbacksSentDataList.emplace_back(hit, physicCompEntityID, boxCollider.first);
+            callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompEntityID, boxCollider.first});
         }
     }
+
+    // nextNbOverlapHint = std::min(collisionsCallbacksSentDataList.size(), 4lu) << 1u;// multiply by 2
+
+    // // Safe, we can remove collisionComponents from here.
+    // for (const CollisionsCallbacksSentDataCpy& data : collisionsCallbacksSentDataList)
+    // {
+    //     callbacks.onOverlap(CollisionsCallbacksSentData{data.hit, data.movingEntityID, data.encounteredEntityID});
+    // }
+
 }

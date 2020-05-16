@@ -98,6 +98,8 @@ private:
     // we modify this value to know when we open the menu.
     bool isLoadAvailable = false; 
 
+    bool isLoaded = false;
+
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
     EditorMode editorMode {EditorMode::E_TRANSLATION};
@@ -112,7 +114,7 @@ private:
 
         void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
         void onCollisionExit  (const Entity::EntityID& entityID);
-        void onOverlap        (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+        void onOverlap        (const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
     };
     
     CollisionsCallbacks collisionsCallbacks {*this};
@@ -120,10 +122,12 @@ private:
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
-    void inputs() override;
-    void update() override;
+
+    void load()     override;
+    void inputs()   override;
+    void update()   override;
     void renderUI() override;
-    void render() override;
+    void render()   override;
     void init();
 
     void updatePhysics();

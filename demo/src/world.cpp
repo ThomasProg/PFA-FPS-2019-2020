@@ -56,7 +56,12 @@ void World::loadData(Save::Loader& loader)
 
 
 World::World(Game& game, bool isLoaded, bool isEditorMode)
-    : game(game), isEditorMode(isEditorMode)
+    : game(game), isLoaded(isLoaded), isEditorMode(isEditorMode)
+{
+
+}
+
+void World::load()
 {
     if (game.isAzerty)
     {
@@ -228,7 +233,11 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
 
 World::~World()
 {
-    game.engine.physicsSystem.reset();
+    // TODO : reset and clear possible
+    enemies.clear();
+    grounds.clear();
+    rendererSystem.reset();
+    game.engine.physicsSystem.reset(); 
 }
 
 void World::inputs()
@@ -665,7 +674,7 @@ void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityI
     ent->onCollisionExit();
 }
 
-void World::CollisionsCallbacks::onOverlap(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
+void World::CollisionsCallbacks::onOverlap(const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
 {
     Physics::CollisionComponentInterface* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
     Physics::CollisionComponentInterface* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);

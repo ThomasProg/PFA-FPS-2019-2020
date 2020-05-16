@@ -251,3 +251,8 @@ void Physics::PhysicsSystem::reset()
 {
     boxes.clear();
 }
+
+bool Physics::PhysicsSystem::isValidIterator(const ColliderIt& it) const noexcept
+{
+    return it != boxes.end();
+}

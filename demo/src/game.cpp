@@ -96,6 +96,7 @@ void Game::update()
     {
         currentScene = std::move(nextScene);
         nextScene = nullptr;
+        currentScene->load();
     }
 
     if (currentScene == nullptr)

@@ -72,6 +72,11 @@ namespace Renderer
         void save(Save::Saver& saver) override;
         void loadData(Save::Loader& loader) override;
 
+        void reset()
+        {
+            meshes.clear();
+        }
+
         friend iterator;
     };
 
