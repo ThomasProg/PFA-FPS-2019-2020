@@ -100,13 +100,4 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
             callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompEntityID, boxCollider.first});
         }
     }
-
-    // nextNbOverlapHint = std::min(collisionsCallbacksSentDataList.size(), 4lu) << 1u;// multiply by 2
-
-    // // Safe, we can remove collisionComponents from here.
-    // for (const CollisionsCallbacksSentDataCpy& data : collisionsCallbacksSentDataList)
-    // {
-    //     callbacks.onOverlap(CollisionsCallbacksSentData{data.hit, data.movingEntityID, data.encounteredEntityID});
-    // }
-
 }

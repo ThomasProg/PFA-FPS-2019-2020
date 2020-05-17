@@ -8,7 +8,7 @@ namespace Physics
     class CollisionComponentInterface
     {
     public:
-        Physics::ColliderIt colliderIt;
+        Physics::PhysicsSystem::ColliderIt<Box> colliderIt;
     
     public:
     

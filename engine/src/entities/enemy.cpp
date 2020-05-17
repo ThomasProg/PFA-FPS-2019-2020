@@ -17,7 +17,7 @@ void Entity::Enemy::update(const Core::Engine& engine)
             timeLeftTillRespawn = 0.f;
             if (mesh.isValid())
             {
-                colliderIt->second.isEnabled = true;
+                colliderIt->isEnabled = true;
                 physicComponent.isEnabled = true;
                 mesh->isDrawn = true;
             }
@@ -136,7 +136,7 @@ void Entity::Enemy::kill()
     timeLeftTillRespawn = respawnCooldown;
     isDead = true;
 
-    colliderIt->second.isEnabled = false;
+    colliderIt->isEnabled = false;
     physicComponent.isEnabled = false;
     if (mesh.isValid())
     {

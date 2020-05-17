@@ -1,27 +1,22 @@
 #ifndef _PHYSICS_SYSTEM_HPP_
 #define _PHYSICS_SYSTEM_HPP_
 
-#include "vec3.hpp"
 #include "collisionComponent.hpp"
-
+#include "physicComponent.hpp"
 #include "entityID.hpp"
-#include <unordered_map>
 
-#include "sphere.hpp"
-#include "box.hpp"
-
+#include "collisions.hpp"
 #include "segmentHit.hpp"
 #include "segment3D.hpp"
-#include "collisions.hpp"
+#include "sphere.hpp"
+#include "box.hpp"
+#include "vec3.hpp"
 
+#include <unordered_map>
 #include <iomanip>
 #include <limits>
 #include <unordered_set>
 #include <functional>
-
-
-#define DEBUG_PHYSIC_SYSTEM 0 
-
 
 namespace Core
 {
@@ -40,20 +35,13 @@ namespace Entity
 
 namespace Physics
 {
-    struct PhysicComponent
-    {
-        Core::Maths::Vec3 velocity = Core::Maths::Vec3{0.f, 0, 0};
-        Physics::CollisionComponent<Sphere> collider;
-
-        bool isEnabled = true;
-    };
-
-    using ColliderIt = std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>>::iterator;
+    // using ColliderIt = std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>>::iterator;
     
     class PhysicsSystem
     {
     private:
         std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>> boxes;
+        Physics::PhysicComponent physicComponent;
 
         static constexpr float gravityAcc = 9.81f * 0.01; 
         static constexpr float linearDamping  = 0.98f;
@@ -90,12 +78,57 @@ namespace Physics
             }
         };
 
+        template<typename T>
+        class iterator
+        {
+        private:
+            Entity::EntityID entityID;
+            std::unordered_map<Entity::EntityID, T>* mapPtr = nullptr;
+
+        public:
+            iterator() = default;
+
+            iterator(Entity::EntityID& entityID, std::unordered_map<Entity::EntityID, T>* container)
+                : entityID(entityID), mapPtr(container)
+            {
+
+            }
+
+            T* operator->()
+            {
+                assert(mapPtr != nullptr);
+                return &mapPtr->at(entityID);
+            }
+
+            const T* operator->() const
+            {
+                assert(mapPtr != nullptr);
+                return &mapPtr->at(entityID);
+            }
+
+            bool isValid() const noexcept
+            {
+                return mapPtr != nullptr;
+            }
+
+            void erase()
+            {
+                assert(mapPtr != nullptr);
+                mapPtr->erase(entityID);
+                mapPtr = nullptr;
+            }
+
+            friend PhysicsSystem;
+        };
+
+        template <typename T>
+        using ColliderIt = iterator<Physics::CollisionComponent<T>>;
+        using PhysicCompIt = iterator<Physics::PhysicComponent>;
+
     public:
         PhysicsSystem() = default;
 
-        decltype(boxes)::iterator addComponentTo(Entity::EntityID& entity);
-
-        void remove(decltype(boxes)::iterator& it);
+        ColliderIt<Box> addComponentTo(Entity::EntityID& entity);
 
         void simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine);
 
@@ -132,9 +165,6 @@ namespace Physics
 
 
         bool raycast(const Segment3D& seg, SegmentHit& hit, Entity::EntityID& touchedEntity) const;
-
-        // TODO : custom iterators (current ones can be invalidated)
-        bool isValidIterator(const ColliderIt& it) const noexcept;
 
         void reset();
     };

@@ -26,10 +26,7 @@ namespace Renderer
             RendererSystem* rendererSystem = nullptr;
 
         public:
-            iterator()
-            {
-                
-            }
+            iterator() = default;
 
             iterator(Entity::EntityID& entityID, RendererSystem* rendererSystem)
                 : entityID(entityID), rendererSystem(rendererSystem)

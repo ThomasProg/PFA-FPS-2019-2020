@@ -449,21 +449,21 @@ void World::updatePhysics()
     for (std::pair<const Entity::EntityID, Entity::BasicEntity>& ground : grounds)
     {
         if (ground.second.mesh.isValid() && ground.second.mesh->transform.transformMatrixNode.isValid())
-            ground.second.colliderIt->second.worldCollider.transform = ground.second.mesh->transform.transformMatrixNode->worldData;
+            ground.second.colliderIt->worldCollider.transform = ground.second.mesh->transform.transformMatrixNode->worldData;
     }
 
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
     {
         if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
-            enemy.second.colliderIt->second.worldCollider.transform = enemy.second.mesh->transform.transformMatrixNode->worldData;
+            enemy.second.colliderIt->worldCollider.transform = enemy.second.mesh->transform.transformMatrixNode->worldData;
             
-        enemy.second.colliderIt->second.isOverlap   = true;
+        enemy.second.colliderIt->isOverlap   = true;
     }
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid())
     {
-        player.colliderIt->second.worldCollider.transform = player.mesh->transform.transformMatrixNode->worldData;
-        player.colliderIt->second.isOverlap   = true;
+        player.colliderIt->worldCollider.transform = player.mesh->transform.transformMatrixNode->worldData;
+        player.colliderIt->isOverlap   = true;
     }
 
     player.onPlayerDeath = [this](){ gameOver(); };

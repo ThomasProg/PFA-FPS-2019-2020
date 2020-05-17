@@ -10,15 +10,10 @@ void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicCom
     physicComp.velocity.y -= gravityAcc * engine.deltaTime;
 }
 
-void Physics::PhysicsSystem::remove(decltype(Physics::PhysicsSystem::boxes)::iterator& it)
+Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
 {
-    boxes.erase(it);
-}
-
-decltype(Physics::PhysicsSystem::boxes)::iterator Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
-{
-    std::pair<decltype(Physics::PhysicsSystem::boxes)::iterator, bool> pair =  boxes.emplace(entity, Physics::CollisionComponent<Box>());
-    return pair.first;
+    boxes.emplace(entity, Physics::CollisionComponent<Box>());
+    return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
 }
 
 Core::Maths::Vec3 Physics::PhysicsSystem::collisionPhysicalResponse(Physics::PhysicComponent& physicComp, 
@@ -250,9 +245,4 @@ bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Enti
 void Physics::PhysicsSystem::reset()
 {
     boxes.clear();
-}
-
-bool Physics::PhysicsSystem::isValidIterator(const ColliderIt& it) const noexcept
-{
-    return it != boxes.end();
 }
