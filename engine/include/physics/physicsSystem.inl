@@ -7,7 +7,8 @@
 // template<typename T = Sphere>
 inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Entity::EntityID& entity)
 {
-
+    physicComponents.emplace(entity, Physics::PhysicComponent());
+    return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
 }
 
 
@@ -15,12 +16,17 @@ inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicCom
 
 
 template<typename COLLISIONS_CALLBACKS>
-Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponent& physicComp, 
+Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicsSystem::PhysicCompIt& physicCompIt, 
                                                           const Core::Maths::Vec3& startLoc, 
                                                           const Physics::PhysicsSystem::PhysicsAdditionalData& data,
                                                           COLLISIONS_CALLBACKS& callbacks,
                                                           const Entity::EntityID& physicCompEntityID)
 {
+    if (!physicCompIt.isValid())
+        return startLoc;
+
+    Physics::PhysicComponent& physicComp = *physicCompIt;
+
     if (!physicComp.isEnabled)
     {
         return startLoc;

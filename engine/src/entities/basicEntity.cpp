@@ -16,7 +16,7 @@ void Entity::BasicEntity::save(Save::Saver& saver)
         saver.save(mesh->transform.transformMatrixNode->graphID);
 
     // Physics
-    saver.save(physicComponent.velocity);
+    saver.save(physicCompIt->velocity);
 }
 
 // loads the data loaded from the save file
@@ -32,7 +32,7 @@ void Entity::BasicEntity::loadData(Save::Loader& loader)
         loader.load(key);
 
     // Physics
-    loader.load(physicComponent.velocity);
+    loader.load(physicCompIt->velocity);
 
     loader.tryToDisplayError(__FILE__);
 }

@@ -9,19 +9,23 @@
 #include "box.hpp"
 #include "saveInterface.hpp"
 #include "collisionComponentInterface.hpp"
+#include "physicComponentInterface.hpp"
 
 namespace Entity
 {
     // Example Class for rendering an object
-    class BasicEntity : public EntityID, public Physics::CollisionComponentInterface, public Save::SaveInterface
+    class BasicEntity : public EntityID, 
+                        public Physics::CollisionComponentInterface, 
+                        public Physics::PhysicComponentInterface, 
+                        public Save::SaveInterface
     {
     public:
         Renderer::MeshIt mesh;
-        Physics::PhysicComponent physicComponent; // moving sphere 
+        // Physics::PhysicComponent physicComponent; // moving sphere 
 
         // to load graphs
         Physics::GraphKey key;
-        
+
         bool isEnabled = true;
 
     public:

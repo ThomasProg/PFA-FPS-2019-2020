@@ -197,30 +197,33 @@ void World::load()
                     &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
                     &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                     root);
-
-        enemy.second.physicComponent.collider.worldCollider.radius = 1.f;
     }
 
 
     fpsCamera.setup(player.mesh->transform);
     tpsCamera.setup(player.mesh->transform);
 
-    // if (!isLoaded)
-    {
-        player.physicComponent.collider.worldCollider.radius = 1.f;
-    }
-
-    // if  (!isLoaded)
-    //     enemies.cbegin().mesh->transform.transform.location.x = 6.f;
-
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
     {
         enemy.second.setup2({0,-10,0}, {0.f,0,0});
         enemy.second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy.second);
+        enemy.second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemy.second);
         enemy.second.mesh->transform.transform.location.x = 6.f;
     }
 
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
+    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
+
+    // if (!isLoaded)
+    {
+        player.physicCompIt-> collider.worldCollider.radius = 1.f;
+    }
+
+
+    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
+    {
+        enemy.second.physicCompIt->collider.worldCollider.radius = 1.f;
+    }
 
     updateCameraProjection();
 
@@ -311,6 +314,7 @@ void World::addEnemy(const Core::Maths::Vec3& v)
         enemyIt.first->second.mesh->transform.UpdateLocalTransformMatrix();
         enemyIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
         enemyIt.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemyIt.first->second);
+        enemyIt.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemyIt.first->second);
     }
 }
 
@@ -469,24 +473,24 @@ void World::updatePhysics()
     player.onPlayerDeath = [this](){ gameOver(); };
 
     if (player.mesh.isValid())
-        player.physicComponent.collider.worldCollider.center = player.mesh->transform.transform.location;
+        player.physicCompIt->collider.worldCollider.center = player.mesh->transform.transform.location;
 
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
         if (enemy.second.mesh.isValid())
-            enemy.second.physicComponent.collider.worldCollider.center = enemy.second.mesh->transform.transform.location;
+            enemy.second.physicCompIt->collider.worldCollider.center = enemy.second.mesh->transform.transform.location;
 
     Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
     playerIgnoreData.ignoredEntities.emplace(player);
     if (player.mesh.isValid())
     {
-        player.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(player.physicComponent, 
+        player.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(player.physicCompIt, 
                                                                                               player.mesh->transform.transform.location, 
                                                                                               playerIgnoreData, 
                                                                                               collisionsCallbacks, 
                                                                                               player);
         nextEntity.next();
     }
-    game.engine.physicsSystem.simulateGravity(player.physicComponent, game.engine);
+    game.engine.physicsSystem.simulateGravity(*player.physicCompIt, game.engine);
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid()) 
     {
@@ -500,14 +504,14 @@ void World::updatePhysics()
         enemyIgnoreData.ignoredEntities.emplace(enemy.second);
         if (enemy.second.mesh.isValid())
         {
-            enemy.second.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(enemy.second.physicComponent, 
+            enemy.second.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(enemy.second.physicCompIt, 
                                                                                                         enemy.second.mesh->transform.transform.location, 
                                                                                                         enemyIgnoreData, 
                                                                                                         collisionsCallbacks, 
                                                                                                         enemy.first);
             nextEntity.next();
         }
-        game.engine.physicsSystem.simulateGravity(enemy.second.physicComponent, game.engine);
+        game.engine.physicsSystem.simulateGravity(*enemy.second.physicCompIt, game.engine);
 
         if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
         {

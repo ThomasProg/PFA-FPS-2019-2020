@@ -28,7 +28,7 @@ void Entity::Player::inputs(const Core::Engine& engine)
 {       
     if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
     {
-        physicComponent.velocity.y = jumpSpeed;
+        physicCompIt->velocity.y = jumpSpeed;
         // state.playerState = PlayerState::E_JUMPING;
     }
 
@@ -65,14 +65,14 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // should not be 0, since it has moved
         if (addedVelocity.vectorSquareLength() != 0)
         {
-            physicComponent.velocity.x = addedVelocity.x;
-            physicComponent.velocity.z = addedVelocity.z;
+            physicCompIt->velocity.x = addedVelocity.x;
+            physicCompIt->velocity.z = addedVelocity.z;
         }
     }
     // else
     // {
-    //     physicComponent.velocity.x = 0.f;
-    //     physicComponent.velocity.z = 0.f;        
+    //     physicCompIt->velocity.x = 0.f;
+    //     physicCompIt->velocity.z = 0.f;        
     // }
 
     camera.inputs(engine);

@@ -94,6 +94,12 @@ namespace Physics
 
             }
 
+            T& operator*()
+            {
+                assert(mapPtr != nullptr);                
+                return mapPtr->at(entityID);
+            }
+
             T* operator->()
             {
                 assert(mapPtr != nullptr);
@@ -133,9 +139,9 @@ namespace Physics
         // template<typename T = Sphere>
         inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
 
-        void simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine);
+        void simulateGravity(PhysicComponent& physicComp, const Core::Engine& engine);
 
-        Core::Maths::Vec3 collisionPhysicalResponse(Physics::PhysicComponent& physicComp, 
+        Core::Maths::Vec3 collisionPhysicalResponse(Physics::PhysicComponent& physicCompIt, 
                                                     const Core::Maths::Vec3& startLoc, 
                                                     SegmentHit& hit);
 
@@ -147,7 +153,7 @@ namespace Physics
         // Warning : You shall NOT invalidate boxes iterators during the callbacks.
         // If you want to add items during the callback, use boxes.reserve().
         template<typename COLLISIONS_CALLBACKS>
-        Core::Maths::Vec3 simulatePhysics(Physics::PhysicComponent& physicComp, 
+        Core::Maths::Vec3 simulatePhysics(Physics::PhysicsSystem::PhysicCompIt& physicComp, 
                                           const Core::Maths::Vec3& startLoc, 
                                           const PhysicsAdditionalData& data,
                                           COLLISIONS_CALLBACKS& callbacks,
