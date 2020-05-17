@@ -16,9 +16,12 @@ namespace Entity
     class BasicEntity : public EntityID, public Physics::CollisionComponentInterface, public Save::SaveInterface
     {
     public:
-        Physics::GraphKey key;
         Renderer::MeshIt mesh;
         Physics::PhysicComponent physicComponent; // moving sphere 
+
+        // to load graphs
+        Physics::GraphKey key;
+        
         bool isEnabled = true;
 
     public:

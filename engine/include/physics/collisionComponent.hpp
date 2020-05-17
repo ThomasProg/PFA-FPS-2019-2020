@@ -1,7 +1,6 @@
 #ifndef _COLLISION_COMPONENT_HPP_
 #define _COLLISION_COMPONENT_HPP_
 
-#include <functional>
 #include "segmentHit.hpp"
 
 namespace Physics

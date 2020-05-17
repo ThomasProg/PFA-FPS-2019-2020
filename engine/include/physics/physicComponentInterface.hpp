@@ -1,15 +1,15 @@
-#ifndef _COLLISION_COMPONENT_INTERFACE_HPP_ 
-#define _COLLISION_COMPONENT_INTERFACE_HPP_
+#ifndef _PHYSIC_COMPONENT_INTERFACE_HPP_ 
+#define _PHYSIC_COMPONENT_INTERFACE_HPP_
 
-#include "collisionComponent.hpp"
+#include "physicComponent.hpp"
 #include "physicsSystem.hpp"
 
 namespace Physics
 {
-    class CollisionComponentInterface
+    class PhysicComponentInterface
     {
     public:
-        Physics::PhysicsSystem::ColliderIt<Box> colliderIt;
+        Physics::PhysicsSystem::PhysicCompIt physicCompIt;
     
     public:
     
@@ -19,5 +19,4 @@ namespace Physics
         virtual void onOverlapEnterAnotherHit(const SegmentHit&) = 0;
     };
 }
-
 #endif
