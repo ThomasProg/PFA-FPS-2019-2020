@@ -2,6 +2,18 @@
 
 #include <vector>
 
+
+
+// template<typename T = Sphere>
+inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Entity::EntityID& entity)
+{
+
+}
+
+
+
+
+
 template<typename COLLISIONS_CALLBACKS>
 Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponent& physicComp, 
                                                           const Core::Maths::Vec3& startLoc, 

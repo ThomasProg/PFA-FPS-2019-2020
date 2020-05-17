@@ -41,7 +41,7 @@ namespace Physics
     {
     private:
         std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>> boxes;
-        Physics::PhysicComponent physicComponent;
+        std::unordered_map<Entity::EntityID, Physics::PhysicComponent> physicComponents;
 
         static constexpr float gravityAcc = 9.81f * 0.01; 
         static constexpr float linearDamping  = 0.98f;
@@ -128,7 +128,10 @@ namespace Physics
     public:
         PhysicsSystem() = default;
 
-        ColliderIt<Box> addComponentTo(Entity::EntityID& entity);
+        template<typename T = Box>
+        ColliderIt<T> addCollider(Entity::EntityID& entity);
+        // template<typename T = Sphere>
+        inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
 
         void simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine);
 

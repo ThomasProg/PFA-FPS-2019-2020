@@ -5,16 +5,25 @@
 #include "engine.hpp"
 #include "camera.hpp"
 
+// template<typename T = Box>
+template<>
+Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Entity::EntityID& entity)
+{
+    boxes.emplace(entity, Physics::CollisionComponent<Box>());
+    return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
+}
+
+
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
     physicComp.velocity.y -= gravityAcc * engine.deltaTime;
 }
 
-Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
-{
-    boxes.emplace(entity, Physics::CollisionComponent<Box>());
-    return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
-}
+// Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
+// {
+//     boxes.emplace(entity, Physics::CollisionComponent<Box>());
+//     return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
+// }
 
 Core::Maths::Vec3 Physics::PhysicsSystem::collisionPhysicalResponse(Physics::PhysicComponent& physicComp, 
                                                            const Core::Maths::Vec3& startLoc, 

@@ -170,7 +170,7 @@ void World::load()
         }
         ent.mesh->transform.UpdateLocalTransformMatrix();
         ent.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-        ent.colliderIt = game.engine.physicsSystem.addComponentTo(ent);
+        ent.colliderIt = game.engine.physicsSystem.addCollider<Box>(ent);
         // ent.colliderIt->second.aabb.size = Core::Maths::Vec3{1.f/0.5f,1.f/0.5f,1.f/0.5f};
     };
 
@@ -216,11 +216,11 @@ void World::load()
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
     {
         enemy.second.setup2({0,-10,0}, {0.f,0,0});
-        enemy.second.colliderIt = game.engine.physicsSystem.addComponentTo(enemy.second);
+        enemy.second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy.second);
         enemy.second.mesh->transform.transform.location.x = 6.f;
     }
 
-    player.colliderIt = game.engine.physicsSystem.addComponentTo(player);
+    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
 
     updateCameraProjection();
 
@@ -283,7 +283,7 @@ void World::addGround(const Core::Maths::Vec3& v)
         groundIt.first->second.mesh->transform.UpdateLocalTransformMatrix();
         groundIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
 
-        groundIt.first->second.colliderIt = game.engine.physicsSystem.addComponentTo(groundIt.first->second);
+        groundIt.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(groundIt.first->second);
     }
 }
 
@@ -310,7 +310,7 @@ void World::addEnemy(const Core::Maths::Vec3& v)
 
         enemyIt.first->second.mesh->transform.UpdateLocalTransformMatrix();
         enemyIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-        enemyIt.first->second.colliderIt = game.engine.physicsSystem.addComponentTo(enemyIt.first->second);
+        enemyIt.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemyIt.first->second);
     }
 }
 
