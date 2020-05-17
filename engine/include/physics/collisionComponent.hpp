@@ -5,20 +5,19 @@
 
 namespace Physics
 {
+    struct GTransform;
+
     template<typename COLLIDER>
     struct CollisionComponent
     {
-        COLLIDER worldCollider;   
+        COLLIDER worldCollider;  
+        GTransform* transform = nullptr;
 
-        bool isEnabled   : 1;
-        bool isColliding : 1;
-        bool isOverlap   : 1;
+        bool isEnabled = true;
+        bool isOverlap = false;
 
-        inline CollisionComponent()
-            : isEnabled(true), isColliding(true), isOverlap(false)
-        {
-
-        }
+    // Flags
+        bool isColliding = false;
     };
 }
 

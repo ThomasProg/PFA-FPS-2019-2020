@@ -208,11 +208,14 @@ void World::load()
         enemy.second.setup2({0,-10,0}, {0.f,0,0});
         enemy.second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy.second);
         enemy.second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemy.second);
+        enemy.second.physicCompIt->collider.transform = &enemy.second.mesh->transform;
         enemy.second.mesh->transform.transform.location.x = 6.f;
     }
 
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
+    player.physicCompIt->collider.transform = &player.mesh->transform;
+
 
     // if (!isLoaded)
     {
@@ -315,6 +318,7 @@ void World::addEnemy(const Core::Maths::Vec3& v)
         enemyIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
         enemyIt.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemyIt.first->second);
         enemyIt.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemyIt.first->second);
+        enemyIt.first->second.physicCompIt->collider.transform = &enemyIt.first->second.mesh->transform;
     }
 }
 
@@ -488,7 +492,6 @@ void World::updatePhysics()
                                                                                               playerIgnoreData, 
                                                                                               collisionsCallbacks, 
                                                                                               player);
-        nextEntity.next();
     }
     game.engine.physicsSystem.simulateGravity(*player.physicCompIt, game.engine);
 
@@ -500,6 +503,7 @@ void World::updatePhysics()
 
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
     {
+        enemy.second.mesh->transform.transform.location;
         Physics::PhysicsSystem::PhysicsAdditionalData enemyIgnoreData;
         enemyIgnoreData.ignoredEntities.emplace(enemy.second);
         if (enemy.second.mesh.isValid())
@@ -509,7 +513,6 @@ void World::updatePhysics()
                                                                                                         enemyIgnoreData, 
                                                                                                         collisionsCallbacks, 
                                                                                                         enemy.first);
-            nextEntity.next();
         }
         game.engine.physicsSystem.simulateGravity(*enemy.second.physicCompIt, game.engine);
 
