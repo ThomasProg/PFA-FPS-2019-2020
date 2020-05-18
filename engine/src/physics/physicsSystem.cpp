@@ -170,6 +170,9 @@ bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent&
         if (!boxCollider.second.isEnabled || boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
             continue;
 
+        // boxCollider.second.worldCollider.transform = boxCollider.second.transform->transformMatrixNode->worldData; 
+        //                                             // * physicComp.collider.transform->transformMatrixNode->worldData.getInverse();
+
         boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
 
         if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, physicComp.collider.worldCollider, seg, segmentHit))

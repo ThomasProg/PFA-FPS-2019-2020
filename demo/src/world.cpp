@@ -171,6 +171,7 @@ void World::load()
         ent.mesh->transform.UpdateLocalTransformMatrix();
         ent.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
         ent.colliderIt = game.engine.physicsSystem.addCollider<Box>(ent);
+        ent.colliderIt->transform = &ent.mesh->transform;
         // ent.colliderIt->second.aabb.size = Core::Maths::Vec3{1.f/0.5f,1.f/0.5f,1.f/0.5f};
     };
 
@@ -208,13 +209,13 @@ void World::load()
         enemy.second.setup2({0,-10,0}, {0.f,0,0});
         enemy.second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy.second);
         enemy.second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemy.second);
-        enemy.second.physicCompIt->collider.transform = &enemy.second.mesh->transform;
+        enemy.second.colliderIt->transform = enemy.second.physicCompIt->collider.transform = &enemy.second.mesh->transform;
         enemy.second.mesh->transform.transform.location.x = 6.f;
     }
 
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
-    player.physicCompIt->collider.transform = &player.mesh->transform;
+    player.colliderIt->transform = player.physicCompIt->collider.transform = &player.mesh->transform;
 
 
     // if (!isLoaded)
@@ -290,6 +291,7 @@ void World::addGround(const Core::Maths::Vec3& v)
         groundIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
 
         groundIt.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(groundIt.first->second);
+        groundIt.first->second.colliderIt->transform = &groundIt.first->second.mesh->transform;
     }
 }
 
@@ -318,7 +320,7 @@ void World::addEnemy(const Core::Maths::Vec3& v)
         enemyIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
         enemyIt.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemyIt.first->second);
         enemyIt.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemyIt.first->second);
-        enemyIt.first->second.physicCompIt->collider.transform = &enemyIt.first->second.mesh->transform;
+        enemyIt.first->second.colliderIt->transform = enemyIt.first->second.physicCompIt->collider.transform = &enemyIt.first->second.mesh->transform;
     }
 }
 
@@ -454,74 +456,21 @@ void World::updateEditorFunctions()
 
 void World::updatePhysics()
 {
-    for (std::pair<const Entity::EntityID, Entity::BasicEntity>& ground : grounds)
-    {
-        if (ground.second.mesh.isValid() && ground.second.mesh->transform.transformMatrixNode.isValid())
-            ground.second.colliderIt->worldCollider.transform = ground.second.mesh->transform.transformMatrixNode->worldData;
-    }
-
+    //////// CAN BE SET BEFORE
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
     {
-        if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
-            enemy.second.colliderIt->worldCollider.transform = enemy.second.mesh->transform.transformMatrixNode->worldData;
-            
         enemy.second.colliderIt->isOverlap   = true;
     }
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid())
     {
-        player.colliderIt->worldCollider.transform = player.mesh->transform.transformMatrixNode->worldData;
         player.colliderIt->isOverlap   = true;
     }
 
     player.onPlayerDeath = [this](){ gameOver(); };
+    /////////////
 
-    if (player.mesh.isValid())
-        player.physicCompIt->collider.worldCollider.center = player.mesh->transform.transform.location;
-
-    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-        if (enemy.second.mesh.isValid())
-            enemy.second.physicCompIt->collider.worldCollider.center = enemy.second.mesh->transform.transform.location;
-
-    Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
-    playerIgnoreData.ignoredEntities.emplace(player);
-    if (player.mesh.isValid())
-    {
-        player.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(player.physicCompIt, 
-                                                                                              player.mesh->transform.transform.location, 
-                                                                                              playerIgnoreData, 
-                                                                                              collisionsCallbacks, 
-                                                                                              player);
-    }
-    game.engine.physicsSystem.simulateGravity(*player.physicCompIt, game.engine);
-
-    if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid()) 
-    {
-        player.mesh->transform.UpdateLocalTransformMatrix();
-        player.mesh->transform.transformMatrixNode->cleanUpdate();
-    }
-
-    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-    {
-        enemy.second.mesh->transform.transform.location;
-        Physics::PhysicsSystem::PhysicsAdditionalData enemyIgnoreData;
-        enemyIgnoreData.ignoredEntities.emplace(enemy.second);
-        if (enemy.second.mesh.isValid())
-        {
-            enemy.second.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(enemy.second.physicCompIt, 
-                                                                                                        enemy.second.mesh->transform.transform.location, 
-                                                                                                        enemyIgnoreData, 
-                                                                                                        collisionsCallbacks, 
-                                                                                                        enemy.first);
-        }
-        game.engine.physicsSystem.simulateGravity(*enemy.second.physicCompIt, game.engine);
-
-        if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
-        {
-            enemy.second.mesh->transform.UpdateLocalTransformMatrix();
-            enemy.second.mesh->transform.transformMatrixNode->cleanUpdate();
-        }
-    }
+    game.engine.physicsSystem.simulate(collisionsCallbacks, game.engine);
 }
 
 void World::update()   

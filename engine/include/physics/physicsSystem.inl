@@ -1,8 +1,8 @@
 #include "physicsSystem.hpp"
 
+#include "gTransform.hpp"
+#include "engine.hpp"
 #include <vector>
-
-
 
 // template<typename T = Sphere>
 inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Entity::EntityID& entity)
@@ -12,81 +12,88 @@ inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicCom
 }
 
 
+template<typename COLLISIONS_CALLBACKS>
+void Physics::PhysicsSystem::simulate(COLLISIONS_CALLBACKS& callbacks, Core::Engine& engine)
+{
+    for (std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp : physicComponents)
+    {
+        physicComp.second.collider.worldCollider.center = physicComp.second.collider.transform->transform.location;
+        
+        for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& box : boxes)
+        {
+            box.second.worldCollider.transform = box.second.transform->transformMatrixNode->worldData;
+                                            //    * physicComp.second.collider.transform->transformMatrixNode->worldData.getInverse();
+        }
+        Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
+        playerIgnoreData.ignoredEntities.emplace(physicComp.first);
+        simulatePhysics(physicComp, 
+                        playerIgnoreData, 
+                        callbacks);
+        
+        simulateGravity(physicComp.second, engine);
 
+        physicComp.second.collider.transform->UpdateLocalTransformMatrix();
+        physicComp.second.collider.transform->transformMatrixNode->cleanUpdate();
+    }
+}
 
 
 template<typename COLLISIONS_CALLBACKS>
-Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicsSystem::PhysicCompIt& physicCompIt, 
-                                                          const Core::Maths::Vec3& startLoc, 
-                                                          const Physics::PhysicsSystem::PhysicsAdditionalData& data,
-                                                          COLLISIONS_CALLBACKS& callbacks,
-                                                          const Entity::EntityID& physicCompEntityID)
+void Physics::PhysicsSystem::simulatePhysics(std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp, 
+                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data,
+                                                       COLLISIONS_CALLBACKS& callbacks)
 {
-    if (!physicCompIt.isValid())
-        return startLoc;
-
-    Physics::PhysicComponent& physicComp = *physicCompIt;
-
-    if (!physicComp.isEnabled)
-    {
-        return startLoc;
-    }
+    if (!physicComp.second.isEnabled)
+        return;
 
     SegmentHit hit;
     hit.t = 2.f;
 
     Entity::EntityID collidedEntity; // box
 
-    if (staticBoxesFirstCollision(physicComp, startLoc, hit, data, collidedEntity))
+    if (staticBoxesFirstCollision(physicComp.second, physicComp.second.collider.transform->transform.location, hit, data, collidedEntity))
     {
-        Core::Maths::Vec3 newLoc = collisionPhysicalResponse(physicComp, startLoc, hit);
+        Core::Maths::Vec3 newLoc = collisionPhysicalResponse(physicComp.second, physicComp.second.collider.transform->transform.location, hit);
 
-        staticBoxesOverlapCollision(physicComp, startLoc, newLoc, data, physicCompEntityID, callbacks);
-        
-        // If we don't use the "nextafter()" function at least one time, 
-        // the collision is detected, but after reajusting the sphere,
-        // the floating points errors make the sphere go through the cube.
-        // If we call the function only one time, when the player is gonna jump,
-        // the collision is detected, and will block the player, so he won't jump.
-        // newLoc.x = std::nextafter(std::nextafter(std::nextafter(newLoc.x, startLoc.x), startLoc.x), startLoc.x);
-        // newLoc.y = std::nextafter(std::nextafter(std::nextafter(newLoc.y, startLoc.y), startLoc.y), startLoc.y);
-        // newLoc.z = std::nextafter(std::nextafter(std::nextafter(newLoc.z, startLoc.z), startLoc.z), startLoc.z);
+        staticBoxesOverlapCollision(physicComp.second, physicComp.second.collider.transform->transform.location, newLoc, data, physicComp.first, callbacks);
 
-        newLoc.x = std::nextafter(newLoc.x, startLoc.x);
-        newLoc.y = std::nextafter(newLoc.y, startLoc.y);
-        newLoc.z = std::nextafter(newLoc.z, startLoc.z);
+        physicComp.second.velocity *= linearDamping;
 
-        physicComp.velocity *= linearDamping;
-
-        if (!physicComp.collider.isColliding)
+        if (!physicComp.second.collider.isColliding)
         {
-            physicComp.collider.isColliding = true;
+            physicComp.second.collider.isColliding = true;
 
             // Callback
             CollisionsCallbacksSentData collisionsCallbacksSentData
             {
                 std::move(hit),
-                physicCompEntityID,
+                physicComp.first,
                 collidedEntity
             };
             callbacks.onCollisionEnter(collisionsCallbacksSentData);
         }
 
-        return newLoc;
+        physicComp.second.collider.transform->transform.location = newLoc;
+        return;
     }
     
     // is not colliding
-    if (physicComp.collider.isColliding)
+    else if (physicComp.second.collider.isColliding)
     {
-        physicComp.collider.isColliding = false;
+        physicComp.second.collider.isColliding = false;
 
         // Callback
-        callbacks.onCollisionExit(physicCompEntityID);
+        callbacks.onCollisionExit(physicComp.first);
     }
 
-    staticBoxesOverlapCollision(physicComp, startLoc, physicComp.velocity + startLoc, data, physicCompEntityID, callbacks);
+    staticBoxesOverlapCollision(physicComp.second, physicComp.second.collider.transform->transform.location, 
+                                physicComp.second.velocity + physicComp.second.collider.transform->transform.location, 
+                                data, 
+                                physicComp.first, 
+                                callbacks);
 
-    return physicComp.velocity + startLoc;
+    physicComp.second.collider.transform->transform.location = physicComp.second.collider.transform->transform.location + physicComp.second.velocity;
+    return;
 }
 
 template<typename COLLISIONS_CALLBACKS>

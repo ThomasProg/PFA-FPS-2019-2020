@@ -139,13 +139,6 @@ namespace Physics
         // template<typename T = Sphere>
         inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
 
-        void simulateGravity(PhysicComponent& physicComp, const Core::Engine& engine);
-
-        Core::Maths::Vec3 collisionPhysicalResponse(Physics::PhysicComponent& physicCompIt, 
-                                                    const Core::Maths::Vec3& startLoc, 
-                                                    SegmentHit& hit);
-
-        // returns new location
         // COLLISIONS_CALLBACKS must implement :
         // - void onCollisionEnter (CollisionsCallbacksSentData&);
         // - void onCollisionExit  (const EntityID& entityID); // TODO ?
@@ -153,11 +146,24 @@ namespace Physics
         // Warning : You shall NOT invalidate boxes iterators during the callbacks.
         // If you want to add items during the callback, use boxes.reserve().
         template<typename COLLISIONS_CALLBACKS>
-        Core::Maths::Vec3 simulatePhysics(Physics::PhysicsSystem::PhysicCompIt& physicComp, 
-                                          const Core::Maths::Vec3& startLoc, 
-                                          const PhysicsAdditionalData& data,
-                                          COLLISIONS_CALLBACKS& callbacks,
-                                          const Entity::EntityID& physicCompEntityID);
+        void simulate(COLLISIONS_CALLBACKS& callbacks, Core::Engine& engine);
+
+        void simulateGravity(PhysicComponent& physicComp, const Core::Engine& engine);
+
+        Core::Maths::Vec3 collisionPhysicalResponse(Physics::PhysicComponent& physicCompIt, 
+                                                    const Core::Maths::Vec3& startLoc, 
+                                                    SegmentHit& hit);
+
+        // COLLISIONS_CALLBACKS must implement :
+        // - void onCollisionEnter (CollisionsCallbacksSentData&);
+        // - void onCollisionExit  (const EntityID& entityID); // TODO ?
+        // - void onOverlap        (CollisionsCallbacksSentData&);
+        // Warning : You shall NOT invalidate boxes iterators during the callbacks.
+        // If you want to add items during the callback, use boxes.reserve().
+        template<typename COLLISIONS_CALLBACKS>
+        void simulatePhysics(std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp, 
+                             const PhysicsAdditionalData& data,
+                             COLLISIONS_CALLBACKS& callbacks);
 
         bool staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
                                        SegmentHit& hit, const PhysicsAdditionalData& data, Entity::EntityID& collidedEntityID);
