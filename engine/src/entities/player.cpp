@@ -39,7 +39,8 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
-    if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
+    // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
+    if (physicCompIt->collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
     {
         physicCompIt->velocity.y = jumpSpeed;
         // state.playerState = PlayerState::E_JUMPING;

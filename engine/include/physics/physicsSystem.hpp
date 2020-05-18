@@ -16,6 +16,7 @@
 #include <iomanip>
 #include <limits>
 #include <unordered_set>
+#include <set>
 #include <functional>
 
 namespace Core
@@ -174,6 +175,22 @@ namespace Physics
                              const PhysicsAdditionalData& data,
                              const Core::Maths::Vec3& leftVelocity,
                              COLLISIONS_CALLBACKS& callbacks);
+
+
+        template<typename COLLISIONS_CALLBACKS>
+        inline Core::Maths::Vec3 simulatePhysicsForASphere(const Sphere& sphere, 
+                                              const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
+                                              std::map<Entity::EntityID, bool>& collidingEntities,
+                                              Core::Maths::Vec3& leftVelocity,
+                                              const Entity::EntityID& physicCompID,
+                                              COLLISIONS_CALLBACKS& callbacks);
+
+        inline bool sphereCollisionWithBoxes(const Sphere& sphere, 
+                                            const Core::Maths::Vec3& velocity,
+                                            const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
+                                            SegmentHit& hit,
+                                            Entity::EntityID& collidedEntityID);
+
 
         bool staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
                                        SegmentHit& hit, const PhysicsAdditionalData& data, Entity::EntityID& collidedEntityID,
