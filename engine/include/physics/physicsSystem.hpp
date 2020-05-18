@@ -172,10 +172,12 @@ namespace Physics
         template<typename COLLISIONS_CALLBACKS>
         void simulatePhysics(std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp, 
                              const PhysicsAdditionalData& data,
+                             const Core::Maths::Vec3& leftVelocity,
                              COLLISIONS_CALLBACKS& callbacks);
 
         bool staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
-                                       SegmentHit& hit, const PhysicsAdditionalData& data, Entity::EntityID& collidedEntityID);
+                                       SegmentHit& hit, const PhysicsAdditionalData& data, Entity::EntityID& collidedEntityID,
+                                       const Core::Maths::Vec3& velocity);
 
         template<typename COLLISIONS_CALLBACKS>
         void staticBoxesOverlapCollision(Physics::PhysicComponent& physicComp, 

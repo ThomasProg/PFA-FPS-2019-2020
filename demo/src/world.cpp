@@ -206,7 +206,7 @@ void World::inputs()
 
 void World::updateCameraProjection()
 {
-    player.camera.projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(game.engine.width, game.engine.height, 0.1, 10000, 45.f);
+    player.camera.projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(game.engine.width, game.engine.height, 0.1, 10000, 90.f);
     fpsCamera.projection = player.camera.projection;
 }
 
