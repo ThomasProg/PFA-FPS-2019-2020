@@ -68,7 +68,8 @@ namespace Entity
                              backward = GLFW_KEY_S,
                              right    = GLFW_KEY_D,
                              left     = GLFW_KEY_A,
-                             jump     = GLFW_KEY_SPACE;
+                             jump     = GLFW_KEY_SPACE,
+                             fire     = GLFW_MOUSE_BUTTON_RIGHT;
             };
 
             std::array<unsigned int, nbInputKeys> keys;
@@ -92,17 +93,14 @@ namespace Entity
                     Physics::TransformGraph& transformParent);
 
         void inputs(const Core::Engine& engine) override;
-
-        // Returns true if the player dies
         void dealDamages(float damages);
-
-
-
 
         virtual void onCollisionEnter        (const SegmentHit& hit) override;
         virtual void onCollisionExit         () override;
         virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
         virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
+
+        Segment3D shoot() const;
     };
 }
 

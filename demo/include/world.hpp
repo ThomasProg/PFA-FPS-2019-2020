@@ -22,7 +22,6 @@
 
 class Game;
 
-// @Obsolete
 class EditorMode
 {
 public:
@@ -60,8 +59,6 @@ public:
     }
 };
 
-
-
 class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
@@ -70,8 +67,10 @@ private:
     Game& game;
     Renderer::RendererSystem rendererSystem;
 
-    Save::SaveSystem saveSystem;
     Physics::TransformGraph root; 
+
+    Physics::PhysicsSystem physicsSystem;
+    Save::SaveSystem saveSystem;
 
     Entity::Player player;
     // std::list<Entity::BasicEntity> grounds;

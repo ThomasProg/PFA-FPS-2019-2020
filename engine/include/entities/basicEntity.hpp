@@ -43,6 +43,8 @@ namespace Entity
                     const Resources::Shader* shader, 
                     Physics::TransformGraph& transformParent);
 
+        virtual void raycastCollide();
+
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 
                     const Resources::Shader* shader,

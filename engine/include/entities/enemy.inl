@@ -14,3 +14,8 @@ inline void Entity::Enemy::setup2(const Core::Maths::Vec3& patrolTarget, const C
     this->patrolTarget = patrolTarget;
     this->chaseTarget = chaseTarget;
 }
+
+inline void Entity::Enemy::raycastCollide()
+{
+    isDead = true;
+}

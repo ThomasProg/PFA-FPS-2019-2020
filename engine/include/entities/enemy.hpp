@@ -51,6 +51,8 @@ namespace Entity
         Core::Maths::Vec3 position;
         Core::Maths::Vec3 patrolTarget;
         Core::Maths::Vec3 chaseTarget;
+
+        inline virtual void raycastCollide() override;
         
         Enemy() = default;
         Enemy(const EntityID& id)
