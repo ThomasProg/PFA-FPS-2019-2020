@@ -10,6 +10,7 @@
 #include "basicEntity.hpp"
 #include "controllerInterface.hpp"
 #include "tpsCamera.hpp"
+#include "fpsCamera.hpp"
 
 #include <array>
 
@@ -49,7 +50,8 @@ namespace Entity
         unsigned int nbBullet = 60;
         unsigned int maxNbBullet = 60;
         
-        Renderer::TPSCamera camera;
+        // Renderer::TPSCamera camera;
+        Renderer::FPSCamera camera;
 
         std::function<void()> onPlayerDeath = nullptr;
 
@@ -93,14 +95,14 @@ namespace Entity
                     Physics::TransformGraph& transformParent);
 
         void inputs(const Core::Engine& engine) override;
+
+        Segment3D shoot() const;
         void dealDamages(float damages);
 
         virtual void onCollisionEnter        (const SegmentHit& hit) override;
         virtual void onCollisionExit         () override;
         virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
         virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
-
-        Segment3D shoot() const;
     };
 }
 

@@ -34,11 +34,11 @@ void Entity::BasicEntity::loadData(Save::Loader& loader)
     if (isMeshValid)
         loader.load(key);
 
-    // Physics
-    bool isPhysicCompValid;
-    loader.load(isPhysicCompValid);
-    if (isPhysicCompValid)
-        loader.load(physicCompIt->velocity);
+    // // Physics
+    // bool isPhysicCompValid;
+    // loader.load(isPhysicCompValid);
+    // if (isPhysicCompValid)
+    //     loader.load(physicCompIt->velocity);
 
     loader.tryToDisplayError(__FILE__);
 }
@@ -62,6 +62,10 @@ void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
     }
 }
 
+void Entity::BasicEntity::raycastCollide()
+{
+    
+}
 
 void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
             const Resources::Model* model, 
@@ -90,7 +94,3 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
     mesh->texture = texture;
 }
     
-void Entity::BasicEntity::raycastCollide()
-{
-    
-}
