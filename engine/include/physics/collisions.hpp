@@ -697,7 +697,7 @@ public:
             aabb.size -= sphere.radius;
 
             // Counter for detecting if it is inside the OOBB
-            unsigned int m;
+            unsigned int m = 0;
             for (unsigned int i = 0; i < Core::Maths::Vec3::getAxisNumber(); i++)
                 if (std::abs(seg.p1[i]) <= aabb.size[i] + sphere.radius)
                     m++;

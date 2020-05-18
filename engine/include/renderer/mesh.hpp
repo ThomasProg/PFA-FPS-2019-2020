@@ -33,7 +33,6 @@ namespace Renderer
         // make sure you call cleanUpdate() or it won't take effect.
         std::function<void()> onDraw = nullptr;
 
-        void setResources(const Resources::Model&, const Resources::Shader&);
         void linkShaderWithModel();
 
         void draw(const Renderer::Camera&);

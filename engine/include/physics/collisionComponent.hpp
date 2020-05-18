@@ -1,28 +1,23 @@
 #ifndef _COLLISION_COMPONENT_HPP_
 #define _COLLISION_COMPONENT_HPP_
 
-#include <functional>
 #include "segmentHit.hpp"
 
 namespace Physics
 {
+    struct GTransform;
+
     template<typename COLLIDER>
     struct CollisionComponent
     {
-        // COLLIDER localCollider;
-        COLLIDER worldCollider;   
+        COLLIDER worldCollider;  
+        GTransform* transform = nullptr;
 
-        bool isEnabled   = true;
-        bool isColliding = true;
-        bool isOverlap   = false;
-        std::function<void(SegmentHit&)> onCollisionEnter = [](SegmentHit&){};
-        std::function<void(void)> onCollisionExit  = [](){};
+        bool isEnabled = true;
+        bool isOverlap = false;
 
-        // Called when this object enters the overlap of another object.
-        std::function<void(SegmentHit&)> onOverlapEnterSelfHit = [](SegmentHit&){};
-
-        // Called when another object enters the overlap of this object.
-        std::function<void(SegmentHit&)> onOverlapEnterAnotherHit = [](SegmentHit&){};
+    // Flags
+        bool isColliding = false;
     };
 }
 

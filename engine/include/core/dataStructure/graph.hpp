@@ -26,7 +26,7 @@ namespace Core::DataStructure
     //
     template<typename DATA_TYPE, typename UPDATE_FUNCTOR, typename DATA_SAVER_AND_LOADER, typename KEY_TYPE = unsigned int>
     // By inheriting the functor, we can use the desired function.
-    // If we stored it as a mumber, even if the functor would have no members (variables),
+    // If we stored it as a member, even if the functor would have no members (variables),
     // the size would have grown up.
     class Graph : UPDATE_FUNCTOR, public Save::SaveInterface
     {  

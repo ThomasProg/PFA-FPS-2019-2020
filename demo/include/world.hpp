@@ -62,6 +62,8 @@ public:
 class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
+    Entity::EntityID nextEntity = 10u;
+
     Game& game;
     Renderer::RendererSystem rendererSystem;
 
@@ -71,16 +73,11 @@ private:
     Save::SaveSystem saveSystem;
 
     Entity::Player player;
-    Entity::BasicEntity sphere2;
     // std::list<Entity::BasicEntity> grounds;
     // std::list<Entity::Enemy> enemies;
 
     std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
     std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
-    // Entity::BasicEntity ground;
-    // Entity::BasicEntity ground2;
-    // Entity::BasicEntity ground3;
-    Entity::BasicEntity dog;
 
     // Entity::Enemy enemy;
 
@@ -93,22 +90,47 @@ private:
     Entity::BasicEntity* editorSelectedEntity = nullptr;
 
     bool isPauseMenuOpen {false};
+    bool inGame {true};
 
     // Searching if a file exists is expensive,
     // so at the start and each time we start the game,
     // we modify this value to know when we open the menu.
     bool isLoadAvailable = false; 
 
+    bool isLoaded = false;
+
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
     EditorMode editorMode {EditorMode::E_TRANSLATION};
 
+    class CollisionsCallbacks
+    {
+    private:
+        World& world;
+
+    public:
+        CollisionsCallbacks(World& world) : world(world) {}
+
+        void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+        void onCollisionExit  (const Entity::EntityID& entityID);
+        void onOverlap        (const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
+    };
+    
+    CollisionsCallbacks collisionsCallbacks {*this};
+
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
-    void inputs() override;
-    void update() override;
+    ~World();
+
+    void setKeys(bool isAzerty);
+    void loadFromSavefile(const char* savedFilename);
+    void makeNewLevel();
+
+    void load()     override;
+    void inputs()   override;
+    void update()   override;
     void renderUI() override;
-    void render() override;
+    void render()   override;
     void init();
 
     void updatePhysics();
@@ -116,16 +138,16 @@ public:
     void updateCameraProjection();
     
     void pauseMenu();
-
+    void hud();
     void gameOver();
 
-    void addGround(const Core::Maths::Vec3&);
-    void addEnemy(const Core::Maths::Vec3&);
+    void addGround(const Physics::Transform& transform);
+    void addEnemy(const Physics::Transform& transform);
 
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
 
-    void getEntityFromID(const Entity::EntityID& entity);
+    Physics::CollisionComponentInterface* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
 };
 
 #endif

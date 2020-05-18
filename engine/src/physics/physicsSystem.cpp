@@ -5,21 +5,32 @@
 #include "engine.hpp"
 #include "camera.hpp"
 
+// template<typename T = Box>
+template<>
+Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Entity::EntityID& entity)
+{
+    boxes.emplace(entity, Physics::CollisionComponent<Box>());
+    return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
+}
+
+template<> 
+void Physics::PhysicsSystem::loadColliderItContainer<Box>(ColliderIt<Box>& it, const Entity::EntityID& entityID)
+{
+    it.entityID = entityID;
+    it.mapPtr = &boxes;
+}
+
+
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
     physicComp.velocity.y -= gravityAcc * engine.deltaTime;
 }
 
-void Physics::PhysicsSystem::remove(decltype(Physics::PhysicsSystem::boxes)::iterator& it)
-{
-    boxes.erase(it);
-}
-
-decltype(Physics::PhysicsSystem::boxes)::iterator Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
-{
-    std::pair<decltype(Physics::PhysicsSystem::boxes)::iterator, bool> pair =  boxes.emplace(entity, Physics::CollisionComponent<Box>());
-    return pair.first;
-}
+// Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addComponentTo(Entity::EntityID& entity)
+// {
+//     boxes.emplace(entity, Physics::CollisionComponent<Box>());
+//     return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
+// }
 
 Core::Maths::Vec3 Physics::PhysicsSystem::collisionPhysicalResponse(Physics::PhysicComponent& physicComp, 
                                                            const Core::Maths::Vec3& startLoc, 
@@ -97,75 +108,77 @@ Core::Maths::Vec3 Physics::PhysicsSystem::collisionPhysicalResponse(Physics::Phy
     return finalLoc + hit.normal * minimalDistToGround;
 }
 
-Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponent& physicComp, 
-                                                          const Core::Maths::Vec3& startLoc, 
-                                                          const PhysicsAdditionalData& data)
-{
-    if (!physicComp.isEnabled)
-    {
-        return startLoc;
-    }
+// Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponent& physicComp, 
+//                                                           const Core::Maths::Vec3& startLoc, 
+//                                                           const PhysicsAdditionalData& data)
+// {
+//     if (!physicComp.isEnabled)
+//     {
+//         return startLoc;
+//     }
 
-    SegmentHit hit;
-    hit.t = 1.f;
+//     SegmentHit hit;
+//     hit.t = 1.f;
 
-    if (staticBoxesFirstCollision(physicComp, startLoc, hit, data))
-    {
-        Core::Maths::Vec3 newLoc = collisionPhysicalResponse(physicComp, startLoc, hit);
+//     if (staticBoxesFirstCollision(physicComp, startLoc, hit, data))
+//     {
+//         Core::Maths::Vec3 newLoc = collisionPhysicalResponse(physicComp, startLoc, hit);
 
-        staticBoxesOverlapCollision(physicComp, startLoc, newLoc, data);
+//         staticBoxesOverlapCollision(physicComp, startLoc, newLoc, data);
         
-        // If we don't use the "nextafter()" function at least one time, 
-        // the collision is detected, but after reajusting the sphere,
-        // the floating points errors make the sphere go through the cube.
-        // If we call the function only one time, when the player is gonna jump,
-        // the collision is detected, and will block the player, so he won't jump.
-        // newLoc.x = std::nextafter(std::nextafter(std::nextafter(newLoc.x, startLoc.x), startLoc.x), startLoc.x);
-        // newLoc.y = std::nextafter(std::nextafter(std::nextafter(newLoc.y, startLoc.y), startLoc.y), startLoc.y);
-        // newLoc.z = std::nextafter(std::nextafter(std::nextafter(newLoc.z, startLoc.z), startLoc.z), startLoc.z);
+//         // If we don't use the "nextafter()" function at least one time, 
+//         // the collision is detected, but after reajusting the sphere,
+//         // the floating points errors make the sphere go through the cube.
+//         // If we call the function only one time, when the player is gonna jump,
+//         // the collision is detected, and will block the player, so he won't jump.
+//         // newLoc.x = std::nextafter(std::nextafter(std::nextafter(newLoc.x, startLoc.x), startLoc.x), startLoc.x);
+//         // newLoc.y = std::nextafter(std::nextafter(std::nextafter(newLoc.y, startLoc.y), startLoc.y), startLoc.y);
+//         // newLoc.z = std::nextafter(std::nextafter(std::nextafter(newLoc.z, startLoc.z), startLoc.z), startLoc.z);
 
-        newLoc.x = std::nextafter(newLoc.x, startLoc.x);
-        newLoc.y = std::nextafter(newLoc.y, startLoc.y);
-        newLoc.z = std::nextafter(newLoc.z, startLoc.z);
+//         newLoc.x = std::nextafter(newLoc.x, startLoc.x);
+//         newLoc.y = std::nextafter(newLoc.y, startLoc.y);
+//         newLoc.z = std::nextafter(newLoc.z, startLoc.z);
 
-        physicComp.velocity *= linearDamping;
+//         physicComp.velocity *= linearDamping;
 
-        if (!physicComp.collider.isColliding)
-        {
-            physicComp.collider.isColliding = true;
-            if (physicComp.collider.onCollisionEnter)
-                physicComp.collider.onCollisionEnter(hit);
-        }
+//         if (!physicComp.collider.isColliding)
+//         {
+//             physicComp.collider.isColliding = true;
+//             if (physicComp.collider.onCollisionEnter)
+//                 physicComp.collider.onCollisionEnter(hit);
+//         }
 
-        return newLoc;
-    }
+//         return newLoc;
+//     }
     
-    // is not colliding
-    if (physicComp.collider.isColliding)
-    {
-        physicComp.collider.isColliding = false;
-        if (physicComp.collider.onCollisionExit)
-            physicComp.collider.onCollisionExit();
-    }
+//     // is not colliding
+//     if (physicComp.collider.isColliding)
+//     {
+//         physicComp.collider.isColliding = false;
+//         if (physicComp.collider.onCollisionExit)
+//             physicComp.collider.onCollisionExit();
+//     }
 
-    staticBoxesOverlapCollision(physicComp, startLoc, physicComp.velocity + startLoc, data);
+//     staticBoxesOverlapCollision(physicComp, startLoc, physicComp.velocity + startLoc, data);
 
-    return physicComp.velocity + startLoc;
-}
+//     return physicComp.velocity + startLoc;
+// }
 
 bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
-                                                       SegmentHit& hit, const PhysicsAdditionalData& data)
+                                                       SegmentHit& hit, const PhysicsAdditionalData& data, Entity::EntityID& collidedEntityID)
 {
     bool hasCollided = false;
     SegmentHit segmentHit;
     
     Segment3D seg{startLoc, startLoc + physicComp.velocity};
 
-    Entity::EntityID collidedEntity;
     for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
         if (!boxCollider.second.isEnabled || boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
             continue;
+
+        // boxCollider.second.worldCollider.transform = boxCollider.second.transform->transformMatrixNode->worldData; 
+        //                                             // * physicComp.collider.transform->transformMatrixNode->worldData.getInverse();
 
         boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
 
@@ -176,7 +189,7 @@ bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent&
                 hit = segmentHit;
 
                 hasCollided = true;
-                collidedEntity = boxCollider.first;
+                collidedEntityID = boxCollider.first;
             }
         }
     }
@@ -184,30 +197,30 @@ bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent&
     return hasCollided;
 }
 
-void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponent& physicComp, 
-                                                         const Core::Maths::Vec3& startLoc, 
-                                                         const Core::Maths::Vec3& endLoc, 
-                                                         const PhysicsAdditionalData& data)
-{   
-    Segment3D seg{startLoc, endLoc};
-    SegmentHit hit;
+// void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponent& physicComp, 
+//                                                          const Core::Maths::Vec3& startLoc, 
+//                                                          const Core::Maths::Vec3& endLoc, 
+//                                                          const PhysicsAdditionalData& data)
+// {   
+//     Segment3D seg{startLoc, endLoc};
+//     SegmentHit hit;
 
-    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
-    {
-        if (!boxCollider.second.isEnabled || !boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
-            continue;
+//     for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+//     {
+//         if (!boxCollider.second.isEnabled || !boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
+//             continue;
 
-        boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
+//         boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
 
-        if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, physicComp.collider.worldCollider, seg, hit))
-        {
-            if (physicComp.collider.onOverlapEnterSelfHit)
-                physicComp.collider.onOverlapEnterSelfHit(hit);
-            if (boxCollider.second.onOverlapEnterAnotherHit)
-                boxCollider.second.onOverlapEnterAnotherHit(hit);
-        }
-    }
-}
+//         if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, physicComp.collider.worldCollider, seg, hit))
+//         {
+//             if (physicComp.collider.onOverlapEnterSelfHit)
+//                 physicComp.collider.onOverlapEnterSelfHit(hit);
+//             if (boxCollider.second.onOverlapEnterAnotherHit)
+//                 boxCollider.second.onOverlapEnterAnotherHit(hit);
+//         }
+//     }
+// }
 
 bool Physics::PhysicsSystem::isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward)
 {
@@ -228,11 +241,11 @@ bool Physics::PhysicsSystem::isSegmentColliding(Renderer::Camera& camera, const 
     return false;
 }
 
-bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Entity::Entity& touchedEntity) const
+bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Entity::EntityID& touchedEntity) const
 {
     hit.t = 2.f;
 
-    for (const std::pair<const Entity::Entity, const Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    for (const std::pair<const Entity::EntityID, const Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
         SegmentHit tempHit;
         if (Collisions::boxSegmentCollision(boxCollider.second.worldCollider, seg, tempHit))
@@ -251,4 +264,5 @@ bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Enti
 void Physics::PhysicsSystem::reset()
 {
     boxes.clear();
+    physicComponents.clear();
 }

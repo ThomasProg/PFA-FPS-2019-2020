@@ -1,7 +1,5 @@
 #include "rendererSystem.hpp"
 
-#include "renderDebug.hpp"
-
 constexpr size_t Renderer::RendererSystem::maxChildrenAtLoad;
 
 Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponentTo(Entity::EntityID& entity)

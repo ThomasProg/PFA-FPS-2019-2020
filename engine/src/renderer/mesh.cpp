@@ -43,11 +43,6 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam)
     glDrawArrays(GL_TRIANGLES, 0, model->positions.size());
 }
 
-void Renderer::Mesh::setResources(const Resources::Model&, const Resources::Shader&)
-{
-
-}
-
 void Renderer::Mesh::linkShaderWithModel()
 {
     assert(shader != nullptr && model != nullptr);

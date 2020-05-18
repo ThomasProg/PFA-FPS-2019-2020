@@ -16,20 +16,30 @@
 
 void World::save(Save::Saver& saver) 
 {
+    saver.save(nextEntity);
     saver.save(grounds.size());
     saver.save(enemies.size());
 }
 
 void World::loadData(Save::Loader& loader) 
 {
+    loader.load(nextEntity);
+
     std::size_t nbGrounds;
     loader.load(nbGrounds);
 
     for (std::size_t i = 0; i < nbGrounds; i++)
     {
-        std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace();
-        if (it.second) // if insertion took place
-            saveSystem.add(&it.first->second);
+        // std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace(Entity::EntityID{i}, Entity::EntityID{i});
+        // if (it.second) // if insertion took place
+        {
+            // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
+            // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
+            // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
+            // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
+            // nextEntity.next();
+            addGround({{}});
+        }
     }
 
     std::size_t nbEnemies;
@@ -39,17 +49,31 @@ void World::loadData(Save::Loader& loader)
     {
         // enemies.emplace_back();
         // saveSystem.add(&enemies.back());
-        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace();
-        if (it.second) // if insertion took place
-            saveSystem.add(&it.first->second);
+        // std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace(Entity::EntityID{i}, Entity::EntityID{i});
+        // if (it.second) // if insertion took place
+        // {
+        //     saveSystem.add(&it.first->second);
+            addEnemy({{}});
+            // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
+            // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
+            // it.first->second.colliderIt->transform = it.first->second.physicCompIt->collider.transform = &it.first->second.mesh->transform;
+            // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
+            // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
+            // nextEntity.next();
+        // }
     }
 }
 
 
 World::World(Game& game, bool isLoaded, bool isEditorMode)
-    : game(game), isEditorMode(isEditorMode)
+    : game(game), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
-    if (game.isAzerty)
+
+}
+
+void World::setKeys(bool isAzerty)
+{
+    if (isAzerty)
     {
         player.inputKeys.keys = 
         {
@@ -87,6 +111,30 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
             GLFW_KEY_A,
         };
     }
+}
+
+void World::loadFromSavefile(const char* savedFilename)
+{
+    saveSystem.load(savedFilename);
+    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
+        enemy.second.loadLinks(root);
+}
+
+void World::makeNewLevel()
+{
+    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
+    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
+
+    addGround({{5.f, -30, 0}, {0.f,0,0}, {20,1,20}});
+    addGround({{50.f, -33, 0}, {0.f,0,0}, {20,1,30}});
+    addGround({{5.f, -35, -20}, {0.f,0,0}, {30,1,40}});
+
+    addEnemy({{2.f, -4, 0}, {0.f,0,0}, {1,1,1}});
+}
+
+void World::load()
+{
+    setKeys(game.isAzerty);
 
     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
 
@@ -98,114 +146,31 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
     saveSystem.add(&root);
     saveSystem.add(&rendererSystem);
     saveSystem.add(&player);
-    saveSystem.add(&sphere2);
-    saveSystem.add(&dog);
-
 
     if (isLoaded)
-    {
-        saveSystem.load(Game::savedFilename);
-        for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-            enemy.second.loadLinks(root);
-    }
+        loadFromSavefile(Game::savedFilename);
     else 
-    {
-        for (unsigned int i = 0; i < 3; i++)
-        {
-            std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> newGroundIt = grounds.emplace();
-            if (newGroundIt.second) // if insertion took place
-                saveSystem.add(&newGroundIt.first->second);
-        }
-
-        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> newEnemyIt = enemies.emplace();
-        if (newEnemyIt.second) // if insertion took place
-            saveSystem.add(&newEnemyIt.first->second);
-    }
+        makeNewLevel();
 
     // ===== Set up Entity ===== //
+
     player.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
                 &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
-
-    sphere2.setup(rendererSystem, 
-                &game.engine.resourceManager.get(E_Model::E_SPHERE), 
-                &game.engine.resourceManager.get(E_Shader::E_FLAT), 
-                root);
-
-    if (!isLoaded)
-        sphere2.mesh->transform.transform.location.x = 2;
-
-    auto lambda = [&](Entity::BasicEntity& ent, Core::Maths::Vec3 location = {0.f,0,0}, Core::Maths::Vec3 scale = {1,1,1}, float zRot = 0)
-    {
-        ent.setup(rendererSystem, 
-                &game.engine.resourceManager.get(E_Model::E_BOX), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
-                &game.engine.resourceManager.get(E_Texture::E_GROUND), 
-                root);
-
-        // ent.mesh->transform.transform.rotation.x = M_PI / 2 * 0.90;
-        if (!isLoaded)
-        {
-            ent.mesh->transform.transform.location = location;
-            ent.mesh->transform.transform.scale = scale;
-            ent.mesh->transform.transform.rotation.z = -zRot;
-            ent.mesh->transform.transform.rotation.y = zRot;
-            ent.mesh->color = Core::Maths::Vec4(0.7,0.7,0.7,1);
-        }
-        ent.mesh->transform.UpdateLocalTransformMatrix();
-        ent.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-        ent.colliderCompo = game.engine.physicsSystem.addComponentTo(ent);
-        // ent.colliderCompo->second.aabb.size = Core::Maths::Vec3{1.f/0.5f,1.f/0.5f,1.f/0.5f};
-    };
-
-    if (!isLoaded) 
-    {
-        std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator it = grounds.begin();
-        lambda((*it++).second, Core::Maths::Vec3(22+10, -100, 0+10), Core::Maths::Vec3(10,20, 9), M_PI / 2 * 0.5);
-        lambda((*it++).second, Core::Maths::Vec3(-5, -20, 6-6), Core::Maths::Vec3(20, 4, 30), 0.f);//M_PI / 2 * 0.5);
-        lambda((*it++).second, Core::Maths::Vec3(130+10, -40, 0), Core::Maths::Vec3(25, 4, 9));
-    }
-    else 
-    {
-        for (std::pair<const Entity::EntityID, Entity::BasicEntity>& ground : grounds)
-        {
-            lambda(ground.second);
-        }
-    }
-    
-    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-    {
-        enemy.second.setup(rendererSystem, 
-                    &game.engine.resourceManager.get(E_Model::E_DOG), 
-                    &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
-                    &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
-                    root);
-
-        enemy.second.physicComponent.collider.worldCollider.radius = 1.f;
-    }
-
-
     fpsCamera.setup(player.mesh->transform);
     tpsCamera.setup(player.mesh->transform);
 
+    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
+    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
+    player.colliderIt->transform = player.physicCompIt->collider.transform = &player.mesh->transform;
+
+
     // if (!isLoaded)
     {
-        player.physicComponent.collider.worldCollider.radius = 1.f;
+        player.physicCompIt-> collider.worldCollider.radius = 1.f;
     }
-
-    // if  (!isLoaded)
-    //     enemies.cbegin().mesh->transform.transform.location.x = 6.f;
-
-    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-    {
-        enemy.second.setup2({0,-10,0}, {0.f,0,0});
-        enemy.second.colliderCompo = game.engine.physicsSystem.addComponentTo(enemy.second);
-        enemy.second.mesh->transform.transform.location.x = 6.f;
-    }
-
-    player.colliderCompo = game.engine.physicsSystem.addComponentTo(player);
 
     updateCameraProjection();
 
@@ -218,7 +183,10 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
 
 World::~World()
 {
-    game.engine.physicsSystem.reset();
+    enemies.clear();
+    grounds.clear();
+    rendererSystem.reset();
+    game.engine.physicsSystem.reset(); 
 }
 
 void World::inputs()
@@ -232,6 +200,7 @@ void World::inputs()
         glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
         isPauseMenuOpen = true;
+        inGame = false;
     }
 }
 
@@ -241,49 +210,63 @@ void World::updateCameraProjection()
     fpsCamera.projection = player.camera.projection;
 }
 
-void World::addGround(const Core::Maths::Vec3& v)
+void World::addGround(const Physics::Transform& transform)
 {
-    std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> groundIt = grounds.emplace();
+    std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> groundIt 
+            = grounds.emplace(nextEntity, nextEntity);
     if (groundIt.second) // if insertion took place
     {
+        nextEntity.next();
+
         saveSystem.add(&groundIt.first->second);
 
-        groundIt.first->second.setup(rendererSystem, 
+        Entity::BasicEntity& ground = groundIt.first->second;
+
+        ground.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
                 &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
 
-        groundIt.first->second.mesh->transform.transform.location = v;
-        groundIt.first->second.mesh->transform.transform.scale = {3.f,3,3};
+        ground.mesh->transform.transform = transform;
+        ground.mesh->transform.UpdateLocalTransformMatrix();
+        ground.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
 
-        groundIt.first->second.mesh->transform.UpdateLocalTransformMatrix();
-        groundIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-        groundIt.first->second.colliderCompo = game.engine.physicsSystem.addComponentTo(groundIt.first->second);
+        ground.colliderIt = game.engine.physicsSystem.addCollider<Box>(ground);
+        ground.colliderIt->transform = &ground.mesh->transform;
     }
 }
 
-void World::addEnemy(const Core::Maths::Vec3& v)
+void World::addEnemy(const Physics::Transform& transform)
 {
-    std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> enemyIt = enemies.emplace();
+    std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> enemyIt
+            = enemies.emplace(nextEntity, nextEntity);
     if (enemyIt.second) // if insertion took place
     {
+        nextEntity.next();
+
         saveSystem.add(&enemyIt.first->second);
 
-        enemyIt.first->second.setup(rendererSystem, 
+        Entity::Enemy& enemy = enemyIt.first->second;
+
+        enemy.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
                 &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
 
-        enemyIt.first->second.patrolTarget = v;
+        enemy.setup2({0,-10,0}, {0.f,0,0});
 
-        enemyIt.first->second.mesh->transform.transform.location = v;
-        enemyIt.first->second.mesh->transform.transform.scale = {1.f,1,1};
+        enemy.patrolTarget = transform.location;
 
-        enemyIt.first->second.mesh->transform.UpdateLocalTransformMatrix();
-        enemyIt.first->second.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-        enemyIt.first->second.colliderCompo = game.engine.physicsSystem.addComponentTo(enemyIt.first->second);
+        enemy.mesh->transform.transform = transform;
+        enemy.mesh->transform.UpdateLocalTransformMatrix();
+        enemy.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
+
+        enemy.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy);
+        enemy.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemy);
+        enemy.colliderIt->transform = enemy.physicCompIt->collider.transform = &enemy.mesh->transform;
+        enemy.physicCompIt->collider.worldCollider.radius = 1.f;
     }
 }
 
@@ -325,7 +308,7 @@ void World::updateEditorFunctions()
     {
         if (!wasEditorKeyPressed)
         {
-            addGround(fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector());
+            addGround({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
             wasEditorKeyPressed = true;
         }
     }
@@ -333,7 +316,7 @@ void World::updateEditorFunctions()
     {
         if (!wasEditorKeyPressed)
         {
-            addEnemy(fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector());
+            addEnemy({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
             wasEditorKeyPressed = true;
         }
     }
@@ -419,92 +402,21 @@ void World::updateEditorFunctions()
 
 void World::updatePhysics()
 {
-    for (std::pair<const Entity::EntityID, Entity::BasicEntity>& ground : grounds)
-    {
-        if (ground.second.mesh.isValid() && ground.second.mesh->transform.transformMatrixNode.isValid())
-            ground.second.colliderCompo->second.worldCollider.transform = ground.second.mesh->transform.transformMatrixNode->worldData;
-    }
-
+    //////// CAN BE SET BEFORE
     for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
     {
-        if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
-            enemy.second.colliderCompo->second.worldCollider.transform = enemy.second.mesh->transform.transformMatrixNode->worldData;
-            
-        enemy.second.colliderCompo->second.isOverlap   = true;
-        enemy.second.physicComponent.collider.onOverlapEnterSelfHit = [&](SegmentHit &hit) {
-            if (hit.normal.y < -0.5)
-            {
-                enemy.second.kill();
-            }
-        };
-        enemy.second.colliderCompo->second.onOverlapEnterAnotherHit = [&](SegmentHit& hit)
-        {
-            if (hit.normal.y > 0.5)
-            {
-                enemy.second.kill();
-            }
-        };
+        enemy.second.colliderIt->isOverlap   = true;
     }
 
     if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid())
-        player.colliderCompo->second.worldCollider.transform = player.mesh->transform.transformMatrixNode->worldData;
-    player.colliderCompo->second.isOverlap   = true;
-    player.physicComponent.collider.onOverlapEnterSelfHit = [&](SegmentHit& hit)
     {
-        if (hit.normal.y < 0.5)
-        {
-            if (player.dealDamages(1.f)) // if player dies
-            {
-                gameOver();
-            }
-        }
-    };
-    player.colliderCompo->second.onOverlapEnterAnotherHit = [&](SegmentHit& hit)
-    {
-        if (hit.normal.y > - 0.5)
-        {
-            if (player.dealDamages(1.f)) // if player dies
-            {
-                gameOver();
-            }
-        }
-    };
-
-    if (player.mesh.isValid())
-        player.physicComponent.collider.worldCollider.center = player.mesh->transform.transform.location;
-
-    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-        if (enemy.second.mesh.isValid())
-            enemy.second.physicComponent.collider.worldCollider.center = enemy.second.mesh->transform.transform.location;
-
-    Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
-    playerIgnoreData.ignoredEntities.emplace(player);
-    if (player.mesh.isValid())
-        player.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(player.physicComponent, player.mesh->transform.transform.location, playerIgnoreData);
-    game.engine.physicsSystem.simulateGravity(player.physicComponent, game.engine);
-
-    if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid()) 
-    {
-        player.mesh->transform.UpdateLocalTransformMatrix();
-        player.mesh->transform.transformMatrixNode->cleanUpdate();
+        player.colliderIt->isOverlap   = true;
     }
 
-    for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
-    {
-        Physics::PhysicsSystem::PhysicsAdditionalData enemyIgnoreData;
-        enemyIgnoreData.ignoredEntities.emplace(enemy.second);
-        if (enemy.second.mesh.isValid())
-            enemy.second.mesh->transform.transform.location = game.engine.physicsSystem.simulatePhysics(enemy.second.physicComponent, 
-                                                                                                        enemy.second.mesh->transform.transform.location, 
-                                                                                                        enemyIgnoreData);
-        game.engine.physicsSystem.simulateGravity(enemy.second.physicComponent, game.engine);
+    player.onPlayerDeath = [this](){ gameOver(); };
+    /////////////
 
-        if (enemy.second.mesh.isValid() && enemy.second.mesh->transform.transformMatrixNode.isValid())
-        {
-            enemy.second.mesh->transform.UpdateLocalTransformMatrix();
-            enemy.second.mesh->transform.transformMatrixNode->cleanUpdate();
-        }
-    }
+    game.engine.physicsSystem.simulate(collisionsCallbacks, game.engine);
 }
 
 void World::update()   
@@ -517,8 +429,11 @@ void World::update()
         // Update entities
         for (std::pair<const Entity::EntityID, Entity::Enemy>& enemy : enemies)
         {
-            enemy.second.chaseTarget = player.mesh->transform.transformMatrixNode->worldData.getTranslationVector();
-            enemy.second.update(game.engine);
+            if (player.mesh.isValid() && player.mesh->transform.transformMatrixNode.isValid())
+            {
+                enemy.second.chaseTarget = player.mesh->transform.transformMatrixNode->worldData.getTranslationVector();
+                enemy.second.update(game.engine);
+            }
         }
 
         // Save game
@@ -530,9 +445,6 @@ void World::update()
 
         updatePhysics();
 
-        if (sphere2.mesh.isValid() && sphere2.mesh->transform.transformMatrixNode.isValid())
-            sphere2.mesh->transform.transformMatrixNode.erase();
-
         if (isEditorMode)
             updateEditorFunctions();
     }
@@ -542,7 +454,7 @@ void World::gameOver()
 {
     if (Resources::File::doesFileExist(game.savedFilename))
     {
-        game.loadLevel(true);
+        game.loadLevel(false);
     }
     else
     {
@@ -555,24 +467,9 @@ void World::renderUI()
 {
     if (isPauseMenuOpen)
         pauseMenu();
-
-    // Renders Lifebar
-    Menu::preparePanel(ImVec2(0, 0), {game.engine.width * 0.3f, game.engine.height * 0.1f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
-
-    ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
-    ImGui::Indent(400 / 2 - 50);
-    //ImGui::PushFont(font);
-    ImGui::SetCursorPosY(30.0f);
-
-    assert(player.maxLifePoints != 0.f);
-    ImGui::ProgressBar(player.lifePoints / player.maxLifePoints);
-
-    ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
-    ImGui::End();
-
-
+    else
+        hud();
+        
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -584,6 +481,28 @@ void World::render()
         rendererSystem.draw(*camera);
 }
 
+void World::hud()
+{
+    Menu::preparePanel(ImVec2(0, 0), {game.engine.width, game.engine.height}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+
+    ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
+    //ImGui::PushFont(font);
+    ImGui::SetCursorPosY(game.engine.height - 30.f);
+    assert(player.maxLifePoints != 0.f);
+    ImGui::SetWindowFontScale(1.0);
+    ImGui::ProgressBar(player.lifePoints / player.maxLifePoints, ImVec2(200,20));
+
+    ImGui::SetCursorPosY(game.engine.height - 30.f);
+    ImGui::SetCursorPosX(game.engine.width - 100.f);
+    ImGui::SetWindowFontScale(1.5);
+    ImGui::Text("%i / %i", player.nbBullet, player.maxNbBullet);
+
+    ImGui::PopStyleColor(5);
+    //ImGui::PopFont();
+    ImGui::End(); 
+}
+
 void World::pauseMenu()
 {
     Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, PURPLE, PINK, DARKERGREY);
@@ -591,12 +510,14 @@ void World::pauseMenu()
     ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoTitleBar);
     ImGui::Indent(400 / 2 - 50);
     //ImGui::PushFont(font);
+    ImGui::SetWindowFontScale(1.0);
     ImGui::SetCursorPosY(30.0f);
     if (ImGui::Button("Back to game", ImVec2(100, 50)))
     {
         ImGui::SetMouseCursor(ImGuiMouseCursor_None);
         glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);        
         isPauseMenuOpen = !isPauseMenuOpen;
+        inGame = true;
     }
 
     ImGui::SetCursorPosX(130.0f);
@@ -626,7 +547,48 @@ void World::pauseMenu()
     ImGui::End();
 }
 
-void World::getEntityFromID(const Entity::EntityID& entityID)
+Physics::CollisionComponentInterface* World::getCollisionComponentEntityFromID(const Entity::EntityID& entityID)
 {
-    auto i1 = grounds.find(entityID);
+    if (player == entityID)
+        return &player;
+    
+    std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator it = enemies.find(entityID);
+    if (it != enemies.end() && it->first == entityID)
+    {
+        return &it->second;
+    }
+
+    return nullptr;
 }
+
+
+void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
+{
+    if (world.player == collisionData.movingEntityID)
+    {
+        world.player.onCollisionEnter(collisionData.hit);
+    }
+}
+
+void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityID)
+{
+    Physics::CollisionComponentInterface* ent = world.getCollisionComponentEntityFromID(entityID);
+    ent->onCollisionExit();
+}
+
+void World::CollisionsCallbacks::onOverlap(const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
+{
+    Physics::CollisionComponentInterface* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
+    Physics::CollisionComponentInterface* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);
+
+    if (movingComp != nullptr)
+    {
+        movingComp->onOverlapEnterSelfHit(collisionData.hit);
+    }
+
+    if (collisionComp != nullptr)
+    {
+        collisionComp->onOverlapEnterAnotherHit(collisionData.hit);
+    }
+}
+

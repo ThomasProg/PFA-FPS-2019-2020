@@ -54,6 +54,14 @@ namespace Entity
 
         inline virtual void raycastCollide() override;
         
+        Enemy() = default;
+        Enemy(const EntityID& id)
+            : BasicEntity(id)
+        {
+
+        }
+        ~Enemy() = default;
+
         inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
 
         inline void setup(Renderer::RendererSystem& renderer, 
@@ -72,6 +80,12 @@ namespace Entity
 
         void save(Save::Saver& saver)       override;
         void loadData(Save::Loader& loader) override;
+
+
+        virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        virtual void onCollisionExit         () override;
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
     };
 }
 

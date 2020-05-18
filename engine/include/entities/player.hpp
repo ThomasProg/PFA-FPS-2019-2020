@@ -10,6 +10,7 @@
 #include "basicEntity.hpp"
 #include "controllerInterface.hpp"
 #include "tpsCamera.hpp"
+#include "fpsCamera.hpp"
 
 #include <array>
 
@@ -29,7 +30,7 @@ namespace Entity
         };
 
     public:
-        EPlayerState playerState = E_WALKING;
+        EPlayerState playerState = E_JUMPING;
 
     public:
         bool isOnGround() const noexcept;
@@ -46,7 +47,13 @@ namespace Entity
     public:
         float lifePoints    = 10.f;
         float maxLifePoints = 10.f;
-        Renderer::TPSCamera camera;
+        unsigned int nbBullet = 60;
+        unsigned int maxNbBullet = 60;
+        
+        // Renderer::TPSCamera camera;
+        Renderer::FPSCamera camera;
+
+        std::function<void()> onPlayerDeath = nullptr;
 
     private:
         PlayerState state;
@@ -89,10 +96,16 @@ namespace Entity
 
         void inputs(const Core::Engine& engine) override;
 
-        // Returns true if the player dies
-        bool dealDamages(float damages);
-
         Segment3D shoot() const;
+        void dealDamages(float damages);
+
+
+
+
+        virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        virtual void onCollisionExit         () override;
+        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
     };
 }
 
