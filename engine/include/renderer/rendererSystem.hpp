@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "entity.hpp"
+#include "entityID.hpp"
 #include "mesh.hpp"
 
 #include "saveInterface.hpp"
@@ -22,16 +22,13 @@ namespace Renderer
         class iterator
         {
         private:
-            Entity::Entity entityID;
+            Entity::EntityID entityID;
             RendererSystem* rendererSystem = nullptr;
 
         public:
-            iterator()
-            {
-                
-            }
+            iterator() = default;
 
-            iterator(Entity::Entity& entityID, RendererSystem* rendererSystem)
+            iterator(Entity::EntityID& entityID, RendererSystem* rendererSystem)
                 : entityID(entityID), rendererSystem(rendererSystem)
             {
 
@@ -58,12 +55,12 @@ namespace Renderer
         };
 
     private:
-        std::unordered_map<Entity::Entity, Mesh> meshes;
+        std::unordered_map<Entity::EntityID, Mesh> meshes;
 
     public:
         RendererSystem() = default;
 
-        iterator addComponentTo(Entity::Entity& entity);
+        iterator addComponentTo(Entity::EntityID& entity);
 
         void remove(decltype(meshes)::iterator& it);
 
@@ -71,6 +68,11 @@ namespace Renderer
 
         void save(Save::Saver& saver) override;
         void loadData(Save::Loader& loader) override;
+
+        void reset()
+        {
+            meshes.clear();
+        }
 
         friend iterator;
     };

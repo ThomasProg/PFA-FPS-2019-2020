@@ -228,6 +228,7 @@ Core::DataStructure::Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADER, KEY
     Core::DataStructure::Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADER, KEY_TYPE>
         ::iterator::operator->()
 {
+    assert(graphPtr != nullptr);
     return &(*graphPtr);
 }
 
@@ -236,6 +237,7 @@ const Core::DataStructure::Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADE
     Core::DataStructure::Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADER, KEY_TYPE>::iterator
         ::operator->() const
 {
+    assert(graphPtr != nullptr);
     return &(*graphPtr);
 }
 

@@ -16,7 +16,10 @@ void Entity::BasicEntity::save(Save::Saver& saver)
         saver.save(mesh->transform.transformMatrixNode->graphID);
 
     // Physics
-    saver.save(physicComponent.velocity);
+    bool isPhysicCompValid = physicCompIt.isValid();
+    saver.save(isPhysicCompValid); 
+    if (isPhysicCompValid)
+        saver.save(physicCompIt->velocity);
 }
 
 // loads the data loaded from the save file
@@ -31,8 +34,11 @@ void Entity::BasicEntity::loadData(Save::Loader& loader)
     if (isMeshValid)
         loader.load(key);
 
-    // Physics
-    loader.load(physicComponent.velocity);
+    // // Physics
+    // bool isPhysicCompValid;
+    // loader.load(isPhysicCompValid);
+    // if (isPhysicCompValid)
+    //     loader.load(physicCompIt->velocity);
 
     loader.tryToDisplayError(__FILE__);
 }
@@ -59,4 +65,31 @@ void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
 void Entity::BasicEntity::raycastCollide()
 {
     
+}
+
+void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
+            const Resources::Model* model, 
+            const Resources::Shader* shader, 
+            Physics::TransformGraph& transformParent) 
+{
+    if (!mesh.isValid())
+        mesh = renderer.addComponentTo(*this);
+
+    // transform 
+    mesh->transform.transformMatrixNode = transformParent.addChild();
+
+    // resources
+    mesh->model  = model;
+    mesh->shader = shader;
+    mesh->linkShaderWithModel();
+}
+
+void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
+            const Resources::Model* model, 
+            const Resources::Shader* shader,
+            const Resources::Texture* texture,
+            Physics::TransformGraph& transformParent) 
+{
+    setup(renderer, model, shader, transformParent);
+    mesh->texture = texture;
 }

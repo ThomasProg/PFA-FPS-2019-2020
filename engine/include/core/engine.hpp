@@ -53,6 +53,7 @@ namespace Core
         inline void stop();
 
         inline bool isKeyDown(const int key) const;
+        inline bool isMouseButtonDown(const int buttonID) const;
     };
 } // namespace Core
 

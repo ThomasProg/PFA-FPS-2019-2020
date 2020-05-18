@@ -14,7 +14,7 @@ bool EditorUtility::isInFrontOfPlayer(Renderer::Camera& camera,
     seg.p1 = camera.transform.transformMatrixNode->worldData * seg.p1;
     seg.p2 = camera.transform.transformMatrixNode->worldData * seg.p2;
 
-    return (Collisions::boxSegmentCollision(object.colliderCompo->second.worldCollider, seg, hit));
+    return (Collisions::boxSegmentCollision(object.colliderIt->worldCollider, seg, hit));
 }
 
 void EditorUtility::moveEntityWithCursor(Renderer::Camera& camera, Entity::BasicEntity& object, const Core::Engine& engine)

@@ -17,8 +17,8 @@ void Entity::Enemy::update(const Core::Engine& engine)
             timeLeftTillRespawn = 0.f;
             if (mesh.isValid())
             {
-                colliderCompo->second.isEnabled = true;
-                physicComponent.isEnabled = true;
+                colliderIt->isEnabled = true;
+                physicCompIt->isEnabled = true;
                 mesh->isDrawn = true;
             }
         }
@@ -64,8 +64,8 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
                 firstPointOfCircle = firstPointOfCircle.unitVector() * maxSpeed;
             }
             // Core::Maths::Vec3 temp = firstPointOfCircle.unitVector();
-            physicComponent.velocity.x = firstPointOfCircle.x;
-            physicComponent.velocity.z = firstPointOfCircle.z;        
+            physicCompIt->velocity.x = firstPointOfCircle.x;
+            physicCompIt->velocity.z = firstPointOfCircle.z;        
         }
         else
         {
@@ -87,10 +87,10 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
         v += patrolTarget;
         
-        float f = physicComponent.velocity.y;
+        float f = physicCompIt->velocity.y;
 
-        physicComponent.velocity = v - mesh->transform.transform.location;
-        physicComponent.velocity.y = f;
+        physicCompIt->velocity = v - mesh->transform.transform.location;
+        physicCompIt->velocity.y = f;
 
         //mesh->transform.transform.location = v;
         //mesh->transform.UpdateLocalTransformMatrix();
@@ -105,7 +105,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
 
     const Core::Maths::Vec3 loc = mesh->transform.transformMatrixNode->worldData.getTranslationVector();
     Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
-    Core::Maths::Vec3 velocityXZ { physicComponent.velocity.x, 0, physicComponent.velocity.z };
+    Core::Maths::Vec3 velocityXZ { physicCompIt->velocity.x, 0, physicCompIt->velocity.z };
 
     velocityXZ += direction * engine.deltaTime;
 
@@ -114,8 +114,8 @@ void Entity::Enemy::chase(const Core::Engine& engine)
         velocityXZ = velocityXZ.unitVector() * maxSpeed;
     }
 
-    physicComponent.velocity.x = velocityXZ.x;
-    physicComponent.velocity.z = velocityXZ.z;
+    physicCompIt->velocity.x = velocityXZ.x;
+    physicCompIt->velocity.z = velocityXZ.z;
     // Core::Maths::Vec3 direction = (position - chaseTarget).unitVector();
     // mesh->transform.transform.location += direction;
     mesh->transform.UpdateLocalTransformMatrix();
@@ -136,8 +136,8 @@ void Entity::Enemy::kill()
     timeLeftTillRespawn = respawnCooldown;
     isDead = true;
 
-    colliderCompo->second.isEnabled = false;
-    physicComponent.isEnabled = false;
+    colliderIt->isEnabled = false;
+    physicCompIt->isEnabled = false;
     if (mesh.isValid())
     {
         mesh->isDrawn = false;
@@ -165,5 +165,31 @@ void Entity::Enemy::loadData(Save::Loader& loader)
     loader.load(timeLeftTillRespawn);
 
     loader.tryToDisplayError(__FILE__);
+}
+
+void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
+{
+
+}
+
+void Entity::Enemy::onCollisionExit() 
+{
+
+}
+
+void Entity::Enemy::onOverlapEnterSelfHit(const SegmentHit& hit) 
+{
+    if (hit.normal.y < -0.5)
+    {
+        kill();
+    }
+}
+
+void Entity::Enemy::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+{    
+    if (hit.normal.y > 0.5)
+    {
+        kill();
+    }
 }
 
