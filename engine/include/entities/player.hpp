@@ -96,6 +96,7 @@ namespace Entity
 
         void inputs(const Core::Engine& engine) override;
 
+        bool isShooting(const Core::Engine& engine);
         Segment3D shoot() const;
         void dealDamages(float damages);
 

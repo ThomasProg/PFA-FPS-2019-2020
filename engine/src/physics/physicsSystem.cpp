@@ -105,6 +105,7 @@ bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Enti
 
     for (const std::pair<const Entity::EntityID, const Physics::CollisionComponent<Box>>& boxCollider : boxes)
     {
+
         SegmentHit tempHit;
         if (Collisions::boxSegmentCollision(boxCollider.second.worldCollider, seg, tempHit))
         {
