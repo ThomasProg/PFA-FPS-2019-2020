@@ -10,6 +10,7 @@
 #include "basicEntity.hpp"
 #include "controllerInterface.hpp"
 #include "tpsCamera.hpp"
+#include "fpsCamera.hpp"
 
 #include <array>
 
@@ -49,7 +50,8 @@ namespace Entity
         unsigned int nbBullet = 60;
         unsigned int maxNbBullet = 60;
         
-        Renderer::TPSCamera camera;
+        // Renderer::TPSCamera camera;
+        Renderer::FPSCamera camera;
 
         std::function<void()> onPlayerDeath = nullptr;
 

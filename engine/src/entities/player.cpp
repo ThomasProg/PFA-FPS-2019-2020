@@ -1,6 +1,10 @@
 #include "player.hpp"
 #include "basicEntity.hpp"
 
+#include "utilities.hpp"
+
+#define _IS_MOUSE_ENABLED_ 1
+
 bool Entity::PlayerState::isOnGround() const noexcept
 {
     return playerState == E_IDLE || playerState == E_WALKING;
@@ -13,6 +17,10 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 {
     BasicEntity::setup(renderer, model, shader, transformParent);
     camera.setup(mesh->transform);
+
+    camera.transform.transform.location.y = 2.f;
+    camera.transform.UpdateLocalTransformMatrix();
+    camera.transform.transformMatrixNode->setDirtySelfAndChildren();
 }
 
 void Entity::Player::setup(Renderer::RendererSystem& renderer, 
@@ -23,6 +31,10 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 {
     BasicEntity::setup(renderer, model, shader, texture, transformParent);
     camera.setup(mesh->transform);
+
+    camera.transform.transform.location.y = 2.f;
+    camera.transform.UpdateLocalTransformMatrix();
+    camera.transform.transformMatrixNode->setDirtySelfAndChildren();
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
@@ -33,8 +45,10 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // state.playerState = PlayerState::E_JUMPING;
     }
 
-    Core::Maths::Vec3 forward = camera.camAnchor.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 right   = camera.camAnchor.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
+    // Core::Maths::Vec3 forward = camera.camAnchor.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
+    // Core::Maths::Vec3 right   = camera.camAnchor.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
+    Core::Maths::Vec3 forward = mesh->transform.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
+    Core::Maths::Vec3 right   = mesh->transform.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
 
     Core::Maths::Vec3 addedVelocity;
 
@@ -80,7 +94,35 @@ void Entity::Player::inputs(const Core::Engine& engine)
     //     physicCompIt->velocity.z = 0.f;        
     // }
 
-    camera.inputs(engine);
+    // camera.inputs(engine);
+
+    constexpr float mouseSensibility = 10.f;
+    constexpr float rotationSpeedOnKey = 3.f;
+    constexpr float rotationSpeed = 0.1;
+
+    #if _IS_MOUSE_ENABLED_
+    float deltaMouseX = - engine.deltaMouseLoc.x * mouseSensibility;
+    float deltaMouseY = - engine.deltaMouseLoc.y * mouseSensibility; 
+    #else
+    float deltaMouseX = 0;
+    float deltaMouseY = 0;
+    #endif
+
+    if (glfwGetKey(engine.window, GLFW_KEY_I))
+        deltaMouseY = rotationSpeedOnKey;
+    if (glfwGetKey(engine.window, GLFW_KEY_J))
+        deltaMouseX = rotationSpeedOnKey;
+    if (glfwGetKey(engine.window, GLFW_KEY_K))
+        deltaMouseY = -rotationSpeedOnKey;
+    if (glfwGetKey(engine.window, GLFW_KEY_L))
+        deltaMouseX = -rotationSpeedOnKey;
+
+    mesh->transform.transform.rotation.y += deltaMouseX * rotationSpeed;
+    mesh->transform.transform.rotation.x = clamp(mesh->transform.transform.rotation.x + deltaMouseY * rotationSpeed, float(- M_PI / 2.f), float(M_PI / 2.f));
+
+    mesh->transform.UpdateLocalTransformMatrix();
+    mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
+    mesh->transform.transformMatrixNode->cleanUpdate();
 }
 
 Segment3D Entity::Player::shoot() const

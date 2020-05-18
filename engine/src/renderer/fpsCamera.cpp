@@ -3,15 +3,9 @@
 #include "engine.hpp"
 
 #include "GLFW/glfw3.h"
+#include "utilities.hpp"
 
 #define _IS_MOUSE_ENABLED_ 1
-
-template<class T>
-constexpr const T& clamp(const T& v, const T& low, const T& high)
-{
-    assert(!(high < low) && "Low value is hight than High value");
-    return (v < low) ? low : (high < v) ? high : v;
-}
 
 void Renderer::FPSCamera::setup(Physics::GTransform& parent)
 {
