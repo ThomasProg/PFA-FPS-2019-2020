@@ -6,6 +6,11 @@
 struct Segment3D
 {
     Core::Maths::Vec3 p1, p2;
+
+    inline float squaredLength() const noexcept
+    {
+        return (p1 - p2).vectorSquareLength();
+    }
 };
 
 inline std::ostream& operator<<(std::ostream& stream, const Segment3D& seg)

@@ -51,7 +51,7 @@ void Physics::PhysicsSystem::simulatePhysics(std::pair<const Entity::EntityID, P
                                                        const Core::Maths::Vec3& leftVelocity,
                                                        COLLISIONS_CALLBACKS& callbacks)
 {
-    if (leftVelocity.vectorSquareLength() < 0.0000001f)
+    if (leftVelocity.vectorSquareLength() < 0.001f)
         return;
 
     // std::cout << leftVelocity << std::endl;
@@ -181,6 +181,8 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
                                                          COLLISIONS_CALLBACKS& callbacks)
 {   
     Segment3D seg{startLoc, endLoc};
+    if (seg.squaredLength() < 0.0001)
+        return;
     SegmentHit hit;
     
     // // TODO : opti with reserve
