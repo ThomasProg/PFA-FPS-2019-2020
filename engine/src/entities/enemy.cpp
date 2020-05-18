@@ -169,7 +169,7 @@ void Entity::Enemy::loadData(Save::Loader& loader)
 
 void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
 {
-
+    
 }
 
 void Entity::Enemy::onCollisionExit() 

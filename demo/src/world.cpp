@@ -270,6 +270,26 @@ void World::addEnemy(const Physics::Transform& transform)
     }
 }
 
+void World::addBullet(const Physics::Transform& transform)
+{
+    bullets.emplace_back(nextEntity);
+
+    nextEntity.next();
+
+    Entity::RenderedEntity& bullet = bullets.at(bullets.size() - 1);
+
+    bullet.setup(rendererSystem, 
+                &game.engine.resourceManager.get(E_Model::E_BOX), 
+                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Texture::E_GROUND), 
+                root);
+    
+    bullet.mesh->transform.transform = transform;
+    bullet.mesh->transform.UpdateLocalTransformMatrix();
+    bullet.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
+    bullet.timer = game.engine.lastTime + bullet.lifeTime;
+}
+
 void World::updateEditorFunctions()
 {
     if (game.engine.isKeyDown(GLFW_KEY_E))
@@ -434,6 +454,44 @@ void World::update()
                 enemy.second.chaseTarget = player.mesh->transform.transformMatrixNode->worldData.getTranslationVector();
                 enemy.second.update(game.engine);
             }
+        }
+
+        if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT))
+        {
+            Segment3D directionHit = player.shoot();
+            SegmentHit hit;
+            Entity::EntityID touchEntity;
+
+            if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
+            {
+                //test hit enemy
+                std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator it = enemies.find(touchEntity);
+                if (it != enemies.end())
+                {
+                    //hit: add a box during 2s
+                    addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                }
+                else 
+                {
+                    //test hit ground/wall
+                    std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator itGround = grounds.find(touchEntity);
+                    if (itGround != grounds.end())
+                    {
+                        addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                    }
+                }
+            }
+        }
+
+        if(bullets.size() > 0)
+        {
+            std::vector<Entity::RenderedEntity>::iterator r = bullets.begin();
+            while(bullets.size() != 0 && game.engine.lastTime >= r->timer)
+            {
+                r->mesh.erase();
+                r = bullets.erase(r);
+            }
+               
         }
 
         // Save game

@@ -51,6 +51,12 @@ namespace Renderer
                 return rendererSystem != nullptr;
             }
 
+            void erase()
+            {
+                assert(rendererSystem != nullptr);
+                rendererSystem->meshes.erase(entityID);
+            }
+
             friend RendererSystem;
         };
 

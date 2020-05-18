@@ -125,9 +125,13 @@ void Entity::Player::inputs(const Core::Engine& engine)
     mesh->transform.transformMatrixNode->cleanUpdate();
 }
 
+bool Entity::Player::isShooting(const Core::Engine& engine)
+{
+    return engine.isMouseButtonDown(inputKeys.fire);
+}
+
 Segment3D Entity::Player::shoot() const
 {
-    Core::Maths::Vec3 direction;
     Segment3D seg;
 
     seg.p1 = {0.f, 0, 0};
