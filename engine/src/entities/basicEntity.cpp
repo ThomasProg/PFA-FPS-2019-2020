@@ -34,11 +34,11 @@ void Entity::BasicEntity::loadData(Save::Loader& loader)
     if (isMeshValid)
         loader.load(key);
 
-    // Physics
-    bool isPhysicCompValid;
-    loader.load(isPhysicCompValid);
-    if (isPhysicCompValid)
-        loader.load(physicCompIt->velocity);
+    // // Physics
+    // bool isPhysicCompValid;
+    // loader.load(isPhysicCompValid);
+    // if (isPhysicCompValid)
+    //     loader.load(physicCompIt->velocity);
 
     loader.tryToDisplayError(__FILE__);
 }

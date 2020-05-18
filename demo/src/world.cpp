@@ -30,16 +30,15 @@ void World::loadData(Save::Loader& loader)
 
     for (std::size_t i = 0; i < nbGrounds; i++)
     {
-        std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace(Entity::EntityID{i}, Entity::EntityID{i});
-        if (it.second) // if insertion took place
+        // std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace(Entity::EntityID{i}, Entity::EntityID{i});
+        // if (it.second) // if insertion took place
         {
-                std::cout << "GOT HERE2" << std::endl;
-            saveSystem.add(&it.first->second);
             // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
             // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
-            it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
-            it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
-            nextEntity.next();
+            // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
+            // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
+            // nextEntity.next();
+            addGround({{}});
         }
     }
 
@@ -50,22 +49,19 @@ void World::loadData(Save::Loader& loader)
     {
         // enemies.emplace_back();
         // saveSystem.add(&enemies.back());
-        std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace(Entity::EntityID{i}, Entity::EntityID{i});
-        if (it.second) // if insertion took place
-        {
-                std::cout << "GOT HERE3" << std::endl;
-            saveSystem.add(&it.first->second);
-            it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
-            it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
+        // std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace(Entity::EntityID{i}, Entity::EntityID{i});
+        // if (it.second) // if insertion took place
+        // {
+        //     saveSystem.add(&it.first->second);
+            addEnemy({{}});
+            // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
+            // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
             // it.first->second.colliderIt->transform = it.first->second.physicCompIt->collider.transform = &it.first->second.mesh->transform;
             // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
             // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
-            nextEntity.next();
-        }
+            // nextEntity.next();
+        // }
     }
-
-    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
-    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
 }
 
 
