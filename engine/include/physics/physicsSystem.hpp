@@ -185,6 +185,13 @@ namespace Physics
                                               const Entity::EntityID& physicCompID,
                                               COLLISIONS_CALLBACKS& callbacks);
 
+        template<typename COLLISIONS_CALLBACKS>
+        void sphereFindOverlappingBoxes(const Sphere& sphere, 
+                                        const Core::Maths::Vec3& velocity,
+                                        const Physics::PhysicsSystem::PhysicsAdditionalData& data,
+                                        const Entity::EntityID& physicCompID,
+                                        COLLISIONS_CALLBACKS& callbacks);
+
         inline bool sphereCollisionWithBoxes(const Sphere& sphere, 
                                             const Core::Maths::Vec3& velocity,
                                             const Physics::PhysicsSystem::PhysicsAdditionalData& data, 

@@ -47,7 +47,7 @@ void Physics::PhysicsSystem::simulate(COLLISIONS_CALLBACKS& callbacks, Core::Eng
             }
 
             Core::Maths::Vec3 temp = physicComp.second.collider.transform->transform.location + physicComp.second.velocity; 
-            Core::Maths::Vec3 leftVelocity = physicComp.second.velocity;
+            Core::Maths::Vec3& leftVelocity = physicComp.second.velocity;
             physicComp.second.collider.transform->transform.location = simulatePhysicsForASphere(sphere, 
                                                                                                 playerIgnoreData,  
                                                                                                 physicComp.second.collider.collidingEntities,
@@ -116,6 +116,39 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
 }
 
 template<typename COLLISIONS_CALLBACKS>
+void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere, 
+                                                      const Core::Maths::Vec3& lastLoc,
+                                                      const Physics::PhysicsSystem::PhysicsAdditionalData& data,
+                                                      const Entity::EntityID& physicCompID,
+                                                      COLLISIONS_CALLBACKS& callbacks)
+{
+    Segment3D seg{sphere.center, lastLoc};
+    if (seg.squaredLength() < 0.0001)
+        return;
+
+    SegmentHit hit;
+    
+    // // TODO : opti with reserve
+    // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
+    // collisionsCallbacksSentDataList.reserve(nextNbOverlapHint); 
+
+    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    {
+        if (!boxCollider.second.isEnabled || !boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
+            continue;
+
+        boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
+
+        if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, sphere, seg, hit))
+        {
+            // // Add Callbacks to list
+            // collisionsCallbacksSentDataList.emplace_back(hit, physicCompEntityID, boxCollider.first);
+            callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompID, boxCollider.first});
+        }
+    }
+}
+
+template<typename COLLISIONS_CALLBACKS>
 inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const Sphere& sphere, 
                                const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                std::map<Entity::EntityID, bool>& collidingEntities,
@@ -157,6 +190,8 @@ inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const
         leftVelocity = (leftVelocity - dot * hit.normal);
         leftVelocity *= 0.9f;
 
+        sphereFindOverlappingBoxes(sphere, finalLoc, data, physicCompID, callbacks);
+
         
         // std::cout << "left : " << physicComp.second.velocity << std::endl;
 
@@ -171,7 +206,9 @@ inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const
     }
     else 
     {
-        return sphere.center + leftVelocity;
+        Core::Maths::Vec3 finalLoc = sphere.center + leftVelocity; 
+        sphereFindOverlappingBoxes(sphere, finalLoc, data, physicCompID, callbacks);
+        return finalLoc;
     }
 }
 
