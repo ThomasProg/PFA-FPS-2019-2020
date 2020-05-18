@@ -139,6 +139,15 @@ namespace Physics
         // template<typename T = Sphere>
         inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
 
+        template <typename T>
+        void loadColliderItContainer(ColliderIt<T>& it, const Entity::EntityID& entityID);
+
+        inline void loadPhysicComponentItContainer(PhysicCompIt& it, const Entity::EntityID& entityID)
+        {
+            it.entityID = entityID;
+            it.mapPtr = &physicComponents;
+        }
+
         // COLLISIONS_CALLBACKS must implement :
         // - void onCollisionEnter (CollisionsCallbacksSentData&);
         // - void onCollisionExit  (const EntityID& entityID); // TODO ?

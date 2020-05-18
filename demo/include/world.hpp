@@ -123,6 +123,10 @@ public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
 
+    void setKeys(bool isAzerty);
+    void loadFromSavefile(const char* savedFilename);
+    void makeNewLevel();
+
     void load()     override;
     void inputs()   override;
     void update()   override;
@@ -138,8 +142,8 @@ public:
     void hud();
     void gameOver();
 
-    void addGround(const Core::Maths::Vec3&);
-    void addEnemy(const Core::Maths::Vec3&);
+    void addGround(const Physics::Transform& transform);
+    void addEnemy(const Physics::Transform& transform);
 
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;

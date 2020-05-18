@@ -16,7 +16,10 @@ void Entity::BasicEntity::save(Save::Saver& saver)
         saver.save(mesh->transform.transformMatrixNode->graphID);
 
     // Physics
-    saver.save(physicCompIt->velocity);
+    bool isPhysicCompValid = physicCompIt.isValid();
+    saver.save(isPhysicCompValid); 
+    if (isPhysicCompValid)
+        saver.save(physicCompIt->velocity);
 }
 
 // loads the data loaded from the save file
@@ -32,7 +35,10 @@ void Entity::BasicEntity::loadData(Save::Loader& loader)
         loader.load(key);
 
     // Physics
-    loader.load(physicCompIt->velocity);
+    bool isPhysicCompValid;
+    loader.load(isPhysicCompValid);
+    if (isPhysicCompValid)
+        loader.load(physicCompIt->velocity);
 
     loader.tryToDisplayError(__FILE__);
 }
