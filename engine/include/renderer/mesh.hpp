@@ -20,7 +20,7 @@ namespace Renderer
         const Resources::Model*  model  = nullptr;
         const Resources::Shader* shader = nullptr;
         const Resources::Texture* texture = nullptr;
-        Physics::GTransform transform;
+        Physics::GTransform* transform;
 
         bool isDrawn = true;
 

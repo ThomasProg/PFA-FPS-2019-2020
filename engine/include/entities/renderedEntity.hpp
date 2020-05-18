@@ -11,6 +11,7 @@ namespace Entity
     private:
         
     public:
+        Physics::GTransform transform;
         Physics::GraphKey key;
         Renderer::MeshIt mesh;
         float lifeTime = 2.0f;

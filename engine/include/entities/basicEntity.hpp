@@ -20,6 +20,7 @@ namespace Entity
                         public Save::SaveInterface
     {
     public:
+        Physics::GTransform transform;
         Renderer::MeshIt mesh;
         // Physics::PhysicComponent physicComponent; // moving sphere 
 

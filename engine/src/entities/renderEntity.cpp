@@ -9,10 +9,11 @@ void Entity::RenderedEntity::setup(Renderer::RendererSystem& renderer,
     if (!mesh.isValid())
     {
         mesh = renderer.addComponentTo(*this);
+        mesh->transform = &transform;
     }
 
     // transform 
-    mesh->transform.transformMatrixNode = transformParent.addChild();
+    transform.transformMatrixNode = transformParent.addChild();
 
     // resources
     mesh->model  = model;
