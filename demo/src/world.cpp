@@ -469,7 +469,8 @@ void World::update()
                 if (it != enemies.end())
                 {
                     //hit: add a box during 2s
-                    addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                    it->second.takeDamage(5);
+                    addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
                 }
                 else 
                 {

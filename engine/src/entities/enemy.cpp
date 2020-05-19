@@ -5,6 +5,7 @@
 
 #include "loader.hpp"
 #include "saver.hpp"
+#include "utilities.hpp"
 
 void Entity::Enemy::update(const Core::Engine& engine)
 {   
@@ -193,3 +194,9 @@ void Entity::Enemy::onOverlapEnterAnotherHit(const SegmentHit& hit)
     }
 }
 
+void Entity::Enemy::takeDamage(int damage)
+{
+    life = clamp(life - damage, 0, life);
+    if(life == 0)
+        kill();
+}

@@ -43,6 +43,8 @@ namespace Entity
         bool  isDead = false;
         float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 5.f;
+        int maxLife = 10;
+        int life = 10;
 
     public:
         EnemyState state;
@@ -74,6 +76,8 @@ namespace Entity
         void patrol(const Core::Engine& engine);
         bool isPlayerInRange() const;
         void chase(const Core::Engine& engine);
+
+        void takeDamage(int damage);
 
         void kill();
         // ~Enemy() {};
