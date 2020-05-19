@@ -24,43 +24,43 @@ void EditorUtility::moveEntityWithCursor(Renderer::Camera& camera, Entity::Basic
         dir = camera.transform.transformMatrixNode->worldData * Core::Maths::Vec4{dir, 0};
         Core::Maths::Vec3 camWorld = dir;
         // dir = Core::Maths::Matrix4x4(object.mesh->transform.transformMatrixNode->worldData.getInverse()) * Core::Maths::Vec4{dir, 0};
-        object.mesh->transform.transform.location += dir;
+        object.transform->transform.location += dir;
     }
 
     {
         Core::Maths::Vec3 dir = {200  * engine.deltaMouseLoc.x , 0, 0};
         dir = camera.transform.transformMatrixNode->worldData * Core::Maths::Vec4{dir, 0};
         // dir = Core::Maths::Matrix4x4(object.mesh->transform.transformMatrixNode->worldData.getInverse()) * Core::Maths::Vec4{dir, 0};
-        object.mesh->transform.transform.location += dir;
+        object.transform->transform.location += dir;
     }
 
-    object.mesh->transform.UpdateLocalTransformMatrix();
-    object.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-    object.mesh->transform.transformMatrixNode->cleanUpdate();
+    object.transform->UpdateLocalTransformMatrix();
+    object.transform->transformMatrixNode->setDirtySelfAndChildren();
+    object.transform->transformMatrixNode->cleanUpdate();
 }
 
 void EditorUtility::rotateEntityWithCursor(Entity::BasicEntity& object, 
                                            const Core::Engine& engine, const unsigned int axis)
 {
     {
-        object.mesh->transform.transform.rotation[axis] += 2 * engine.deltaMouseLoc.x;
+        object.transform->transform.rotation[axis] += 2 * engine.deltaMouseLoc.x;
     }
 
-    object.mesh->transform.UpdateLocalTransformMatrix();
-    object.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-    object.mesh->transform.transformMatrixNode->cleanUpdate();
+    object.transform->UpdateLocalTransformMatrix();
+    object.transform->transformMatrixNode->setDirtySelfAndChildren();
+    object.transform->transformMatrixNode->cleanUpdate();
 }
 
 void EditorUtility::scaleEntityWithCursor(Entity::BasicEntity& object, 
                                           const Core::Engine& engine, const unsigned int axis)
 {
     {
-        object.mesh->transform.transform.scale[axis] += 2 * engine.deltaMouseLoc.x;
-        if (object.mesh->transform.transform.scale[axis] < 0.f)
-            object.mesh->transform.transform.scale[axis] = 0.f;
+        object.transform->transform.scale[axis] += 2 * engine.deltaMouseLoc.x;
+        if (object.transform->transform.scale[axis] < 0.f)
+            object.transform->transform.scale[axis] = 0.f;
     }
 
-    object.mesh->transform.UpdateLocalTransformMatrix();
-    object.mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-    object.mesh->transform.transformMatrixNode->cleanUpdate();
+    object.transform->UpdateLocalTransformMatrix();
+    object.transform->transformMatrixNode->setDirtySelfAndChildren();
+    object.transform->transformMatrixNode->cleanUpdate();
 }

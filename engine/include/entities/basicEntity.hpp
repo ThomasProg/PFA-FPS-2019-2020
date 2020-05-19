@@ -20,6 +20,7 @@ namespace Entity
                         public Save::SaveInterface
     {
     public:
+        Physics::GTransform* transform = nullptr;
         Renderer::MeshIt mesh;
         // Physics::PhysicComponent physicComponent; // moving sphere 
 
@@ -36,7 +37,13 @@ namespace Entity
         {
 
         }
-        ~BasicEntity() = default;
+        ~BasicEntity()
+        {
+            if (transform != nullptr)
+            {
+                delete transform;
+            }
+        }
 
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 

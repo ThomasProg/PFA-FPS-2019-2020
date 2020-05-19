@@ -26,11 +26,11 @@ struct CenteredAABB
 
     inline CenteredAABB(const CenteredAABB& aabb) = default;
     
-    inline bool isPointInside(const Core::Maths::Vec3& v, const float epsilon) const
+    inline bool isPointInside(const Core::Maths::Vec3& v) const
     {
-        return abs(v.x) < size.x + epsilon
-            && abs(v.y) < size.y + epsilon
-            && abs(v.z) < size.z + epsilon;
+        return abs(v.x) < size.x
+            && abs(v.y) < size.y
+            && abs(v.z) < size.z;
     }
 };
 

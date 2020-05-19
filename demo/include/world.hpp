@@ -14,6 +14,7 @@
 #include "tpsCamera.hpp"
 
 #include "basicEntity.hpp"
+#include "renderedEntity.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
 
@@ -67,9 +68,8 @@ private:
     Game& game;
     Renderer::RendererSystem rendererSystem;
 
-    Physics::TransformGraph root; 
+    Physics::TransformGraph root;
 
-    Physics::PhysicsSystem physicsSystem;
     Save::SaveSystem saveSystem;
 
     Entity::Player player;
@@ -78,6 +78,7 @@ private:
 
     std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
     std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
+    std::vector<Entity::RenderedEntity> bullets;
 
     // Entity::Enemy enemy;
 
@@ -148,6 +149,7 @@ public:
 
     void addGround(const Physics::Transform& transform);
     void addEnemy(const Physics::Transform& transform);
+    void addBullet(const Physics::Transform& transform);
 
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
