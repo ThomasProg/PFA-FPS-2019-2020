@@ -56,7 +56,7 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
     GLuint modelID = shader->getUniformLocation("model");  
-    glUniformMatrix4fv(modelID, 1, GL_FALSE, &transform->transformMatrixNode->worldData[0][0]);
+    glUniformMatrix4fv(modelID, 1, GL_FALSE, &transform->transformMatrixNode->worldData.transpose()[0][0]);
 
     GLuint colorID = shader->getUniformLocation("color");
 

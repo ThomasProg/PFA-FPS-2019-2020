@@ -153,7 +153,7 @@ void World::load()
         makeNewLevel();
 
     lightManager.lightsBufferInit(10);
-    // lightManager.lights.emplace_back();
+    lightManager.lights.emplace_back();
     lightManager.lights.emplace_back();
     {
         Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;

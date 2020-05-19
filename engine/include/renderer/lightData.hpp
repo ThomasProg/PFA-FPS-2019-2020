@@ -18,7 +18,7 @@ namespace Renderer
 
         // updated by setLight() 
         // should not be updated anywhere else
-        Core::Maths::Vec4 location {1.f, -28.f, 0, 0.0}; 
+        Core::Maths::Vec4 location {0.f, -27.f, 5, 0.0}; 
 
         Core::Maths::Vec4 spotDirection = Core::Maths::Vec3(0,1,0);
 
