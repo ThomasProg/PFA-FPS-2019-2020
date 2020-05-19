@@ -70,7 +70,7 @@ namespace Renderer
 
         void remove(decltype(meshes)::iterator& it);
 
-        void draw(const Camera& camera);
+        void draw(const Camera& camera, Renderer::LightManager& lightManager);
 
         void save(Save::Saver& saver) override;
         void loadData(Save::Loader& loader) override;

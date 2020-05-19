@@ -3,7 +3,7 @@
 #include "game.hpp"
 
 #include "mesh.hpp"
-
+#include "light.hpp"
 int main()
 {
     Game game;

@@ -88,7 +88,7 @@ Primitives Primitives::CreateCube()
     indices.push_back(3);
 
     for (unsigned int i = 0; i < 6; i++)
-        normals.emplace_back(1, 0, 0);
+        normals.emplace_back(-1, 0, 0);
 
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);
@@ -106,7 +106,7 @@ Primitives Primitives::CreateCube()
     indices.push_back(2);
 
     for (unsigned int i = 0; i < 6; i++)
-        normals.emplace_back(0, 0, -1);
+        normals.emplace_back(0, 0, 1);
 
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);
@@ -124,7 +124,7 @@ Primitives Primitives::CreateCube()
     indices.push_back(3);
 
     for (unsigned int i = 0; i < 6; i++)
-        normals.emplace_back(0, -1, 0);
+        normals.emplace_back(0, 1, 0);
 
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 1.f);
@@ -142,7 +142,7 @@ Primitives Primitives::CreateCube()
     indices.push_back(6);
 
     for (unsigned int i = 0; i < 6; i++)
-        normals.emplace_back(0, 0, 1);
+        normals.emplace_back(0, 0, -1);
 
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 1.f);
@@ -160,7 +160,7 @@ Primitives Primitives::CreateCube()
     indices.push_back(0);
 
     for (unsigned int i = 0; i < 6; i++)
-        normals.emplace_back(0, 1, 0);
+        normals.emplace_back(0, -1, 0);
 
     uvs.emplace_back(0.f, 1.f);
     uvs.emplace_back(1.f, 1.f);
@@ -178,7 +178,7 @@ Primitives Primitives::CreateCube()
     indices.push_back(5);
 
     for (unsigned int i = 0; i < 6; i++)
-        normals.emplace_back(-1, 0, 0);
+        normals.emplace_back(1, 0, 0);
 
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);

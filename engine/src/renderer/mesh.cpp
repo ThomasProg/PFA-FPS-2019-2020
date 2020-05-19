@@ -9,7 +9,9 @@
 #include "saver.hpp"
 #include "loader.hpp"
 
-void Renderer::Mesh::draw(const Renderer::Camera& cam)
+#include "light.hpp"
+
+void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& lightManager)
 {
     if (transform == nullptr)
         return;
@@ -31,6 +33,25 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam)
     Core::Maths::Matrix4x4 mvp = (cam.projection * cam.transform.transformMatrixNode->worldData.getInverse() * transform->transformMatrixNode->worldData);
     mvp.transposeThis();
     
+    // ===== Lights ===== //
+
+    unsigned int i = 0;
+    for (const Renderer::Light& light : lightManager.lights)
+    {
+        // light.lightData.location = Core::Maths::Vec4{cam.transform.transformMatrixNode->worldData.getTranslationVector(), 1};
+        shader->linkLight(i, light.lightData, lightManager.lightsUniformBuffer);
+        ++i;
+    }
+
+    GLint nbCurLights = shader->getUniformLocation("nbCurrentLights");
+    if (nbCurLights != -1)
+        glUniform1i(nbCurLights, lightManager.lights.size());
+    else 
+        std::cout << "Could not set uniform value : " "nbCUrrentLights" << std::endl;
+        // Core::Debug::Log::addMessage(_LOG_ERROR_("Could not set uniform value : " "nbCurrentLights"));
+
+    // ===== ===== ===== //
+
     GLuint mvpID = shader->getUniformLocation("mvp");  
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 

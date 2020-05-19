@@ -152,11 +152,19 @@ void World::load()
     else 
         makeNewLevel();
 
+    lightManager.lightsBufferInit(10);
+    // lightManager.lights.emplace_back();
+    lightManager.lights.emplace_back();
+    {
+        Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
+        l.lightType = 3;
+    }
+
     // ===== Set up Entity ===== //
 
     player.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
     fpsCamera.setup(*player.transform);
@@ -224,7 +232,7 @@ void World::addGround(const Physics::Transform& transform)
 
         ground.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
 
@@ -251,7 +259,7 @@ void World::addEnemy(const Physics::Transform& transform)
 
         enemy.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
 
@@ -280,7 +288,7 @@ void World::addBullet(const Physics::Transform& transform)
 
     bullet.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
     
@@ -401,7 +409,7 @@ void World::updateEditorFunctions()
         {
             if (newSelection != editorSelectedEntity)
             {
-                newSelection->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_TEXTURED);
+                newSelection->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
 
                 editorSelectedEntity = newSelection;
                 editorSelectedEntity->mesh->color = {0, 0.4, 0.4, 0.5};
@@ -412,7 +420,7 @@ void World::updateEditorFunctions()
         {
             if (editorSelectedEntity != nullptr)
             {
-                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_TEXTURED);
+                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
             }
             editorSelectedEntity = nullptr;
         }
@@ -537,7 +545,7 @@ void World::renderUI()
 void World::render()   
 {
     if (camera != nullptr)
-        rendererSystem.draw(*camera);
+        rendererSystem.draw(*camera, lightManager);
 }
 
 void World::hud()

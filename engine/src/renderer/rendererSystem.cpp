@@ -10,11 +10,11 @@ Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponentTo(Enti
     return it;
 }
 
-void Renderer::RendererSystem::draw(const Camera& camera)
+void Renderer::RendererSystem::draw(const Camera& camera, Renderer::LightManager& lightManager)
 {
     for (std::pair<const Entity::EntityID, Mesh>& pair : meshes)
     {
-        pair.second.draw(camera);
+        pair.second.draw(camera, lightManager);
     }
 }
 
