@@ -149,5 +149,5 @@ void main()
       }
     }
 
-    color = texture(f_texture, f_uvs) * intensity.rgba;
+    color = texture(f_texture, f_uvs) * intensity.bgra;
 }

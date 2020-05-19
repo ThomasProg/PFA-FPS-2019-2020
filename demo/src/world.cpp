@@ -125,11 +125,13 @@ void World::makeNewLevel()
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
 
-    addGround({{5.f, -30, 0}, {0.f,0,0}, {20,1,20}});
-    addGround({{50.f, -33, 0}, {0.f,0,0}, {20,1,30}});
-    addGround({{5.f, -35, -20}, {0.f,0,0}, {30,1,40}});
+    addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
+    addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
+    addGround({{5.f, -35, -20}, {0.f,0,0}, {20,1,40}});
 
-    addEnemy({{2.f, -4, 0}, {0.f,0,0}, {1,1,1}});
+    addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
+
+    addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
 }
 
 void World::load()
@@ -157,6 +159,7 @@ void World::load()
     lightManager.lights.emplace_back();
     {
         Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
+        l.location = {20.f, -27.f, 12, 0.0}; 
         l.lightType = 3;
     }
 
@@ -441,6 +444,11 @@ void World::updatePhysics()
     {
         player.colliderIt->isOverlap   = true;
     }
+
+    auto it = grounds.begin();
+    it->second.transform->transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
+    it->second.transform->UpdateLocalTransformMatrix();
+    it->second.transform->transformMatrixNode->setDirtySelfAndChildren();
 
     player.onPlayerDeath = [this](){ gameOver(); };
     /////////////
