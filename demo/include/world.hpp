@@ -89,8 +89,13 @@ private:
 
     Entity::BasicEntity* editorSelectedEntity = nullptr;
 
+    /////////// UI ////////////////
     bool isPauseMenuOpen {false};
     bool inGame {true};
+    int imageWidth = 0;
+    int imageHeight = 0;
+    GLuint imageText = 0;
+    //////////////////////////////
 
     // Searching if a file exists is expensive,
     // so at the start and each time we start the game,

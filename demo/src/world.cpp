@@ -68,7 +68,7 @@ void World::loadData(Save::Loader& loader)
 World::World(Game& game, bool isLoaded, bool isEditorMode)
     : game(game), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
-
+    bool ret = Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
 }
 
 void World::setKeys(bool isAzerty)
@@ -206,7 +206,7 @@ void World::inputs()
 
 void World::updateCameraProjection()
 {
-    player.camera.projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(game.engine.width, game.engine.height, 0.1, 10000, 45.f);
+    player.camera.projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(game.engine.width, game.engine.height, 0.1, 10000, 90.f);
     fpsCamera.projection = player.camera.projection;
 }
 
@@ -497,6 +497,11 @@ void World::hud()
     ImGui::SetCursorPosX(game.engine.width - 100.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", player.nbBullet, player.maxNbBullet);
+
+    ImGui::SetCursorPosY(game.engine.height / 2 - imageHeight / 2);
+    ImGui::SetCursorPosX(game.engine.width / 2 - imageWidth / 2);
+    ImGui::Image((void*)(intptr_t)imageText, ImVec2(imageWidth, imageHeight));
+    std::cout << imageText << std::endl;
 
     ImGui::PopStyleColor(5);
     //ImGui::PopFont();
