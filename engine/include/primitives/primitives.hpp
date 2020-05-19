@@ -13,6 +13,7 @@ public:
     ~Primitives() = default;
 
     std::vector<Core::Maths::Vec3> vertices;
+    std::vector<Core::Maths::Vec3> normals;
     std::vector<unsigned int> indices;
     std::vector<Core::Maths::Vec2> uvs;
 
