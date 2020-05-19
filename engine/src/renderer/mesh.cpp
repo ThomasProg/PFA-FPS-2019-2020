@@ -11,7 +11,10 @@
 
 void Renderer::Mesh::draw(const Renderer::Camera& cam)
 {
-    if (!isDrawn || model == nullptr || shader == nullptr || &(*transform.transformMatrixNode) == nullptr)
+    if (transform == nullptr)
+        return;
+        
+    if (!isDrawn || model == nullptr || shader == nullptr || &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
         return;
 
     // Call Callback if valid
@@ -25,14 +28,14 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam)
     if(texture != nullptr)
         glBindTexture(GL_TEXTURE_2D, texture->textureData);
 
-    Core::Maths::Matrix4x4 mvp = (cam.projection * cam.transform.transformMatrixNode->worldData.getInverse() * transform.transformMatrixNode->worldData);
+    Core::Maths::Matrix4x4 mvp = (cam.projection * cam.transform.transformMatrixNode->worldData.getInverse() * transform->transformMatrixNode->worldData);
     mvp.transposeThis();
     
     GLuint mvpID = shader->getUniformLocation("mvp");  
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
     GLuint modelID = shader->getUniformLocation("model");  
-    glUniformMatrix4fv(modelID, 1, GL_FALSE, &transform.transformMatrixNode->worldData[0][0]);
+    glUniformMatrix4fv(modelID, 1, GL_FALSE, &transform->transformMatrixNode->worldData[0][0]);
 
     GLuint colorID = shader->getUniformLocation("color");
 

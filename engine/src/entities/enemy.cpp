@@ -45,15 +45,15 @@ void Entity::Enemy::move(const Core::Engine& engine)
 
 void Entity::Enemy::patrol(const Core::Engine& engine)
 {
-    if (!mesh.isValid() || !mesh->transform.transformMatrixNode.isValid())
+    if (!transform->transformMatrixNode.isValid())
         return;
 
-    Core::Maths::Vec3 patrolDir = patrolTarget - mesh->transform.transformMatrixNode->worldData.getTranslationVector();
+    Core::Maths::Vec3 patrolDir = patrolTarget - transform->transformMatrixNode->worldData.getTranslationVector();
     patrolDir.y = 0.f;
 
     if (state.enemyState == EnemyState::E_CHASING)
     {
-        Core::Maths::Vec3 firstPointOfCircle = patrolTarget - mesh->transform.transformMatrixNode->worldData.getTranslationVector();
+        Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform->transformMatrixNode->worldData.getTranslationVector();
         firstPointOfCircle.x += patrolRadius;
         firstPointOfCircle.y = 0;
 
@@ -90,11 +90,8 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
         
         float f = physicCompIt->velocity.y;
 
-        physicCompIt->velocity = v - mesh->transform.transform.location;
+        physicCompIt->velocity = v - transform->transform.location;
         physicCompIt->velocity.y = f;
-
-        //mesh->transform.transform.location = v;
-        //mesh->transform.UpdateLocalTransformMatrix();
 
         angle += engine.deltaTime * speed / patrolRadius;
     }
@@ -104,7 +101,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
 {
     state.enemyState = EnemyState::E_CHASING;
 
-    const Core::Maths::Vec3 loc = mesh->transform.transformMatrixNode->worldData.getTranslationVector();
+    const Core::Maths::Vec3 loc = transform->transformMatrixNode->worldData.getTranslationVector();
     Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
     Core::Maths::Vec3 velocityXZ { physicCompIt->velocity.x, 0, physicCompIt->velocity.z };
 
@@ -119,16 +116,16 @@ void Entity::Enemy::chase(const Core::Engine& engine)
     physicCompIt->velocity.z = velocityXZ.z;
     // Core::Maths::Vec3 direction = (position - chaseTarget).unitVector();
     // mesh->transform.transform.location += direction;
-    mesh->transform.UpdateLocalTransformMatrix();
-    mesh->transform.transformMatrixNode->cleanUpdate();
+    transform->UpdateLocalTransformMatrix();
+    transform->transformMatrixNode->cleanUpdate();
 }
 
 bool Entity::Enemy::isPlayerInRange() const
 {
-    if (!mesh.isValid() || !mesh->transform.transformMatrixNode.isValid())
+    if (!transform->transformMatrixNode.isValid())
         return false;
 
-    return (mesh->transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+    return (transform->transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= detectionRadius * detectionRadius;
 }
 

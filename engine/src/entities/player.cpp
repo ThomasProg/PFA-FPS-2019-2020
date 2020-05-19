@@ -16,7 +16,7 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
             Physics::TransformGraph& transformParent) 
 {
     BasicEntity::setup(renderer, model, shader, transformParent);
-    camera.setup(mesh->transform);
+    camera.setup(*transform);
 
     camera.transform.transform.location.y = 2.f;
     camera.transform.UpdateLocalTransformMatrix();
@@ -30,7 +30,7 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
             Physics::TransformGraph& transformParent) 
 {
     BasicEntity::setup(renderer, model, shader, texture, transformParent);
-    camera.setup(mesh->transform);
+    camera.setup(*transform);
 
     camera.transform.transform.location.y = 2.f;
     camera.transform.UpdateLocalTransformMatrix();
@@ -39,7 +39,8 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
-    if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
+    // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
+    if (physicCompIt->collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
     {
         physicCompIt->velocity.y = jumpSpeed;
         // state.playerState = PlayerState::E_JUMPING;
@@ -47,8 +48,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
 
     // Core::Maths::Vec3 forward = camera.camAnchor.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
     // Core::Maths::Vec3 right   = camera.camAnchor.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 forward = mesh->transform.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 right   = mesh->transform.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
+    Core::Maths::Vec3 forward = transform->transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
+    Core::Maths::Vec3 right   = transform->transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
 
     Core::Maths::Vec3 addedVelocity;
 
@@ -117,12 +118,16 @@ void Entity::Player::inputs(const Core::Engine& engine)
     if (glfwGetKey(engine.window, GLFW_KEY_L))
         deltaMouseX = -rotationSpeedOnKey;
 
-    mesh->transform.transform.rotation.y += deltaMouseX * rotationSpeed;
-    mesh->transform.transform.rotation.x = clamp(mesh->transform.transform.rotation.x + deltaMouseY * rotationSpeed, float(- M_PI / 2.f), float(M_PI / 2.f));
+    transform->transform.rotation.y += deltaMouseX * rotationSpeed;
+    camera.transform.transform.rotation.x = clamp(camera.transform.transform.rotation.x + deltaMouseY * rotationSpeed, float(- M_PI / 2.f), float(M_PI / 2.f));
 
-    mesh->transform.UpdateLocalTransformMatrix();
-    mesh->transform.transformMatrixNode->setDirtySelfAndChildren();
-    mesh->transform.transformMatrixNode->cleanUpdate();
+    transform->UpdateLocalTransformMatrix();
+    transform->transformMatrixNode->setDirtySelfAndChildren();
+    transform->transformMatrixNode->cleanUpdate();
+
+    camera.transform.UpdateLocalTransformMatrix();
+    camera.transform.transformMatrixNode->setDirtySelfAndChildren(); 
+    camera.transform.transformMatrixNode->cleanUpdate();
 }
 
 bool Entity::Player::isShooting(const Core::Engine& engine)

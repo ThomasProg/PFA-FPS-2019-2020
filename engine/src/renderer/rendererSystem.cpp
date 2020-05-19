@@ -25,7 +25,7 @@ void Renderer::RendererSystem::save(Save::Saver& saver)
     for (std::pair<const Entity::EntityID, Mesh> pair : meshes)
     {
         saver.save(pair.first);
-        saver.save(pair.second.transform.transform);
+        saver.save(pair.second.transform->transform);
         saver.save(pair.second.isDrawn);
     }
 }
@@ -39,7 +39,7 @@ void Renderer::RendererSystem::loadData(Save::Loader& loader)
     {
         std::pair<Entity::EntityID, Mesh> pair;
         loader.load(pair.first);
-        loader.load(pair.second.transform.transform);
+        loader.load(pair.second.transform->transform);
         loader.load(pair.second.isDrawn);
         meshes.emplace(std::move(pair));
     }
