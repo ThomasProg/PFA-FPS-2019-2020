@@ -217,11 +217,11 @@ bool Collisions::infiniteCylinderSegmentCollision(const Cylinder& cylinder, cons
     // Of course, we lose some precision, and this optimization would only be useful if the collision is really far away.
     // However, if we optimize the collisions, that is because we want to put a lot of them without lags, so that's not a problem.
 
-    // We already know that s != 0 from the previous assert
-    if (cross1sqrt / s > squaredRadius
-                       + cylinder.radius * segSquaredLength 
-                       + segSquaredLength)
-        return false;
+    // // We already know that s != 0 from the previous assert
+    // if (cross1sqrt / s > squaredRadius
+    //                    + cylinder.radius * segSquaredLength 
+    //                    + segSquaredLength)
+    //     return false;
 
     const Core::Maths::Vec3 cross2 = Core::Maths::Vec3::crossProduct(segment.p2 - segment.p1, cylinder.dirInWorldLoc - cylinder.location);
 
@@ -735,7 +735,7 @@ bool Collisions::centeredAABBMovingSphereCollision(CenteredAABB aabb, const Sphe
                 }
             }
 
-            return (cylinderSegmentCollision(cyl, seg, hit));
+            return (infiniteCylinderSegmentCollision(cyl, seg, hit));
         }
     };
 
