@@ -10,10 +10,10 @@ void Entity::BasicEntity::save(Save::Saver& saver)
     saver.save(entityID);
 
     // Renderer
-    bool isMeshValid = mesh.isValid() && transform.transformMatrixNode.isValid();
+    bool isMeshValid = mesh.isValid() && transform->transformMatrixNode.isValid();
     saver.save(isMeshValid);
     if (isMeshValid)
-        saver.save(transform.transformMatrixNode->graphID);
+        saver.save(transform->transformMatrixNode->graphID);
 
     // Physics
     bool isPhysicCompValid = physicCompIt.isValid();
@@ -52,11 +52,11 @@ void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
         {
             if (g.graphID == key)
             {
-                if (transform.transformMatrixNode.isValid())
+                if (transform->transformMatrixNode.isValid())
                 {
-                    transform.transformMatrixNode.erase();
+                    transform->transformMatrixNode.erase();
                 }
-                transform.transformMatrixNode = Physics::TransformGraph::iterator{&g};
+                transform->transformMatrixNode = Physics::TransformGraph::iterator{&g};
             }
         });
     }
@@ -72,14 +72,19 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
             const Resources::Shader* shader, 
             Physics::TransformGraph& transformParent) 
 {
+    if (transform == nullptr)
+    {
+        transform = new Physics::GTransform();
+    }
+        
     if (!mesh.isValid())
     {
         mesh = renderer.addComponentTo(*this);
-        mesh->transform = &transform;
+        mesh->transform = transform;
     }
 
     // transform 
-    transform.transformMatrixNode = transformParent.addChild();
+    transform->transformMatrixNode = transformParent.addChild();
 
     // resources
     mesh->model  = model;

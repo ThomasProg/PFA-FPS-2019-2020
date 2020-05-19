@@ -6,14 +6,19 @@ void Entity::RenderedEntity::setup(Renderer::RendererSystem& renderer,
             const Resources::Shader* shader, 
             Physics::TransformGraph& transformParent) 
 {
+    if (transform == nullptr)
+    {
+        transform = new Physics::GTransform();
+    }
+
     if (!mesh.isValid())
     {
         mesh = renderer.addComponentTo(*this);
-        mesh->transform = &transform;
+        mesh->transform = transform;
     }
 
     // transform 
-    transform.transformMatrixNode = transformParent.addChild();
+    transform->transformMatrixNode = transformParent.addChild();
 
     // resources
     mesh->model  = model;

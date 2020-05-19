@@ -11,7 +11,10 @@
 
 void Renderer::Mesh::draw(const Renderer::Camera& cam)
 {
-    if (!isDrawn || model == nullptr || shader == nullptr || &(*transform->transformMatrixNode) == nullptr)
+    if (transform == nullptr)
+        return;
+        
+    if (!isDrawn || model == nullptr || shader == nullptr || &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
         return;
 
     // Call Callback if valid
