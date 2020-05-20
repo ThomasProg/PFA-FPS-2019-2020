@@ -119,9 +119,9 @@ void World::setKeys(bool isAzerty)
 
 void World::loadFromSavefile(const char* savedFilename)
 {
-    saveSystem.load(savedFilename);
-    for (Entity::Enemy* enemy : enemies)
-        enemy->loadLinks(root);
+    // saveSystem.load(savedFilename);
+    // for (Entity::Enemy* enemy : enemies)
+    //     enemy->loadLinks(root);
 }
 
 void World::makeNewLevel()
@@ -148,10 +148,10 @@ void World::load()
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    saveSystem.add(this);
-    saveSystem.add(&root);
-    saveSystem.add(&rendererSystem);
-    saveSystem.add(&player);
+    // saveSystem.add(this);
+    // saveSystem.add(&root);
+    // saveSystem.add(&rendererSystem);
+    // saveSystem.add(&player);
 
     if (isLoaded)
         loadFromSavefile(Game::savedFilename);
@@ -170,7 +170,7 @@ void World::load()
 
     // ===== Set up Entity ===== //
 
-    player.setup(rendererSystem, 
+    player.setup(game.engine.rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
                 &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
@@ -209,7 +209,7 @@ World::~World()
 
     enemies.clear();
     grounds.clear();
-    rendererSystem.reset();
+    game.engine.rendererSystem.reset();
     game.engine.physicsSystem.reset(); 
 }
 
@@ -242,10 +242,10 @@ void World::addGround(const Physics::Transform& transform)
 
     Entity::BasicEntity* ground = grounds.back();
 
-    saveSystem.add(ground);
+    // saveSystem.add(ground);
 
 
-    ground->setup(rendererSystem, 
+    ground->setup(game.engine.rendererSystem, 
             &game.engine.resourceManager.get(E_Model::E_BOX), 
             &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
             &game.engine.resourceManager.get(E_Texture::E_GROUND), 
@@ -266,9 +266,9 @@ void World::addEnemy(const Physics::Transform& transform)
 
     // nextEntity.next();
 
-    saveSystem.add(&enemy);
+    // saveSystem.add(&enemy);
 
-    enemy.setup(rendererSystem, 
+    enemy.setup(game.engine.rendererSystem, 
             &game.engine.resourceManager.get(E_Model::E_DOG), 
             &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
             &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
@@ -296,7 +296,7 @@ void World::addBullet(const Physics::Transform& transform)
 
     std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.at(bullets.size() - 1);
 
-    bullet->setup(rendererSystem, 
+    bullet->setup(game.engine.rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
                 &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
@@ -522,7 +522,7 @@ void World::update()
             while(bullets.size() != 0 && game.engine.lastTime >= r->get()->timer)
             {
                 // (*r)->mesh.erase();
-                rendererSystem.erase((*r)->meshIt);
+                game.engine.rendererSystem.erase((*r)->meshIt);
                 r = bullets.erase(r);
             }
                
@@ -531,7 +531,7 @@ void World::update()
         // Save game
         if (glfwGetKey(game.engine.window, GLFW_KEY_F5))
         {
-            saveSystem.save(Game::savedFilename);
+            // saveSystem.save(Game::savedFilename);
             isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
         }
 
@@ -570,7 +570,7 @@ void World::renderUI()
 void World::render()   
 {
     if (camera != nullptr)
-        rendererSystem.draw(*camera, lightManager);
+        game.engine.rendererSystem.draw(*camera, lightManager);
 }
 
 void World::hud()
@@ -627,7 +627,7 @@ void World::pauseMenu()
     ImGui::SetCursorPosY(190.0f);
     if (ImGui::Button("Save", ImVec2(100, 50)))
     {
-        saveSystem.save(Game::savedFilename);
+        // saveSystem.save(Game::savedFilename);
         isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
     }
 

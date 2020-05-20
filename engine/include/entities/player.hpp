@@ -108,12 +108,12 @@ namespace Entity
 
         virtual void physicCompOnCollisionEnter        (const SegmentHit&) override 
         {
-            std::cout << "Enter collision" << std::endl;
+            // std::cout << "Enter collision" << std::endl;
         }
 
         virtual void physicCompOnCollisionExit        () override 
         {
-            std::cout << "Exit collision" << std::endl;
+            // std::cout << "Exit collision" << std::endl;
         }
 
 

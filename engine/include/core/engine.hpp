@@ -9,6 +9,7 @@
 
 #include "enumedResourceManager.hpp"
 #include "physicsSystem.hpp"
+#include "rendererSystem.hpp"
 #include "saveSystem.hpp"
 
 
@@ -24,6 +25,7 @@ namespace Core
     public:
         EnumedResourceManager resourceManager;
         Physics::PhysicsSystem physicsSystem;
+        Renderer::RendererSystem rendererSystem;
 
         /* data */
         GLFWwindow* window;

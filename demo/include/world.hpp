@@ -68,12 +68,11 @@ private:
     // Entity::EntityID nextEntity = 10u;
 
     Game& game;
-    Renderer::RendererSystem rendererSystem;
     Renderer::LightManager lightManager;
 
     Physics::TransformGraph root;
 
-    Save::SaveSystem saveSystem;
+    // Save::SaveSystem saveSystem;
 
     Entity::Player player;
     // std::list<Entity::BasicEntity> grounds;
