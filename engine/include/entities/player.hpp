@@ -100,9 +100,6 @@ namespace Entity
         Segment3D shoot() const;
         void dealDamages(float damages);
 
-
-
-
         virtual void onCollisionEnter        (const SegmentHit& hit) override;
         virtual void onCollisionExit         () override;
         virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;

@@ -101,3 +101,4 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
     setup(renderer, model, shader, transformParent);
     mesh->texture = texture;
 }
+    
