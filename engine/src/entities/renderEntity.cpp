@@ -6,7 +6,7 @@ void Entity::RenderedEntity::setup(Renderer::RendererSystem& renderer,
             const Resources::Shader* shader, 
             Physics::TransformGraph& transformParent) 
 {
-    meshIt = renderer.addComponentTo(&mesh);
+    meshIt = renderer.addComponent(&mesh);
     mesh.transform = &transform;
 
     // transform 

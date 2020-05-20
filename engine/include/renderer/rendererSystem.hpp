@@ -18,71 +18,47 @@ namespace Renderer
         static constexpr size_t maxChildrenAtLoad = 100;
 
     public:
-        // class iterator
-        // {
-        // private:
-        //     unsigned int elementIndex = 0;
-
-        // public:
-        //     iterator() = default;
-
-        //     iterator(unsigned int elementIndex) 
-        //         : elementIndex(elementIndex)
-        //     {
-
-        //     }
-
-        // //     Entity::EntityID entityID;
-        // //     RendererSystem* rendererSystem = nullptr;
-
-        // // public:
-        // //     iterator() = default;
-
-        // //     iterator(Entity::EntityID& entityID, RendererSystem* rendererSystem)
-        // //         : entityID(entityID), rendererSystem(rendererSystem)
-        // //     {
-
-        // //     }
-
-        // //     Mesh* operator->()
-        // //     {
-        // //         assert(rendererSystem != nullptr);
-        // //         return &rendererSystem->meshes.at(entityID);
-        // //     }
-
-        // //     const Mesh* operator->() const
-        // //     {
-        // //         assert(rendererSystem != nullptr);
-        // //         return &rendererSystem->meshes.at(entityID);
-        // //     }
-
-        // //     bool isValid() const noexcept
-        // //     {
-        // //         return rendererSystem != nullptr;
-        // //     }
-
-        // //     void erase()
-        // //     {
-        // //         assert(rendererSystem != nullptr);
-        // //         rendererSystem->meshes.erase(entityID);
-        // //     }
-
-        //     friend RendererSystem;
-        // };
+        // Represents an Index.
+        // This means an index can't take more size that this type's size.
+        // Used to erase the element from the sytem.
         using iterator = unsigned int;
 
     private:
-        // std::unordered_map<Entity::EntityID, Mesh> meshes;
         std::vector<Mesh*> meshes;
+        std::vector<iterator> freeMeshIndices;
 
     public:
+
         RendererSystem() = default;
 
-        // iterator addComponentTo(Entity::EntityID& entity);
-        iterator addComponentTo(Renderer::Mesh* mesh);
+        // Adds the mesh pointed by the pointer to the render list.
+        //
+        // Inputs : A pointer towards a valid mesh (not nullptr).
+        // Outputs : The iterator corresponding to the stored mesh pointer.
+        //
+        // WARNING : 
+        // - The mesh should be static in memory while being in the render list. 
+        //   If this requirement is not met, this results in undefined behavior.
+        // - No order is guaranteed.
+        //
+        // Speed :
+        // Average Case : O(1)
+        // Worst Case : O(n), n being meshes.size()
+        iterator addComponent(Renderer::Mesh* mesh);
 
-        // returns an iterator to the next element
-        iterator erase(iterator& it);
+        // Removes the reference to the mesh corresponding to the iterator.
+        // 
+        // Inputs : The corresponding iterator.
+        //
+        // WARNING : 
+        // - The iterator should be valid.
+        //   A valid iterator is an iterator returned by addComponent(), 
+        //   which has not been erased beforehand.
+        //
+        // Speed : 
+        // Average Case : O(1)
+        // Worst Case : O(n), n being freeMeshIndices.size()
+        void erase(iterator& it);
 
         void draw(const Camera& camera, Renderer::LightManager& lightManager);
 
@@ -92,6 +68,7 @@ namespace Renderer
         void reset()
         {
             meshes.clear();
+            freeMeshIndices.clear();
         }
 
         //friend iterator;

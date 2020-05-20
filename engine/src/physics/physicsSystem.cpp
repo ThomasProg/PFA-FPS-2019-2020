@@ -20,6 +20,15 @@ Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>
     return Physics::PhysicsSystem::ColliderIt<Box>{boxes.size() - 1};
 }
 
+Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
+{
+    // physicComponents.emplace(entity, Physics::PhysicComponent());
+    // return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
+    physicComponents.emplace_back(physicComp);
+    return Physics::PhysicsSystem::PhysicCompIt{physicComponents.size() - 1};
+}
+
+
 // template<> 
 // void Physics::PhysicsSystem::loadColliderItContainer<Box>(ColliderIt<Box>& it, const Entity::EntityID& entityID)
 // {
@@ -148,14 +157,6 @@ void Physics::PhysicsSystem::reset()
 
 
 
-
-Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
-{
-    // physicComponents.emplace(entity, Physics::PhysicComponent());
-    // return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
-    physicComponents.emplace_back(physicComp);
-    return Physics::PhysicsSystem::PhysicCompIt{physicComponents.size() - 1};
-}
 
 
 void Physics::PhysicsSystem::simulate(Core::Engine& engine)
