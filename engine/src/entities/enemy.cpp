@@ -161,35 +161,35 @@ void Entity::Enemy::loadData(Save::Loader& loader)
     loader.tryToDisplayError(__FILE__);
 }
 
-void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
-{
+// void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
+// {
     
-}
+// }
 
-void Entity::Enemy::onCollisionExit() 
-{
+// void Entity::Enemy::onCollisionExit() 
+// {
 
-}
+// }
 
-void Entity::Enemy::onOverlapEnterSelfHit(const SegmentHit& hit) 
-{
-    if (hit.normal.y < -0.5)
-    {
-        kill();
-    }
-}
+// void Entity::Enemy::onOverlapEnterSelfHit(const SegmentHit& hit) 
+// {
+//     if (hit.normal.y < -0.5)
+//     {
+//         kill();
+//     }
+// }
 
-void Entity::Enemy::onOverlapEnterAnotherHit(const SegmentHit& hit) 
-{    
-    if (hit.normal.y > 0.5)
-    {
-        kill();
-    }
-}
+// void Entity::Enemy::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+// {    
+//     if (hit.normal.y > 0.5)
+//     {
+//         kill();
+//     }
+// }
 
-void Entity::Enemy::takeDamage(int damage)
-{
-    life = clamp(life - damage, 0, life);
-    if(life == 0)
-        kill();
-}
+// void Entity::Enemy::takeDamage(int damage)
+// {
+//     life = clamp(life - damage, 0, life);
+//     if(life == 0)
+//         kill();
+// }

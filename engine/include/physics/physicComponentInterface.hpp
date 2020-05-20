@@ -14,10 +14,14 @@ namespace Physics
     
     public:
     
-        virtual void onCollisionEnter        (const SegmentHit&) = 0;
-        virtual void onCollisionExit         () = 0;
-        virtual void onOverlapEnterSelfHit   (const SegmentHit&) = 0;
-        virtual void onOverlapEnterAnotherHit(const SegmentHit&) = 0;
+        virtual void physicCompOnCollisionEnter        (const SegmentHit&) = 0;
+        virtual void physicCompOnCollisionExit         () = 0;
+        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
+        {
+
+        }
+        // virtual void physicCompOnOverlapEnterSelfHit   (const SegmentHit&) = 0;
+        // virtual void physicCompOnOverlapEnterAnotherHit(const SegmentHit&) = 0;
     };
 }
 #endif

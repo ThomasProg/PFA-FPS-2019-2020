@@ -76,7 +76,7 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
     {
         transform = new Physics::GTransform();
     }
-
+    
     meshIt = renderer.addComponentTo(&mesh);
     mesh.transform = transform;
 

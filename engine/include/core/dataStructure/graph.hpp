@@ -1,7 +1,6 @@
 #ifndef _GRAPH_HPP_
 #define _GRAPH_HPP_
 
-#include <functional>
 #include <unordered_map>
 #include <memory>
 

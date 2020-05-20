@@ -125,7 +125,7 @@ void World::loadFromSavefile(const char* savedFilename)
 
 void World::makeNewLevel()
 {
-    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
+    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
 
     addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
@@ -177,7 +177,7 @@ void World::load()
     fpsCamera.setup(*player.transform);
     tpsCamera.setup(*player.transform);
 
-    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
+    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
     player.collider.transform = player.physicComp.collider.transform = player.transform;
 
@@ -254,7 +254,7 @@ void World::addGround(const Physics::Transform& transform)
     ground->transform->UpdateLocalTransformMatrix();
     ground->transform->transformMatrixNode->setDirtySelfAndChildren();
 
-    ground->colliderIt = game.engine.physicsSystem.addCollider<Box>(*ground);
+    ground->colliderIt = game.engine.physicsSystem.addCollider<Box>(ground);
     ground->collider.transform = ground->transform;
 }
 
@@ -281,7 +281,7 @@ void World::addEnemy(const Physics::Transform& transform)
     enemy.transform->UpdateLocalTransformMatrix();
     enemy.transform->transformMatrixNode->setDirtySelfAndChildren();
 
-    enemy.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy);
+    enemy.colliderIt = game.engine.physicsSystem.addCollider<Box>(&enemy);
     enemy.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&enemy);
     enemy.collider.transform = enemy.physicComp.collider.transform = enemy.transform;
     enemy.physicComp.collider.worldCollider.radius = 1.f;
@@ -459,7 +459,7 @@ void World::updatePhysics()
     player.onPlayerDeath = [this](){ gameOver(); };
     /////////////
 
-    game.engine.physicsSystem.simulate(collisionsCallbacks, game.engine);
+    game.engine.physicsSystem.simulate(game.engine);
 }
 
 void World::update()   
@@ -483,13 +483,13 @@ void World::update()
         {
             Segment3D directionHit = player.shoot();
             SegmentHit hit;
-            Entity::EntityID touchEntity;
+            Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
 
             if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
             {
                 //test hit enemy
                 std::vector<Entity::Enemy*>::iterator it = enemies.begin();
-                while (it != enemies.end() && (*it)->entityID != touchEntity.entityID)
+                while (it != enemies.end() && (*it) != touchEntity)
                 {
                     it++;
                 }
@@ -503,7 +503,7 @@ void World::update()
                 {
                     //test hit ground/wall
                     std::vector<Entity::BasicEntity*>::iterator it = grounds.begin();
-                    while (it != grounds.end() && (*it)->entityID != touchEntity.entityID)
+                    while (it != grounds.end() && (*it) != touchEntity)
                     {
                         it++;
                     }
@@ -667,33 +667,33 @@ Physics::CollisionComponentInterface<Box>* World::getCollisionComponentEntityFro
 }
 
 
-void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
-{
-    if (world.player == collisionData.movingEntityID)
-    {
-        world.player.onCollisionEnter(collisionData.hit);
-    }
-}
+// void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
+// {
+//     if (world.player == collisionData.movingEntityID)
+//     {
+//         world.player.onCollisionEnter(collisionData.hit);
+//     }
+// }
 
-void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityID)
-{
-    Physics::CollisionComponentInterface<Box>* ent = world.getCollisionComponentEntityFromID(entityID);
-    ent->onCollisionExit();
-}
+// void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityID)
+// {
+//     Physics::CollisionComponentInterface<Box>* ent = world.getCollisionComponentEntityFromID(entityID);
+//     ent->onCollisionExit();
+// }
 
-void World::CollisionsCallbacks::onOverlap(const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
-{
-    Physics::CollisionComponentInterface<Box>* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
-    Physics::CollisionComponentInterface<Box>* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);
+// void World::CollisionsCallbacks::onOverlap(const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
+// {
+//     Physics::CollisionComponentInterface<Box>* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
+//     Physics::CollisionComponentInterface<Box>* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);
 
-    if (movingComp != nullptr)
-    {
-        movingComp->onOverlapEnterSelfHit(collisionData.hit);
-    }
+//     if (movingComp != nullptr)
+//     {
+//         movingComp->onOverlapEnterSelfHit(collisionData.hit);
+//     }
 
-    if (collisionComp != nullptr)
-    {
-        collisionComp->onOverlapEnterAnotherHit(collisionData.hit);
-    }
-}
+//     if (collisionComp != nullptr)
+//     {
+//         collisionComp->onOverlapEnterAnotherHit(collisionData.hit);
+//     }
+// }
 

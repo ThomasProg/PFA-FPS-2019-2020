@@ -2,14 +2,14 @@
 #define _BASIC_ENTITY_HPP_
 
 #include "entityID.hpp"
-#include "rendererSystem.hpp"
-#include "resourceManager.hpp"
 
 #include "box.hpp"
 #include "saveInterface.hpp"
 #include "collisionComponentInterface.hpp"
 #include "physicComponentInterface.hpp"
+
 #include "mesh.hpp"
+#include "rendererSystem.hpp"
 
 namespace Entity
 {
@@ -67,10 +67,19 @@ namespace Entity
         // after loading data, this function will be called to set pointers, iterators, references...
         void loadLinks(Physics::TransformGraph& root);
 
-        virtual void onCollisionEnter        (const SegmentHit&) override {}
-        virtual void onCollisionExit         () override {}
-        virtual void onOverlapEnterSelfHit   (const SegmentHit&) override {}
-        virtual void onOverlapEnterAnotherHit(const SegmentHit&) override {}
+        virtual void physicCompOnCollisionEnter        (const SegmentHit&) override {}
+        virtual void physicCompOnCollisionExit         () override {}
+        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        {
+
+        }
+
+        virtual void colliderOnCollisionEnter (const SegmentHit&) override {};
+        virtual void colliderOnCollisionExit  () override {};
+        virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        {
+
+        }
     };
 }
 

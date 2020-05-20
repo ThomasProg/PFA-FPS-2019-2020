@@ -10,6 +10,7 @@
 #include "loader.hpp"
 
 #include "light.hpp"
+#include "lightManager.hpp"
 
 void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& lightManager)
 {

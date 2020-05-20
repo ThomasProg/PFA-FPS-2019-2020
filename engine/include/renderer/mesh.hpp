@@ -6,13 +6,16 @@
 #include "gTransform.hpp"
 #include "camera.hpp"
 
-#include "lightManager.hpp"
-
 namespace Resources
 {
     class Model;
     class Shader;
     class Texture;
+}
+
+namespace Renderer
+{
+    class LightManager;
 }
 
 namespace Renderer

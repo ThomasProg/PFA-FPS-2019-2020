@@ -18,6 +18,8 @@
 #include "player.hpp"
 #include "enemy.hpp"
 
+#include "lightManager.hpp"
+
 #include <list>
 #include <unordered_map>
 

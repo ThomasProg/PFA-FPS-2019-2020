@@ -3,9 +3,6 @@
 
 #include "entityID.hpp"
 #include "rendererSystem.hpp"
-#include "resourceManager.hpp"
-
-#include "engine.hpp"
 
 #include "basicEntity.hpp"
 #include "controllerInterface.hpp"
@@ -13,6 +10,11 @@
 #include "fpsCamera.hpp"
 
 #include <array>
+
+namespace Core
+{
+    class Engine;
+}
 
 namespace Entity
 {
@@ -100,10 +102,12 @@ namespace Entity
         Segment3D shoot() const;
         void dealDamages(float damages);
 
-        virtual void onCollisionEnter        (const SegmentHit& hit) override;
-        virtual void onCollisionExit         () override;
-        virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
-        virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
+        // virtual void onCollisionEnter        (const SegmentHit& hit) override;
+        // virtual void onCollisionExit         () override;
+        // virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
+        // virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
+
+
     };
 }
 

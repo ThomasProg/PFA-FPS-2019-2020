@@ -174,18 +174,23 @@ void Entity::Player::onCollisionExit()
     state.playerState = PlayerState::E_JUMPING;
 }
 
-void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
-{
-    if (hit.normal.y < 0.5)
-    {
-        dealDamages(1.f);
-    }
-}
+// void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
+// {
+//     if (hit.normal.y < 0.5)
+//     {
+//         dealDamages(1.f);
+//     }
+// }
 
-void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+// void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+// {
+//     if (hit.normal.y > - 0.5)
+//     {
+//         dealDamages(1.f);
+//     }
+// }
+
+void Entity::Player::onOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
 {
-    if (hit.normal.y > - 0.5)
-    {
-        dealDamages(1.f);
-    }
+        
 }
