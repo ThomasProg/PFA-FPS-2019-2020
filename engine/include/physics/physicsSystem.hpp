@@ -3,6 +3,9 @@
 
 #include "collisionComponent.hpp"
 #include "physicComponent.hpp"
+#include "collisionComponentInterface.hpp"
+#include "physicComponentInterface.hpp"
+
 #include "entityID.hpp"
 
 #include "collisions.hpp"
@@ -41,8 +44,10 @@ namespace Physics
     class PhysicsSystem
     {
     private:
-        std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>> boxes;
-        std::unordered_map<Entity::EntityID, Physics::PhysicComponent> physicComponents;
+        // std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>> boxes;
+        // std::unordered_map<Entity::EntityID, Physics::PhysicComponent> physicComponents;
+        std::vector<Physics::CollisionComponentInterface<Box>*> boxes;
+        std::vector<Physics::PhysicComponentInterface*> physicComponents;
 
         static constexpr float gravityAcc = 9.81f * 0.01; 
         static constexpr float linearDamping  = 0.98f;
@@ -83,47 +88,55 @@ namespace Physics
         class iterator
         {
         private:
-            Entity::EntityID entityID;
-            std::unordered_map<Entity::EntityID, T>* mapPtr = nullptr;
+            unsigned int arrayIndex = 0;
+
+            // Entity::EntityID entityID;
+            // std::unordered_map<Entity::EntityID, T>* mapPtr = nullptr;
 
         public:
             iterator() = default;
 
-            iterator(Entity::EntityID& entityID, std::unordered_map<Entity::EntityID, T>* container)
-                : entityID(entityID), mapPtr(container)
+            iterator(unsigned int index)
+                : arrayIndex(index)
             {
 
             }
 
-            T& operator*()
-            {
-                assert(mapPtr != nullptr);                
-                return mapPtr->at(entityID);
-            }
+            // iterator(Entity::EntityID& entityID, std::unordered_map<Entity::EntityID, T>* container)
+            //     : entityID(entityID), mapPtr(container)
+            // {
 
-            T* operator->()
-            {
-                assert(mapPtr != nullptr);
-                return &mapPtr->at(entityID);
-            }
+            // }
 
-            const T* operator->() const
-            {
-                assert(mapPtr != nullptr);
-                return &mapPtr->at(entityID);
-            }
+            // T& operator*()
+            // {
+            //     assert(mapPtr != nullptr);                
+            //     return mapPtr->at(entityID);
+            // }
 
-            bool isValid() const noexcept
-            {
-                return mapPtr != nullptr;
-            }
+            // T* operator->()
+            // {
+            //     assert(mapPtr != nullptr);
+            //     return &mapPtr->at(entityID);
+            // }
 
-            void erase()
-            {
-                assert(mapPtr != nullptr);
-                mapPtr->erase(entityID);
-                mapPtr = nullptr;
-            }
+            // const T* operator->() const
+            // {
+            //     assert(mapPtr != nullptr);
+            //     return &mapPtr->at(entityID);
+            // }
+
+            // bool isValid() const noexcept
+            // {
+            //     return mapPtr != nullptr;
+            // }
+
+            // void erase()
+            // {
+            //     assert(mapPtr != nullptr);
+            //     mapPtr->erase(entityID);
+            //     mapPtr = nullptr;
+            // }
 
             friend PhysicsSystem;
         };
@@ -132,22 +145,24 @@ namespace Physics
         using ColliderIt = iterator<Physics::CollisionComponent<T>>;
         using PhysicCompIt = iterator<Physics::PhysicComponent>;
 
+
     public:
         PhysicsSystem() = default;
 
         template<typename T = Box>
         ColliderIt<T> addCollider(Entity::EntityID& entity);
         // template<typename T = Sphere>
-        inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
+        // inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
+        inline PhysicCompIt addPhysicComponent(Physics::PhysicComponent* physicComp);
 
-        template <typename T>
-        void loadColliderItContainer(ColliderIt<T>& it, const Entity::EntityID& entityID);
+        // template <typename T>
+        // void loadColliderItContainer(ColliderIt<T>& it, const Entity::EntityID& entityID);
 
-        inline void loadPhysicComponentItContainer(PhysicCompIt& it, const Entity::EntityID& entityID)
-        {
-            it.entityID = entityID;
-            it.mapPtr = &physicComponents;
-        }
+        // inline void loadPhysicComponentItContainer(PhysicCompIt& it, const Entity::EntityID& entityID)
+        // {
+        //     it.entityID = entityID;
+        //     it.mapPtr = &physicComponents;
+        // }
 
         // COLLISIONS_CALLBACKS must implement :
         // - void onCollisionEnter (CollisionsCallbacksSentData&);

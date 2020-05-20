@@ -5,10 +5,12 @@
 #include <vector>
 
 // template<typename T = Sphere>
-inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Entity::EntityID& entity)
+inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponent* physicComp)
 {
-    physicComponents.emplace(entity, Physics::PhysicComponent());
-    return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
+    // physicComponents.emplace(entity, Physics::PhysicComponent());
+    // return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
+    physicComponents.emplace_back(physicComp);
+    return Physics::PhysicsSystem::PhysicCompIt{physicComponents.size() - 1};
 }
 
 
@@ -90,7 +92,8 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
     
     Segment3D seg{sphere.center, sphere.center + velocity};
 
-    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    for (Physics::CollisionComponentInterface<Box>>* boxCollider : boxes)
     {
         if (!boxCollider.second.isEnabled || boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
             continue;

@@ -158,7 +158,7 @@ public:
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
 
-    Physics::CollisionComponentInterface* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
+    Physics::CollisionComponentInterface<Box>* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
 };
 
 #endif

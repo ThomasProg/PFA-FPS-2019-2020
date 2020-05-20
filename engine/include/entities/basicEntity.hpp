@@ -16,7 +16,7 @@ namespace Entity
 {
     // Example Class for rendering an object
     class BasicEntity : public EntityID, 
-                        public Physics::CollisionComponentInterface, 
+                        public Physics::CollisionComponentInterface<Box>, 
                         public Physics::PhysicComponentInterface, 
                         public Save::SaveInterface
     {

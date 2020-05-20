@@ -639,7 +639,7 @@ void World::pauseMenu()
     ImGui::End();
 }
 
-Physics::CollisionComponentInterface* World::getCollisionComponentEntityFromID(const Entity::EntityID& entityID)
+Physics::CollisionComponentInterface<Box>* World::getCollisionComponentEntityFromID(const Entity::EntityID& entityID)
 {
     if (player == entityID)
         return &player;
@@ -674,14 +674,14 @@ void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::Collis
 
 void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityID)
 {
-    Physics::CollisionComponentInterface* ent = world.getCollisionComponentEntityFromID(entityID);
+    Physics::CollisionComponentInterface<Box>* ent = world.getCollisionComponentEntityFromID(entityID);
     ent->onCollisionExit();
 }
 
 void World::CollisionsCallbacks::onOverlap(const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
 {
-    Physics::CollisionComponentInterface* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
-    Physics::CollisionComponentInterface* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);
+    Physics::CollisionComponentInterface<Box>* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
+    Physics::CollisionComponentInterface<Box>* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);
 
     if (movingComp != nullptr)
     {

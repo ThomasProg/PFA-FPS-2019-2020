@@ -6,10 +6,12 @@
 
 namespace Physics
 {
+    template<typename SHAPE>
     class CollisionComponentInterface
     {
     public:
-        Physics::PhysicsSystem::ColliderIt<Box> colliderIt;
+        Physics::PhysicsSystem::ColliderIt<SHAPE> colliderIt;
+        Physics::PhysicsSystem::ColliderIt<SHAPE> collider;
     
     public:
     

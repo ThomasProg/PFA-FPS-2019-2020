@@ -13,12 +13,12 @@ Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>
     return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
 }
 
-template<> 
-void Physics::PhysicsSystem::loadColliderItContainer<Box>(ColliderIt<Box>& it, const Entity::EntityID& entityID)
-{
-    it.entityID = entityID;
-    it.mapPtr = &boxes;
-}
+// template<> 
+// void Physics::PhysicsSystem::loadColliderItContainer<Box>(ColliderIt<Box>& it, const Entity::EntityID& entityID)
+// {
+//     it.entityID = entityID;
+//     it.mapPtr = &boxes;
+// }
 
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
