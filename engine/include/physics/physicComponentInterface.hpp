@@ -10,7 +10,7 @@ namespace Physics
     {
     public:
         Physics::PhysicsSystem::PhysicCompIt physicCompIt;
-        Physics::PhysicsSystem::PhysicComponent physicComp;
+        Physics::PhysicComponent physicComp;
     
     public:
     

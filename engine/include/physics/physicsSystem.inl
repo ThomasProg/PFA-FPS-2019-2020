@@ -1,11 +1,14 @@
 #include "physicsSystem.hpp"
 
+#include "collisionComponentInterface.hpp"
+#include "physicComponent.hpp"
+
 #include "gTransform.hpp"
 #include "engine.hpp"
 #include <vector>
 
 // template<typename T = Sphere>
-inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponent* physicComp)
+inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
 {
     // physicComponents.emplace(entity, Physics::PhysicComponent());
     // return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
@@ -17,53 +20,54 @@ inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicCom
 template<typename COLLISIONS_CALLBACKS>
 void Physics::PhysicsSystem::simulate(COLLISIONS_CALLBACKS& callbacks, Core::Engine& engine)
 {
-    for (std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp : physicComponents)
+    // for (std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp : physicComponents)
+    for (Physics::PhysicComponentInterface* physicComp : physicComponents)
     {
-        physicComp.second.collider.worldCollider.center = physicComp.second.collider.transform->transform.location;
+        physicComp->collider.worldCollider.center = physicComp->collider.transform->transform.location;
         
         for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& box : boxes)
         {
             box.second.worldCollider.transform = box.second.transform->transformMatrixNode->worldData;
-                                            //    * physicComp.second.collider.transform->transformMatrixNode->worldData.getInverse();
+                                            //    * physicComp->collider.transform->transformMatrixNode->worldData.getInverse();
         }
 
-        if (physicComp.second.isEnabled)
+        if (physicComp->isEnabled)
         {
             Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
-            playerIgnoreData.ignoredEntities.emplace(physicComp.first);
+            playerIgnoreData.ignoredEntities.emplace(physicComp);
             // simulatePhysics(physicComp, 
             //                 playerIgnoreData, 
-            //                 physicComp.second.velocity,
+            //                 physicComp->velocity,
             //                 callbacks);
             Sphere sphere;
-            sphere.center = physicComp.second.collider.worldCollider.center;
-            sphere.radius = physicComp.second.collider.worldCollider.radius; 
+            sphere.center = physicComp->collider.worldCollider.center;
+            sphere.radius = physicComp->collider.worldCollider.radius; 
         // if (leftVelocity.y > 0)
         // std::cout << leftVelocity << std::endl;
 
-            std::map<Entity::EntityID, bool>::iterator it = physicComp.second.collider.collidingEntities.begin();
-            while (it != physicComp.second.collider.collidingEntities.end())
+            std::map<Entity::EntityID, bool>::iterator it = physicComp->collider.collidingEntities.begin();
+            while (it != physicComp->collider.collidingEntities.end())
             {
                 it->second = false;
                 ++it;
             }
 
-            Core::Maths::Vec3 temp = physicComp.second.collider.transform->transform.location + physicComp.second.velocity; 
-            Core::Maths::Vec3& leftVelocity = physicComp.second.velocity;
-            physicComp.second.collider.transform->transform.location = simulatePhysicsForASphere(sphere, 
-                                                                                                playerIgnoreData,  
-                                                                                                physicComp.second.collider.collidingEntities,
-                                                                                                leftVelocity,
-                                                                                                physicComp.first,
-                                                                                                callbacks);
+            Core::Maths::Vec3 temp = physicComp->collider.transform->transform.location + physicComp->velocity; 
+            Core::Maths::Vec3& leftVelocity = physicComp->velocity;
+            physicComp->collider.transform->transform.location = simulatePhysicsForASphere(sphere, 
+                                                                                            playerIgnoreData,  
+                                                                                            physicComp->collider.collidingEntities,
+                                                                                            leftVelocity,
+                                                                                            physicComp,
+                                                                                            callbacks);
 
-            std::map<Entity::EntityID, bool>::iterator itColliding = physicComp.second.collider.collidingEntities.begin();
-            while (itColliding != physicComp.second.collider.collidingEntities.end())
+            std::map<Entity::EntityID, bool>::iterator itColliding = physicComp->collider.collidingEntities.begin();
+            while (itColliding != physicComp->collider.collidingEntities.end())
             {
                 if (!itColliding->second)
                 {
-                    callbacks.onCollisionExit(physicComp.first);//it->first);  
-                    itColliding = physicComp.second.collider.collidingEntities.erase(itColliding);
+                    callbacks.onCollisionExit(physicComp);//it->first);  
+                    itColliding = physicComp->collider.collidingEntities.erase(itColliding);
                 }
                 else 
                     ++itColliding;
@@ -73,10 +77,10 @@ void Physics::PhysicsSystem::simulate(COLLISIONS_CALLBACKS& callbacks, Core::Eng
             // if (physicComp.second.collider.isColliding)
             //     physicComp.second.velocity *= linearDamping;
 
-            simulateGravity(physicComp.second, engine);
+            simulateGravity(physicComp->collider, engine);
 
-            physicComp.second.collider.transform->UpdateLocalTransformMatrix();
-            physicComp.second.collider.transform->transformMatrixNode->cleanUpdate();
+            physicComp->collider.transform->UpdateLocalTransformMatrix();
+            physicComp->collider.transform->transformMatrixNode->cleanUpdate();
         }
     }
 }
@@ -85,7 +89,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
                                                       const Core::Maths::Vec3& velocity,
                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                                       SegmentHit& hit,
-                                                      Entity::EntityID& collidedEntityID)
+                                                      Physics::CollisionComponentInterface<Box>*& collidedMeshInterface)
 {
     bool hasCollided = false;
     SegmentHit segmentHit;
@@ -93,24 +97,24 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
     Segment3D seg{sphere.center, sphere.center + velocity};
 
     // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
-    for (Physics::CollisionComponentInterface<Box>>* boxCollider : boxes)
+    for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
-        if (!boxCollider.second.isEnabled || boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider.first) > 0)
+        if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
             continue;
 
-        // boxCollider.second.worldCollider.transform = boxCollider.second.transform->transformMatrixNode->worldData; 
+        // boxCollider->collider.worldCollider.transform = boxCollider->collider.transform->transformMatrixNode->worldData; 
         //                                             // * physicComp.collider.transform->transformMatrixNode->worldData.getInverse();
 
-        boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
+        boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
 
-        if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, sphere, seg, segmentHit))
+        if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, segmentHit))
         {
             if (segmentHit.t <= hit.t)
             {
                 hit = segmentHit;
 
                 hasCollided = true;
-                collidedEntityID = boxCollider.first;
+                collidedMeshInterface = boxCollider;
             }
         }
     }
@@ -166,11 +170,12 @@ inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const
 
     SegmentHit hit;
     hit.t = 2.f;
-    Entity::EntityID collidedEntity; // box
+    // Entity::EntityID collidedEntity; // box
+    Physics::CollisionComponentInterface<Box>* collidedMeshInterface; // box
 
-    if (sphereCollisionWithBoxes(sphere, leftVelocity, data, hit, collidedEntity))
+    if (sphereCollisionWithBoxes(sphere, leftVelocity, data, hit, collidedMeshInterface))
     {
-        std::pair<std::map<Entity::EntityID, bool>::iterator, bool> it = collidingEntities.emplace(collidedEntity, true);
+        std::pair<std::map<Entity::EntityID, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
         if (!it.second)
         {
             // Callback
@@ -178,7 +183,7 @@ inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const
             {
                 std::move(hit),
                 physicCompID,
-                collidedEntity
+                collidedMeshInterface
             };
             callbacks.onCollisionEnter(collisionsCallbacksSentData);
         }

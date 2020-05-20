@@ -1,11 +1,6 @@
 #ifndef _PHYSICS_SYSTEM_HPP_
 #define _PHYSICS_SYSTEM_HPP_
 
-#include "collisionComponent.hpp"
-#include "physicComponent.hpp"
-#include "collisionComponentInterface.hpp"
-#include "physicComponentInterface.hpp"
-
 #include "entityID.hpp"
 
 #include "collisions.hpp"
@@ -39,6 +34,14 @@ namespace Entity
 
 namespace Physics
 {
+    template<typename SHAPE>
+    class CollisionComponentInterface;
+    template<typename SHAPE>
+    class CollisionComponent;
+
+    class PhysicComponentInterface;
+    class PhysicComponent;
+
     // using ColliderIt = std::unordered_map<Entity::EntityID, Physics::CollisionComponent<Box>>::iterator;
     
     class PhysicsSystem
@@ -153,7 +156,7 @@ namespace Physics
         ColliderIt<T> addCollider(Entity::EntityID& entity);
         // template<typename T = Sphere>
         // inline PhysicCompIt addPhysicComponent(Entity::EntityID& entity);
-        inline PhysicCompIt addPhysicComponent(Physics::PhysicComponent* physicComp);
+        inline PhysicCompIt addPhysicComponent(Physics::PhysicComponentInterface* physicComp);
 
         // template <typename T>
         // void loadColliderItContainer(ColliderIt<T>& it, const Entity::EntityID& entityID);
@@ -211,7 +214,7 @@ namespace Physics
                                             const Core::Maths::Vec3& velocity,
                                             const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                             SegmentHit& hit,
-                                            Entity::EntityID& collidedEntityID);
+                                            Physics::CollisionComponentInterface<Box>*& collidedMeshInterface);
 
 
         bool staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 

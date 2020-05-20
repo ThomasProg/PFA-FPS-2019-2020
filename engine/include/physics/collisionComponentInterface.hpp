@@ -11,7 +11,7 @@ namespace Physics
     {
     public:
         Physics::PhysicsSystem::ColliderIt<SHAPE> colliderIt;
-        Physics::PhysicsSystem::ColliderIt<SHAPE> collider;
+        Physics::CollisionComponent<SHAPE> collider;
     
     public:
     

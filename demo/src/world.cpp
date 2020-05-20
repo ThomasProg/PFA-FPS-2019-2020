@@ -10,6 +10,9 @@
 #include "log.hpp"
 #include "editorUtility.hpp"
 
+#include "physicComponentInterface.hpp"
+#include "collisionComponentInterface.hpp"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -123,7 +126,7 @@ void World::loadFromSavefile(const char* savedFilename)
 void World::makeNewLevel()
 {
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
-    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
+    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
 
     addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
     addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
@@ -175,12 +178,12 @@ void World::load()
     tpsCamera.setup(*player.transform);
 
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
-    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
-    player.colliderIt->transform = player.physicCompIt->collider.transform = player.transform;
+    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
+    player.collider.transform = player.physicComp.collider.transform = player.transform;
 
     // if (!isLoaded)
     {
-        player.physicCompIt-> collider.worldCollider.radius = 1.f;
+        player.physicComp.collider.worldCollider.radius = 1.f;
     }
 
     updateCameraProjection();
@@ -252,7 +255,7 @@ void World::addGround(const Physics::Transform& transform)
     ground->transform->transformMatrixNode->setDirtySelfAndChildren();
 
     ground->colliderIt = game.engine.physicsSystem.addCollider<Box>(*ground);
-    ground->colliderIt->transform = ground->transform;
+    ground->collider.transform = ground->transform;
 }
 
 void World::addEnemy(const Physics::Transform& transform)
@@ -279,9 +282,9 @@ void World::addEnemy(const Physics::Transform& transform)
     enemy.transform->transformMatrixNode->setDirtySelfAndChildren();
 
     enemy.colliderIt = game.engine.physicsSystem.addCollider<Box>(enemy);
-    enemy.physicCompIt = game.engine.physicsSystem.addPhysicComponent(enemy);
-    enemy.colliderIt->transform = enemy.physicCompIt->collider.transform = enemy.transform;
-    enemy.physicCompIt->collider.worldCollider.radius = 1.f;
+    enemy.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&enemy);
+    enemy.collider.transform = enemy.physicComp.collider.transform = enemy.transform;
+    enemy.physicComp.collider.worldCollider.radius = 1.f;
 }
 
 void World::addBullet(const Physics::Transform& transform)
@@ -440,12 +443,12 @@ void World::updatePhysics()
     //////// CAN BE SET BEFORE
     for (Entity::Enemy* enemy : enemies)
     {
-        enemy->colliderIt->isOverlap   = true;
+        enemy->collider.isOverlap   = true;
     }
 
     if (player.transform->transformMatrixNode.isValid())
     {
-        player.colliderIt->isOverlap   = true;
+        player.collider.isOverlap   = true;
     }
 
     Entity::BasicEntity* it = grounds.front();

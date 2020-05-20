@@ -41,6 +41,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
 {       
     if (!physicCompIt.isValid())
         return;
+    
+    std::vector<unsigned int>::iterator it;
 
     // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
     if (physicCompIt->collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
