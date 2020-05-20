@@ -26,6 +26,7 @@ public:
     {
         E_FLAT = 0,
         E_TEXTURED,
+        E_LIGHTED
     };
 
 private:

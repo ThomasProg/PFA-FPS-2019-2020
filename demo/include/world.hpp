@@ -67,6 +67,7 @@ private:
 
     Game& game;
     Renderer::RendererSystem rendererSystem;
+    Renderer::LightManager lightManager;
 
     Physics::TransformGraph root;
 
@@ -103,6 +104,7 @@ private:
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
     EditorMode editorMode {EditorMode::E_TRANSLATION};
+
 
     class CollisionsCallbacks
     {

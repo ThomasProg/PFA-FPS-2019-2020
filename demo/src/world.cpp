@@ -125,11 +125,13 @@ void World::makeNewLevel()
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(player);
 
-    addGround({{5.f, -30, 0}, {0.f,0,0}, {20,1,20}});
-    addGround({{50.f, -33, 0}, {0.f,0,0}, {20,1,30}});
-    addGround({{5.f, -35, -20}, {0.f,0,0}, {30,1,40}});
+    addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
+    addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
+    addGround({{5.f, -35, -20}, {0.f,0,0}, {20,1,40}});
 
-    addEnemy({{2.f, -4, 0}, {0.f,0,0}, {1,1,1}});
+    addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
+
+    addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
 }
 
 void World::load()
@@ -152,11 +154,20 @@ void World::load()
     else 
         makeNewLevel();
 
+    lightManager.lightsBufferInit(10);
+    lightManager.lights.emplace_back();
+    lightManager.lights.emplace_back();
+    {
+        Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
+        l.location = {20.f, -27.f, 12, 0.0}; 
+        l.lightType = 3;
+    }
+
     // ===== Set up Entity ===== //
 
     player.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
     fpsCamera.setup(*player.transform);
@@ -224,7 +235,7 @@ void World::addGround(const Physics::Transform& transform)
 
         ground.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
 
@@ -251,7 +262,7 @@ void World::addEnemy(const Physics::Transform& transform)
 
         enemy.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_DOG), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
 
@@ -280,7 +291,7 @@ void World::addBullet(const Physics::Transform& transform)
 
     bullet.setup(rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
-                &game.engine.resourceManager.get(E_Shader::E_TEXTURED), 
+                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
     
@@ -401,7 +412,7 @@ void World::updateEditorFunctions()
         {
             if (newSelection != editorSelectedEntity)
             {
-                newSelection->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_TEXTURED);
+                newSelection->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
 
                 editorSelectedEntity = newSelection;
                 editorSelectedEntity->mesh->color = {0, 0.4, 0.4, 0.5};
@@ -412,7 +423,7 @@ void World::updateEditorFunctions()
         {
             if (editorSelectedEntity != nullptr)
             {
-                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_TEXTURED);
+                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
             }
             editorSelectedEntity = nullptr;
         }
@@ -433,6 +444,11 @@ void World::updatePhysics()
     {
         player.colliderIt->isOverlap   = true;
     }
+
+    auto it = grounds.begin();
+    it->second.transform->transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
+    it->second.transform->UpdateLocalTransformMatrix();
+    it->second.transform->transformMatrixNode->setDirtySelfAndChildren();
 
     player.onPlayerDeath = [this](){ gameOver(); };
     /////////////
@@ -538,7 +554,7 @@ void World::renderUI()
 void World::render()   
 {
     if (camera != nullptr)
-        rendererSystem.draw(*camera);
+        rendererSystem.draw(*camera, lightManager);
 }
 
 void World::hud()

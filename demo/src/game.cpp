@@ -33,16 +33,25 @@ void Game::loadResources()
         model.loadOBJ("resources/obj/dog.obj");
         for (Core::Maths::Vec3& pos : model.positions)
         {
-            pos /= 10.f;
-            float temp = pos.z;
-            pos.z = pos.y;
-            pos.y = temp;
+            pos /= 30.f;
+            std::swap(pos.y, pos.z);
 
-            pos.y -= 1.1f;
-            pos.z /= 2.f;
-            pos.y /= 1.3f;
+            // pos.y -= 1.1f;
+            // pos.z /= 2.f;
+            // pos.y /= 1.3f;
 
-            pos.x *= -1;
+            pos.z *= -1;
+        }
+
+        for (Core::Maths::Vec3& normal : model.normals)
+        {
+            std::swap(normal.y, normal.z);
+
+            // pos.y -= 1.1f;
+            // pos.z /= 2.f;
+            // pos.y /= 1.3f;
+
+            normal.z *= -1;
         }
         model.setupModel();
         engine.resourceManager.add(std::move(model), E_Model::E_DOG);
@@ -55,6 +64,7 @@ void Game::loadResources()
     }
     engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
     engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
+    engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}, E_Shader::E_LIGHTED);
 }
 
 void Game::loadMenu()

@@ -1,8 +1,12 @@
 #ifndef _MESH_HPP_
 #define _MESH_HPP_
 
+#include <vector>
+
 #include "gTransform.hpp"
 #include "camera.hpp"
+
+#include "lightManager.hpp"
 
 namespace Resources
 {
@@ -20,7 +24,7 @@ namespace Renderer
         const Resources::Model*  model  = nullptr;
         const Resources::Shader* shader = nullptr;
         const Resources::Texture* texture = nullptr;
-        Physics::GTransform* transform;
+        Physics::GTransform* transform = nullptr;
 
         bool isDrawn = true;
 
@@ -35,7 +39,7 @@ namespace Renderer
 
         void linkShaderWithModel();
 
-        void draw(const Renderer::Camera&);
+        void draw(const Renderer::Camera&, Renderer::LightManager& lightManager);
     };
 }
 
