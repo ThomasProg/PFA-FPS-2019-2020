@@ -42,7 +42,7 @@ bool Resources::Texture::loadTexture(const char* filename, int& width, int& heig
     GLuint image_texture;
     glGenTextures(1, &image_texture);
     glBindTexture(GL_TEXTURE_2D, image_texture);
-    std::cout << image_texture << std::endl;
+    // std::cout << image_texture << std::endl;
 
     // Setup filtering parameters for display
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
