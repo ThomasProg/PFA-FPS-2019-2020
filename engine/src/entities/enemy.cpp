@@ -16,12 +16,10 @@ void Entity::Enemy::update(const Core::Engine& engine)
         {
             isDead = false;
             timeLeftTillRespawn = 0.f;
-            if (mesh.isValid())
-            {
-                colliderIt->isEnabled = true;
-                physicCompIt->isEnabled = true;
-                mesh->isDrawn = true;
-            }
+
+            colliderIt->isEnabled = true;
+            physicCompIt->isEnabled = true;
+            mesh.isDrawn = true;
         }
     }
     else 
@@ -136,10 +134,8 @@ void Entity::Enemy::kill()
 
     colliderIt->isEnabled = false;
     physicCompIt->isEnabled = false;
-    if (mesh.isValid())
-    {
-        mesh->isDrawn = false;
-    }
+
+    mesh.isDrawn = false;
 }
 
 

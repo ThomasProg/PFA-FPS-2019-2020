@@ -11,19 +11,16 @@ void Entity::RenderedEntity::setup(Renderer::RendererSystem& renderer,
         transform = new Physics::GTransform();
     }
 
-    if (!mesh.isValid())
-    {
-        mesh = renderer.addComponentTo(*this);
-        mesh->transform = transform;
-    }
+    meshIt = renderer.addComponentTo(&mesh);
+    mesh.transform = transform;
 
     // transform 
     transform->transformMatrixNode = transformParent.addChild();
 
     // resources
-    mesh->model  = model;
-    mesh->shader = shader;
-    mesh->linkShaderWithModel();
+    mesh.model  = model;
+    mesh.shader = shader;
+    mesh.linkShaderWithModel();
 }
 
 void Entity::RenderedEntity::setup(Renderer::RendererSystem& renderer, 
@@ -33,5 +30,5 @@ void Entity::RenderedEntity::setup(Renderer::RendererSystem& renderer,
             Physics::TransformGraph& transformParent) 
 {
     setup(renderer, model, shader, transformParent);
-    mesh->texture = texture;
+    mesh.texture = texture;
 }

@@ -13,7 +13,10 @@ namespace Entity
     public:
         Physics::GTransform* transform = nullptr;
         Physics::GraphKey key;
-        Renderer::MeshIt mesh;
+
+        Renderer::MeshIt meshIt;
+        Renderer::Mesh mesh;
+
         float lifeTime = 2.0f;
         float timer;
         

@@ -19,58 +19,71 @@ namespace Renderer
         static constexpr size_t maxChildrenAtLoad = 100;
 
     public:
-        class iterator
-        {
-        private:
-            // unsigned int elementIndex;
-            Entity::EntityID entityID;
-            RendererSystem* rendererSystem = nullptr;
+        // class iterator
+        // {
+        // private:
+        //     unsigned int elementIndex = 0;
 
-        public:
-            iterator() = default;
+        // public:
+        //     iterator() = default;
 
-            iterator(Entity::EntityID& entityID, RendererSystem* rendererSystem)
-                : entityID(entityID), rendererSystem(rendererSystem)
-            {
+        //     iterator(unsigned int elementIndex) 
+        //         : elementIndex(elementIndex)
+        //     {
 
-            }
+        //     }
 
-            Mesh* operator->()
-            {
-                assert(rendererSystem != nullptr);
-                return &rendererSystem->meshes.at(entityID);
-            }
+        // //     Entity::EntityID entityID;
+        // //     RendererSystem* rendererSystem = nullptr;
 
-            const Mesh* operator->() const
-            {
-                assert(rendererSystem != nullptr);
-                return &rendererSystem->meshes.at(entityID);
-            }
+        // // public:
+        // //     iterator() = default;
 
-            bool isValid() const noexcept
-            {
-                return rendererSystem != nullptr;
-            }
+        // //     iterator(Entity::EntityID& entityID, RendererSystem* rendererSystem)
+        // //         : entityID(entityID), rendererSystem(rendererSystem)
+        // //     {
 
-            void erase()
-            {
-                assert(rendererSystem != nullptr);
-                rendererSystem->meshes.erase(entityID);
-            }
+        // //     }
 
-            friend RendererSystem;
-        };
+        // //     Mesh* operator->()
+        // //     {
+        // //         assert(rendererSystem != nullptr);
+        // //         return &rendererSystem->meshes.at(entityID);
+        // //     }
+
+        // //     const Mesh* operator->() const
+        // //     {
+        // //         assert(rendererSystem != nullptr);
+        // //         return &rendererSystem->meshes.at(entityID);
+        // //     }
+
+        // //     bool isValid() const noexcept
+        // //     {
+        // //         return rendererSystem != nullptr;
+        // //     }
+
+        // //     void erase()
+        // //     {
+        // //         assert(rendererSystem != nullptr);
+        // //         rendererSystem->meshes.erase(entityID);
+        // //     }
+
+        //     friend RendererSystem;
+        // };
+        using iterator = unsigned int;
 
     private:
-        std::unordered_map<Entity::EntityID, Mesh> meshes;
-        // std::vector<Mesh*> meshes;
+        // std::unordered_map<Entity::EntityID, Mesh> meshes;
+        std::vector<Mesh*> meshes;
 
     public:
         RendererSystem() = default;
 
-        iterator addComponentTo(Entity::EntityID& entity);
+        // iterator addComponentTo(Entity::EntityID& entity);
+        iterator addComponentTo(Renderer::Mesh* mesh);
 
-        void remove(decltype(meshes)::iterator& it);
+        // returns an iterator to the next element
+        iterator erase(iterator& it);
 
         void draw(const Camera& camera, Renderer::LightManager& lightManager);
 
@@ -82,7 +95,7 @@ namespace Renderer
             meshes.clear();
         }
 
-        friend iterator;
+        //friend iterator;
     };
 
     // MeshComponents are used by the RendererSystem.

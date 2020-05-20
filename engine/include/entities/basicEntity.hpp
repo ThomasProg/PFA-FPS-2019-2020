@@ -10,6 +10,7 @@
 #include "saveInterface.hpp"
 #include "collisionComponentInterface.hpp"
 #include "physicComponentInterface.hpp"
+#include "mesh.hpp"
 
 namespace Entity
 {
@@ -21,7 +22,9 @@ namespace Entity
     {
     public:
         Physics::GTransform* transform = nullptr;
-        Renderer::MeshIt mesh;
+
+        Renderer::MeshIt meshIt;
+        Renderer::Mesh mesh;
         // Physics::PhysicComponent physicComponent; // moving sphere 
 
         // to load graphs

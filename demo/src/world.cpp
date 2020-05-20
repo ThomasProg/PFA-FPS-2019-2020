@@ -415,18 +415,18 @@ void World::updateEditorFunctions()
         {
             if (newSelection != editorSelectedEntity)
             {
-                newSelection->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
+                newSelection->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
 
                 editorSelectedEntity = newSelection;
-                editorSelectedEntity->mesh->color = {0, 0.4, 0.4, 0.5};
-                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_FLAT);
+                editorSelectedEntity->mesh.color = {0, 0.4, 0.4, 0.5};
+                editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_FLAT);
             }
         }
         else 
         {
             if (editorSelectedEntity != nullptr)
             {
-                editorSelectedEntity->mesh->shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
+                editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
             }
             editorSelectedEntity = nullptr;
         }
@@ -517,7 +517,8 @@ void World::update()
             std::vector<std::unique_ptr<Entity::RenderedEntity>>::iterator r = bullets.begin();
             while(bullets.size() != 0 && game.engine.lastTime >= r->get()->timer)
             {
-                (*r)->mesh.erase();
+                // (*r)->mesh.erase();
+                rendererSystem.erase((*r)->meshIt);
                 r = bullets.erase(r);
             }
                

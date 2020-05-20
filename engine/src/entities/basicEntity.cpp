@@ -6,41 +6,41 @@
 // save any data you want with this function
 void Entity::BasicEntity::save(Save::Saver& saver)
 {
-    // Entity
-    saver.save(entityID);
+    // // Entity
+    // saver.save(entityID);
 
-    // Renderer
-    bool isMeshValid = mesh.isValid() && transform->transformMatrixNode.isValid();
-    saver.save(isMeshValid);
-    if (isMeshValid)
-        saver.save(transform->transformMatrixNode->graphID);
+    // // Renderer
+    // bool isMeshValid = mesh.isValid() && transform->transformMatrixNode.isValid();
+    // saver.save(isMeshValid);
+    // if (isMeshValid)
+    //     saver.save(transform->transformMatrixNode->graphID);
 
-    // Physics
-    bool isPhysicCompValid = physicCompIt.isValid();
-    saver.save(isPhysicCompValid); 
-    if (isPhysicCompValid)
-        saver.save(physicCompIt->velocity);
+    // // Physics
+    // bool isPhysicCompValid = physicCompIt.isValid();
+    // saver.save(isPhysicCompValid); 
+    // if (isPhysicCompValid)
+    //     saver.save(physicCompIt->velocity);
 }
 
 // loads the data loaded from the save file
 void Entity::BasicEntity::loadData(Save::Loader& loader)
 {
-    // Entity
-    loader.load(entityID);
+    // // Entity
+    // loader.load(entityID);
 
-    // Renderer
-    bool isMeshValid;
-    loader.load(isMeshValid);
-    if (isMeshValid)
-        loader.load(key);
+    // // Renderer
+    // bool isMeshValid;
+    // loader.load(isMeshValid);
+    // if (isMeshValid)
+    //     loader.load(key);
 
-    // // Physics
-    // bool isPhysicCompValid;
-    // loader.load(isPhysicCompValid);
-    // if (isPhysicCompValid)
-    //     loader.load(physicCompIt->velocity);
+    // // // Physics
+    // // bool isPhysicCompValid;
+    // // loader.load(isPhysicCompValid);
+    // // if (isPhysicCompValid)
+    // //     loader.load(physicCompIt->velocity);
 
-    loader.tryToDisplayError(__FILE__);
+    // loader.tryToDisplayError(__FILE__);
 }
 
 // after loading data, this function will be called to set pointers, iterators, references...
@@ -76,20 +76,17 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
     {
         transform = new Physics::GTransform();
     }
-        
-    if (!mesh.isValid())
-    {
-        mesh = renderer.addComponentTo(*this);
-        mesh->transform = transform;
-    }
+
+    meshIt = renderer.addComponentTo(&mesh);
+    mesh.transform = transform;
 
     // transform 
     transform->transformMatrixNode = transformParent.addChild();
 
     // resources
-    mesh->model  = model;
-    mesh->shader = shader;
-    mesh->linkShaderWithModel();
+    mesh.model  = model;
+    mesh.shader = shader;
+    mesh.linkShaderWithModel();
 }
 
 void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
@@ -99,6 +96,6 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
             Physics::TransformGraph& transformParent) 
 {
     setup(renderer, model, shader, transformParent);
-    mesh->texture = texture;
+    mesh.texture = texture;
 }
     
