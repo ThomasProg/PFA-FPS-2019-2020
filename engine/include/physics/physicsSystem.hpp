@@ -228,6 +228,4 @@ namespace Physics
     };
 }
 
-#include "physicsSystem.inl"
-
 #endif

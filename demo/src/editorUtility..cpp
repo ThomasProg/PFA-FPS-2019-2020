@@ -4,6 +4,9 @@
 #include "basicEntity.hpp"
 #include "engine.hpp"
 
+#include "segment3D.hpp"
+#include "collisions.hpp"
+
 bool EditorUtility::isInFrontOfPlayer(Renderer::Camera& camera,  
                                       const Entity::BasicEntity& object,
                                       SegmentHit& hit)

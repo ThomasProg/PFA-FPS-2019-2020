@@ -6,6 +6,7 @@
 #include "camera.hpp"
 #include "game.hpp"
 
+#include "segment3D.hpp"
 #include "primitives.hpp"
 #include "log.hpp"
 #include "editorUtility.hpp"

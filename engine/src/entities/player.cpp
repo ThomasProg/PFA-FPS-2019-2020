@@ -3,6 +3,9 @@
 
 #include "utilities.hpp"
 
+#include "segment3D.hpp"
+#include "engine.hpp"
+
 #define _IS_MOUSE_ENABLED_ 1
 
 bool Entity::PlayerState::isOnGround() const noexcept
