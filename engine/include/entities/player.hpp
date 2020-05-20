@@ -107,7 +107,28 @@ namespace Entity
         // virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
         // virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
 
+        virtual void physicCompOnCollisionEnter        (const SegmentHit&) override 
+        {
+            std::cout << "Enter collision" << std::endl;
+        }
 
+        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        {
+            if (data.movingEntityID != this)
+            if (data.hit.normal.y < 0.5)
+            {
+                dealDamages(1.f);
+            }
+        }
+
+        virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        {
+            if (data.movingEntityID != this)
+            if (data.hit.normal.y > - 0.5)
+            {
+                dealDamages(1.f);
+            }
+        }
     };
 }
 

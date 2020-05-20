@@ -35,7 +35,7 @@ namespace Entity
     {
     private:
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.1f;
-        static constexpr float maxSpeed = 0.02f;
+        static constexpr float maxSpeed = 0.07f;
 
         float angle = 0.f;
         float speed = 2.f; 
@@ -90,6 +90,23 @@ namespace Entity
         // virtual void onCollisionExit         () override;
         // virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
         // virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
+        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        {
+            if (data.movingEntityID != this)
+            if (data.hit.normal.y < -0.5)
+            {
+                kill();
+            }
+        }
+
+        virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        {
+            if (data.movingEntityID != this)
+            if (data.hit.normal.y > 0.5)
+            {
+                kill();
+            }
+        }
     };
 }
 

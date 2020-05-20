@@ -6,9 +6,14 @@
 #include "segmentHit.hpp"
 #include <map>
 
+struct Box;
+
 namespace Physics
 {
     struct GTransform;
+
+    template<typename SHAPE>
+    class CollisionComponentInterface;
 
     template<typename COLLIDER>
     struct CollisionComponent
@@ -21,7 +26,7 @@ namespace Physics
 
         // First value of pair is an Entity, 
         // Second value is wether the entity is colliding with this one or not.
-        std::map<Entity::EntityID, bool> collidingEntities;
+        std::map<Physics::CollisionComponentInterface<Box>*, bool> collidingEntities;
 
     // Flags
         bool isColliding = false;

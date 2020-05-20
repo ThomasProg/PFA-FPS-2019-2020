@@ -67,7 +67,7 @@ bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent&
         if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
             continue;
 
-        // boxCollider.second.worldCollider.transform = boxCollider.second.transform->transformMatrixNode->worldData; 
+        // boxCollider->collider.worldCollider.transform = boxCollider.second.transform->transformMatrixNode->worldData; 
         //                                             // * physicComp.collider.transform->transformMatrixNode->worldData.getInverse();
 
         boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
@@ -149,7 +149,7 @@ void Physics::PhysicsSystem::reset()
 
 
 
-inline Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
+Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
 {
     // physicComponents.emplace(entity, Physics::PhysicComponent());
     // return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
@@ -175,7 +175,7 @@ void Physics::PhysicsSystem::simulate(Core::Engine& engine)
         if (physicComp->physicComp.isEnabled)
         {
             Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
-            playerIgnoreData.ignoredEntities.emplace(physicComp);
+            playerIgnoreData.ignoredEntities.emplace(nullptr);
             // simulatePhysics(physicComp, 
             //                 playerIgnoreData, 
             //                 physicComp->velocity,
@@ -186,7 +186,7 @@ void Physics::PhysicsSystem::simulate(Core::Engine& engine)
         // if (leftVelocity.y > 0)
         // std::cout << leftVelocity << std::endl;
 
-            std::map<Entity::EntityID, bool>::iterator it = physicComp->physicComp.collider.collidingEntities.begin();
+            std::map<CollisionComponentInterface<Box>*, bool>::iterator it = physicComp->physicComp.collider.collidingEntities.begin();
             while (it != physicComp->physicComp.collider.collidingEntities.end())
             {
                 it->second = false;
@@ -201,7 +201,7 @@ void Physics::PhysicsSystem::simulate(Core::Engine& engine)
                                                                                             leftVelocity,
                                                                                             physicComp);
 
-            std::map<Entity::EntityID, bool>::iterator itColliding = physicComp->physicComp.collider.collidingEntities.begin();
+            std::map<CollisionComponentInterface<Box>*, bool>::iterator itColliding = physicComp->physicComp.collider.collidingEntities.begin();
             while (itColliding != physicComp->physicComp.collider.collidingEntities.end())
             {
                 if (!itColliding->second)
@@ -296,9 +296,9 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
     }
 }
 
-inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const Sphere& sphere, 
+Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const Sphere& sphere, 
                                const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                               std::map<Entity::EntityID, bool>& collidingEntities,
+                               std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities,
                                Core::Maths::Vec3& leftVelocity,
                                Physics::PhysicComponentInterface* physicCompID)
 {
@@ -314,7 +314,7 @@ inline Core::Maths::Vec3 Physics::PhysicsSystem::simulatePhysicsForASphere(const
 
     if (sphereCollisionWithBoxes(sphere, leftVelocity, data, hit, collidedMeshInterface))
     {
-        std::pair<std::map<Entity::EntityID, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
+        std::pair<std::map<CollisionComponentInterface<Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
         if (!it.second)
         {
             // Callback
@@ -379,7 +379,7 @@ void Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponentInterface* 
         Core::Maths::Vec3 newLoc = physicComp->physicComp.collider.transform->transform.location + leftVelocity * hit.t;
         // std::cout << "Old : " << physicComp.second.collider.transform->transform.location << '\t' << " New : " << newLoc << std::endl; 
         // std::cout << "Hit.t : " << hit.t << std::endl;
-        staticBoxesOverlapCollision(physicComp->physicComp, 
+        staticBoxesOverlapCollision(physicComp, 
                                     physicComp->physicComp.collider.transform->transform.location, 
                                     newLoc, 
                                     data);
@@ -488,11 +488,10 @@ void Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponentInterface* 
 //     return;
 // }
 
-void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponent& physicComp, 
+void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponentInterface* physicComp, 
                                                          const Core::Maths::Vec3& startLoc, 
                                                          const Core::Maths::Vec3& endLoc, 
-                                                         const PhysicsAdditionalData& data,
-                                                         const Entity::EntityID& physicCompEntityID)
+                                                         const PhysicsAdditionalData& data)
 {   
     Segment3D seg{startLoc, endLoc};
     if (seg.squaredLength() < 0.0001)
@@ -503,18 +502,20 @@ void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponen
     // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
     // collisionsCallbacksSentDataList.reserve(nextNbOverlapHint); 
 
-    for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
+    for (CollisionComponentInterface<Box>* boxCollider : boxes)
     {
-        if (!boxCollider.second.isEnabled || !boxCollider.second.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
+        if (!boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
             continue;
 
-        boxCollider.second.worldCollider.updateMatrixSizeFromMatrix();
+        boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
 
-        if (Collisions::boxMovingShereCollision(boxCollider.second.worldCollider, physicComp.collider.worldCollider, seg, hit))
+        if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, physicComp->physicComp.collider.worldCollider, seg, hit))
         {
             // // Add Callbacks to list
             // collisionsCallbacksSentDataList.emplace_back(hit, physicCompEntityID, boxCollider.first);
-            callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompEntityID, boxCollider.first});
+            // callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompEntityID, boxCollider.first});
+            physicComp->physicCompOnOverlapEnter(CollisionsCallbacksSentData{hit, physicComp, boxCollider});
         }
     }
 }

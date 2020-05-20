@@ -39,15 +39,15 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
 
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
-    if (!physicCompIt.isValid())
-        return;
+    // if (!physicCompIt.isValid())
+    //     return;
     
     std::vector<unsigned int>::iterator it;
 
     // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
-    if (physicCompIt->collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
+    if (physicComp.collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
     {
-        physicCompIt->velocity.y = jumpSpeed;
+        physicComp.velocity.y = jumpSpeed;
         // state.playerState = PlayerState::E_JUMPING;
     }
 
@@ -90,14 +90,14 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // should not be 0, since it has moved
         if (addedVelocity.vectorSquareLength() != 0)
         {
-            physicCompIt->velocity.x = addedVelocity.x;
-            physicCompIt->velocity.z = addedVelocity.z;
+            physicComp.velocity.x = addedVelocity.x;
+            physicComp.velocity.z = addedVelocity.z;
         }
     }
     // else
     // {
-    //     physicCompIt->velocity.x = 0.f;
-    //     physicCompIt->velocity.z = 0.f;        
+    //     physicComp.velocity.x = 0.f;
+    //     physicComp.velocity.z = 0.f;        
     // }
 
     // camera.inputs(engine);
@@ -164,15 +164,15 @@ void Entity::Player::dealDamages(float damages)
 
 
 
-void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
-{
-    state.playerState = PlayerState::E_IDLE;
-}
+// void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
+// {
+//     state.playerState = PlayerState::E_IDLE;
+// }
 
-void Entity::Player::onCollisionExit() 
-{
-    state.playerState = PlayerState::E_JUMPING;
-}
+// void Entity::Player::onCollisionExit() 
+// {
+//     state.playerState = PlayerState::E_JUMPING;
+// }
 
 // void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
 // {
@@ -190,7 +190,7 @@ void Entity::Player::onCollisionExit()
 //     }
 // }
 
-void Entity::Player::onOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
-{
+// void Entity::Player::onOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
+// {
         
-}
+// }

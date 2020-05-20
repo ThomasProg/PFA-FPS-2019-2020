@@ -17,8 +17,8 @@ void Entity::Enemy::update(const Core::Engine& engine)
             isDead = false;
             timeLeftTillRespawn = 0.f;
 
-            colliderIt->isEnabled = true;
-            physicCompIt->isEnabled = true;
+            collider.isEnabled = true;
+            physicComp.isEnabled = true;
             mesh.isDrawn = true;
         }
     }
@@ -63,8 +63,8 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
                 firstPointOfCircle = firstPointOfCircle.unitVector() * maxSpeed;
             }
             // Core::Maths::Vec3 temp = firstPointOfCircle.unitVector();
-            physicCompIt->velocity.x = firstPointOfCircle.x;
-            physicCompIt->velocity.z = firstPointOfCircle.z;        
+            physicComp.velocity.x = firstPointOfCircle.x;
+            physicComp.velocity.z = firstPointOfCircle.z;        
         }
         else
         {
@@ -86,10 +86,10 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
         v += patrolTarget;
         
-        float f = physicCompIt->velocity.y;
+        float f = physicComp.velocity.y;
 
-        physicCompIt->velocity = v - transform->transform.location;
-        physicCompIt->velocity.y = f;
+        physicComp.velocity = v - transform->transform.location;
+        physicComp.velocity.y = f;
 
         angle += engine.deltaTime * speed / patrolRadius;
     }
@@ -101,7 +101,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
 
     const Core::Maths::Vec3 loc = transform->transformMatrixNode->worldData.getTranslationVector();
     Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
-    Core::Maths::Vec3 velocityXZ { physicCompIt->velocity.x, 0, physicCompIt->velocity.z };
+    Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
 
     velocityXZ += direction * engine.deltaTime;
 
@@ -110,8 +110,8 @@ void Entity::Enemy::chase(const Core::Engine& engine)
         velocityXZ = velocityXZ.unitVector() * maxSpeed;
     }
 
-    physicCompIt->velocity.x = velocityXZ.x;
-    physicCompIt->velocity.z = velocityXZ.z;
+    physicComp.velocity.x = velocityXZ.x;
+    physicComp.velocity.z = velocityXZ.z;
     // Core::Maths::Vec3 direction = (position - chaseTarget).unitVector();
     // mesh->transform.transform.location += direction;
     transform->UpdateLocalTransformMatrix();
@@ -132,8 +132,8 @@ void Entity::Enemy::kill()
     timeLeftTillRespawn = respawnCooldown;
     isDead = true;
 
-    colliderIt->isEnabled = false;
-    physicCompIt->isEnabled = false;
+    collider.isEnabled = false;
+    physicComp.isEnabled = false;
 
     mesh.isDrawn = false;
 }
@@ -187,9 +187,9 @@ void Entity::Enemy::loadData(Save::Loader& loader)
 //     }
 // }
 
-// void Entity::Enemy::takeDamage(int damage)
-// {
-//     life = clamp(life - damage, 0, life);
-//     if(life == 0)
-//         kill();
-// }
+void Entity::Enemy::takeDamage(int damage)
+{
+    life = clamp(life - damage, 0, life);
+    if(life == 0)
+        kill();
+}

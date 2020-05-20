@@ -194,7 +194,7 @@ namespace Physics
 
         Core::Maths::Vec3 simulatePhysicsForASphere(const Sphere& sphere, 
                                               const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                                              std::map<Entity::EntityID, bool>& collidingEntities,
+                                              std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities,
                                               Core::Maths::Vec3& leftVelocity,
                                               Physics::PhysicComponentInterface* physicCompID);
 
@@ -215,7 +215,7 @@ namespace Physics
                                        Physics::CollisionComponentInterface<Box>*& collidedEntityID,
                                        const Core::Maths::Vec3& velocity);
 
-        void staticBoxesOverlapCollision(Physics::PhysicComponent& physicComp, 
+        void staticBoxesOverlapCollision(Physics::PhysicComponentInterface* physicComp, 
                                          const Core::Maths::Vec3& startLoc, 
                                          const Core::Maths::Vec3& endLoc, 
                                          const PhysicsAdditionalData& data);
