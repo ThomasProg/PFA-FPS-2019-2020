@@ -19,10 +19,6 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
     if (!isDrawn || model == nullptr || shader == nullptr || &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
         return;
 
-    // Call Callback if valid
-    if (onDraw)
-        onDraw();
-
     glBindVertexArray(model->VAO);
 
     shader->use();

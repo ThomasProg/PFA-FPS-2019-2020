@@ -31,11 +31,6 @@ namespace Renderer
         Core::Maths::Vec4 color = {1,0,0,1};
 
     public:
-        // Callback called when draw() is called.
-        // Can be used to modify buffer access (color / depth / stencil buffers).
-        // If you want to modify the GTransform of an object with this callback,
-        // make sure you call cleanUpdate() or it won't take effect.
-        std::function<void()> onDraw = nullptr;
 
         void linkShaderWithModel();
 

@@ -22,6 +22,7 @@ namespace Renderer
         class iterator
         {
         private:
+            // unsigned int elementIndex;
             Entity::EntityID entityID;
             RendererSystem* rendererSystem = nullptr;
 
@@ -62,6 +63,7 @@ namespace Renderer
 
     private:
         std::unordered_map<Entity::EntityID, Mesh> meshes;
+        // std::vector<Mesh*> meshes;
 
     public:
         RendererSystem() = default;

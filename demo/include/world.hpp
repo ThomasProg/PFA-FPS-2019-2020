@@ -76,10 +76,12 @@ private:
     Entity::Player player;
     // std::list<Entity::BasicEntity> grounds;
     // std::list<Entity::Enemy> enemies;
+    std::vector<Entity::BasicEntity*> grounds;
+    std::vector<Entity::Enemy*> enemies;
+    // std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
+    // std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
 
-    std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
-    std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
-    std::vector<Entity::RenderedEntity> bullets;
+    std::vector<std::unique_ptr<Entity::RenderedEntity>> bullets;
 
     // Entity::Enemy enemy;
 
