@@ -43,24 +43,24 @@ void Entity::BasicEntity::loadData(Save::Loader& loader)
     // loader.tryToDisplayError(__FILE__);
 }
 
-// after loading data, this function will be called to set pointers, iterators, references...
-void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
-{
-    if (!(key == 0))
-    {
-        root.foreach([&](Physics::TransformGraph& g)
-        {
-            if (g.graphID == key)
-            {
-                if (transform->transformMatrixNode.isValid())
-                {
-                    transform->transformMatrixNode.erase();
-                }
-                transform->transformMatrixNode = Physics::TransformGraph::iterator{&g};
-            }
-        });
-    }
-}
+// // after loading data, this function will be called to set pointers, iterators, references...
+// void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
+// {
+//     if (!(key == 0))
+//     {
+//         root.foreach([&](Physics::TransformGraph& g)
+//         {
+//             if (g.graphID == key)
+//             {
+//                 if (transform->transformMatrixNode.isValid())
+//                 {
+//                     transform->transformMatrixNode.erase();
+//                 }
+//                 transform->transformMatrixNode = Physics::TransformGraph::iterator{&g};
+//             }
+//         });
+//     }
+// }
 
 void Entity::BasicEntity::raycastCollide()
 {
@@ -71,17 +71,12 @@ void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer,
             const Resources::Model* model, 
             const Resources::Shader* shader, 
             Physics::TransformGraph& transformParent) 
-{
-    if (transform == nullptr)
-    {
-        transform = new Physics::GTransform();
-    }
-    
+{   
     meshIt = renderer.addComponentTo(&mesh);
-    mesh.transform = transform;
+    mesh.transform = &transform;
 
     // transform 
-    transform->transformMatrixNode = transformParent.addChild();
+    transform.transformMatrixNode = transformParent.addChild();
 
     // resources
     mesh.model  = model;

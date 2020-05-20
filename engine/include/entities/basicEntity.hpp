@@ -18,16 +18,14 @@ namespace Entity
                         public Save::SaveInterface
     {
     public:
-        Physics::GTransform* transform = nullptr;
+        Physics::GTransform transform;
 
         Renderer::MeshIt meshIt;
         Renderer::Mesh mesh;
         // Physics::PhysicComponent physicComponent; // moving sphere 
 
         // to load graphs
-        Physics::GraphKey key;
-
-        bool isEnabled = true;
+        // Physics::GraphKey key;
 
     public:
 
@@ -37,13 +35,7 @@ namespace Entity
         // {
 
         // }
-        ~BasicEntity()
-        {
-            if (transform != nullptr)
-            {
-                delete transform;
-            }
-        }
+        ~BasicEntity() = default;
 
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 

@@ -175,12 +175,12 @@ void World::load()
                 &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
                 &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
                 root);
-    fpsCamera.setup(*player.transform);
-    tpsCamera.setup(*player.transform);
+    fpsCamera.setup(player.transform);
+    tpsCamera.setup(player.transform);
 
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
-    player.collider.transform = player.physicComp.collider.transform = player.transform;
+    player.collider.transform = player.physicComp.collider.transform = &player.transform;
 
     // if (!isLoaded)
     {
@@ -251,12 +251,12 @@ void World::addGround(const Physics::Transform& transform)
             &game.engine.resourceManager.get(E_Texture::E_GROUND), 
             root);
 
-    ground->transform->transform = transform;
-    ground->transform->UpdateLocalTransformMatrix();
-    ground->transform->transformMatrixNode->setDirtySelfAndChildren();
+    ground->transform.transform = transform;
+    ground->transform.UpdateLocalTransformMatrix();
+    ground->transform.transformMatrixNode->setDirtySelfAndChildren();
 
     ground->colliderIt = game.engine.physicsSystem.addCollider<Box>(ground);
-    ground->collider.transform = ground->transform;
+    ground->collider.transform = &ground->transform;
 }
 
 void World::addEnemy(const Physics::Transform& transform)
@@ -278,13 +278,13 @@ void World::addEnemy(const Physics::Transform& transform)
 
     enemy.patrolTarget = transform.location;
 
-    enemy.transform->transform = transform;
-    enemy.transform->UpdateLocalTransformMatrix();
-    enemy.transform->transformMatrixNode->setDirtySelfAndChildren();
+    enemy.transform.transform = transform;
+    enemy.transform.UpdateLocalTransformMatrix();
+    enemy.transform.transformMatrixNode->setDirtySelfAndChildren();
 
     enemy.colliderIt = game.engine.physicsSystem.addCollider<Box>(&enemy);
     enemy.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&enemy);
-    enemy.collider.transform = enemy.physicComp.collider.transform = enemy.transform;
+    enemy.collider.transform = enemy.physicComp.collider.transform = &enemy.transform;
     enemy.physicComp.collider.worldCollider.radius = 1.f;
 }
 
@@ -302,10 +302,9 @@ void World::addBullet(const Physics::Transform& transform)
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
     
-    bullet->transform->transform = transform;
-    bullet->transform->UpdateLocalTransformMatrix();
-    bullet->transform->transformMatrixNode->setDirtySelfAndChildren();
-    bullet->transform->transformMatrixNode->cleanUpdate();
+    bullet->transform.transform = transform;
+    bullet->transform.UpdateLocalTransformMatrix();
+    bullet->transform.transformMatrixNode->setDirtySelfAndChildren();
     bullet->timer = game.engine.lastTime + bullet->lifeTime;
 }
 
@@ -443,9 +442,9 @@ void World::updatePhysics()
 {
     // === DEMO === //
     Entity::BasicEntity* it = grounds.front();
-    it->transform->transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
-    it->transform->UpdateLocalTransformMatrix();
-    it->transform->transformMatrixNode->setDirtySelfAndChildren();
+    it->transform.transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
+    it->transform.UpdateLocalTransformMatrix();
+    it->transform.transformMatrixNode->setDirtySelfAndChildren();
 
     player.onPlayerDeath = [this](){ gameOver(); };
     /////////////
@@ -463,9 +462,9 @@ void World::update()
         // Update entities
         for (Entity::Enemy* enemy : enemies)
         {
-            if (player.transform->transformMatrixNode.isValid())
+            if (player.transform.transformMatrixNode.isValid())
             {
-                enemy->chaseTarget = player.transform->transformMatrixNode->worldData.getTranslationVector();
+                enemy->chaseTarget = player.transform.transformMatrixNode->worldData.getTranslationVector();
                 enemy->update(game.engine);
             }
         }
