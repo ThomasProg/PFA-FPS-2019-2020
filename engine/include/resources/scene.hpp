@@ -1,8 +1,6 @@
 #ifndef _SCENE_HPP_
 #define _SCENE_HPP_
 
-#include "entityID.hpp"
-
 #include "rendererSystem.hpp"
 
 #include <unordered_map>

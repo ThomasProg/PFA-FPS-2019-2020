@@ -1,8 +1,6 @@
 #ifndef _COLLISION_COMPONENT_HPP_
 #define _COLLISION_COMPONENT_HPP_
 
-#include "entityID.hpp"
-
 #include "segmentHit.hpp"
 #include <map>
 

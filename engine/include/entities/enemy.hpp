@@ -1,7 +1,6 @@
 #ifndef _ENEMY_HPP_
 #define _ENEMY_HPP_
 
-#include "entityID.hpp"
 #include "basicEntity.hpp"
 
 #include "saveInterface.hpp"
@@ -57,11 +56,11 @@ namespace Entity
         inline virtual void raycastCollide() override;
         
         Enemy() = default;
-        Enemy(const EntityID& id)
-            : BasicEntity(id)
-        {
+        // Enemy(const EntityID& id)
+        //     : BasicEntity(id)
+        // {
 
-        }
+        // }
         ~Enemy() = default;
 
         inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);

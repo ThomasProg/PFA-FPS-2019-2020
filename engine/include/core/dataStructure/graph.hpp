@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <memory>
+#include <functional>
 
 #include "saveInterface.hpp"
 
@@ -127,11 +128,11 @@ namespace Core::DataStructure
         iterator addChild(const KEY_TYPE& key); 
 
 
-        // // Change the parent of the node pointed by "it" to "newParent".
-        // // Inputs :
-        // // iterator it : the iterator used for the current node we want to change parent
-        // // CURRENT_GRAPH_TYPE& newParent : the graph which will become the parent of it
-        // static void attachTo(iterator& it, CURRENT_GRAPH_TYPE& newParent);
+        // // // Change the parent of the node pointed by "it" to "newParent".
+        // // // Inputs :
+        // // // iterator it : the iterator used for the current node we want to change parent
+        // // // CURRENT_GRAPH_TYPE& newParent : the graph which will become the parent of it
+        // // static void attachTo(iterator& it, CURRENT_GRAPH_TYPE& newParent);
 
         void save(Save::Saver& saver)       override;
         void loadData(Save::Loader& loader) override;

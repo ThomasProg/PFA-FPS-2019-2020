@@ -1,8 +1,6 @@
 #ifndef _BASIC_ENTITY_HPP_
 #define _BASIC_ENTITY_HPP_
 
-#include "entityID.hpp"
-
 #include "box.hpp"
 #include "saveInterface.hpp"
 #include "collisionComponentInterface.hpp"
@@ -14,7 +12,7 @@
 namespace Entity
 {
     // Example Class for rendering an object
-    class BasicEntity : public EntityID, 
+    class BasicEntity : //public EntityID, 
                         public Physics::CollisionComponentInterface<Box>, 
                         public Physics::PhysicComponentInterface, 
                         public Save::SaveInterface
@@ -34,11 +32,11 @@ namespace Entity
     public:
 
         BasicEntity() = default;
-        inline BasicEntity(const EntityID& id)
-            : EntityID(id)
-        {
+        // inline BasicEntity(const EntityID& id)
+        //     : EntityID(id)
+        // {
 
-        }
+        // }
         ~BasicEntity()
         {
             if (transform != nullptr)

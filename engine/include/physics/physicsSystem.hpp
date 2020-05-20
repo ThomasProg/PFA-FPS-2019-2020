@@ -9,7 +9,6 @@
 #include "box.hpp"
 
 
-#include "entityID.hpp"
 #include "segmentHit.hpp"
 
 class Sphere;
@@ -72,20 +71,20 @@ namespace Physics
             const Physics::CollisionComponentInterface<Box>* encounteredEntityID; // CollisionComponent
         };
 
-        struct CollisionsCallbacksSentDataCpy
-        {
-            const SegmentHit hit;
-            const Entity::EntityID movingEntityID; // PhysicComponent
-            const Entity::EntityID encounteredEntityID; // CollisionComponent
+        // struct CollisionsCallbacksSentDataCpy
+        // {
+        //     const SegmentHit hit;
+        //     const Entity::EntityID movingEntityID; // PhysicComponent
+        //     const Entity::EntityID encounteredEntityID; // CollisionComponent
 
-            inline CollisionsCallbacksSentDataCpy(const SegmentHit& hit, 
-                                                  const Entity::EntityID& movingEntityID, 
-                                                  const Entity::EntityID& encounteredEntityID)
-                : hit(hit), movingEntityID(movingEntityID), encounteredEntityID(encounteredEntityID)
-            {
+        //     inline CollisionsCallbacksSentDataCpy(const SegmentHit& hit, 
+        //                                           const Entity::EntityID& movingEntityID, 
+        //                                           const Entity::EntityID& encounteredEntityID)
+        //         : hit(hit), movingEntityID(movingEntityID), encounteredEntityID(encounteredEntityID)
+        //     {
 
-            }
-        };
+        //     }
+        // };
 
         template<typename T>
         class iterator

@@ -65,7 +65,7 @@ public:
 class World : public Resources::Scene, public Save::SaveInterface
 {
 private:
-    Entity::EntityID nextEntity = 10u;
+    // Entity::EntityID nextEntity = 10u;
 
     Game& game;
     Renderer::RendererSystem rendererSystem;
@@ -115,21 +115,6 @@ private:
     EditorMode editorMode {EditorMode::E_TRANSLATION};
 
 
-    class CollisionsCallbacks
-    {
-    private:
-        World& world;
-
-    public:
-        CollisionsCallbacks(World& world) : world(world) {}
-
-        void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
-        void onCollisionExit  (const Entity::EntityID& entityID);
-        void onOverlap        (const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
-    };
-    
-    CollisionsCallbacks collisionsCallbacks {*this};
-
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
@@ -159,8 +144,6 @@ public:
 
     void save(Save::Saver& saver) override;
     void loadData(Save::Loader& loader) override;
-
-    Physics::CollisionComponentInterface<Box>* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
 };
 
 #endif

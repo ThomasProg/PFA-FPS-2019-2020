@@ -19,14 +19,14 @@
 
 void World::save(Save::Saver& saver) 
 {
-    saver.save(nextEntity);
+    // saver.save(nextEntity);
     saver.save(grounds.size());
     saver.save(enemies.size());
 }
 
 void World::loadData(Save::Loader& loader) 
 {
-    loader.load(nextEntity);
+    // loader.load(nextEntity);
 
     std::size_t nbGrounds;
     loader.load(nbGrounds);
@@ -235,9 +235,9 @@ void World::updateCameraProjection()
 
 void World::addGround(const Physics::Transform& transform)
 {
-    grounds.emplace_back(new Entity::BasicEntity(nextEntity));
+    grounds.emplace_back(new Entity::BasicEntity());
 
-    nextEntity.next();
+    // nextEntity.next();
 
     Entity::BasicEntity* ground = grounds.back();
 
@@ -260,10 +260,10 @@ void World::addGround(const Physics::Transform& transform)
 
 void World::addEnemy(const Physics::Transform& transform)
 { 
-    enemies.emplace_back(new Entity::Enemy(nextEntity));
+    enemies.emplace_back(new Entity::Enemy());
     Entity::Enemy& enemy = *enemies.back();
 
-    nextEntity.next();
+    // nextEntity.next();
 
     saveSystem.add(&enemy);
 
@@ -289,9 +289,9 @@ void World::addEnemy(const Physics::Transform& transform)
 
 void World::addBullet(const Physics::Transform& transform)
 {
-    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>(nextEntity));
+    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>());
 
-    nextEntity.next();
+    // nextEntity.next();
 
     std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.at(bullets.size() - 1);
 
@@ -641,59 +641,4 @@ void World::pauseMenu()
     //ImGui::PopFont();
     ImGui::End();
 }
-
-Physics::CollisionComponentInterface<Box>* World::getCollisionComponentEntityFromID(const Entity::EntityID& entityID)
-{
-    if (player == entityID)
-        return &player;
-    
-    // std::vector<Entity::Enemy*>::iterator it = enemies.find(entityID);
-    // if (it != enemies.end() && it->first == entityID)
-    // {
-    //     return &it->second;
-    // }
-    for (Entity::Enemy* ptr : enemies)
-    {
-        if (ptr == nullptr)
-            continue;
-
-        if (ptr->entityID == entityID.entityID)
-        {
-            return ptr;
-        }
-    }
-
-    return nullptr;
-}
-
-
-// void World::CollisionsCallbacks::onCollisionEnter(Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
-// {
-//     if (world.player == collisionData.movingEntityID)
-//     {
-//         world.player.onCollisionEnter(collisionData.hit);
-//     }
-// }
-
-// void World::CollisionsCallbacks::onCollisionExit(const Entity::EntityID& entityID)
-// {
-//     Physics::CollisionComponentInterface<Box>* ent = world.getCollisionComponentEntityFromID(entityID);
-//     ent->onCollisionExit();
-// }
-
-// void World::CollisionsCallbacks::onOverlap(const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData)
-// {
-//     Physics::CollisionComponentInterface<Box>* movingComp    = world.getCollisionComponentEntityFromID(collisionData.movingEntityID);
-//     Physics::CollisionComponentInterface<Box>* collisionComp = world.getCollisionComponentEntityFromID(collisionData.encounteredEntityID);
-
-//     if (movingComp != nullptr)
-//     {
-//         movingComp->onOverlapEnterSelfHit(collisionData.hit);
-//     }
-
-//     if (collisionComp != nullptr)
-//     {
-//         collisionComp->onOverlapEnterAnotherHit(collisionData.hit);
-//     }
-// }
 

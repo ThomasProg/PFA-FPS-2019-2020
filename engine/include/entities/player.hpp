@@ -1,7 +1,6 @@
 #ifndef _PLAYER_HPP_
 #define _PLAYER_HPP_
 
-#include "entityID.hpp"
 #include "rendererSystem.hpp"
 
 #include "basicEntity.hpp"
@@ -109,7 +108,7 @@ namespace Entity
 
         virtual void physicCompOnCollisionEnter        (const SegmentHit&) override 
         {
-            std::cout << "Enter collision" << std::endl;
+            // std::cout << "Enter collision" << std::endl;
         }
 
         virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override

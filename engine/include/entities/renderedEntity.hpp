@@ -1,12 +1,11 @@
 #ifndef _RENDERED_ENTITY_HPP_
 #define _RENDERED_ENTITY_HPP_
 
-#include "entityID.hpp"
 #include "rendererSystem.hpp"
 
 namespace Entity
 {
-    class RenderedEntity: public EntityID
+    class RenderedEntity//: public EntityID
     {
     private:
         
@@ -32,7 +31,7 @@ namespace Entity
             mesh = rhs.mesh;
             lifeTime = rhs.lifeTime;
             timer = rhs.timer;
-            entityID = rhs.entityID;
+            // entityID = rhs.entityID;
         } 
         RenderedEntity(RenderedEntity&& rhs) noexcept
         {
@@ -45,7 +44,7 @@ namespace Entity
             mesh = rhs.mesh;
             lifeTime = rhs.lifeTime;
             timer = rhs.timer;
-            entityID = rhs.entityID;
+            // entityID = rhs.entityID;
         }
 
         RenderedEntity& operator=(const RenderedEntity& rhs)
@@ -59,7 +58,7 @@ namespace Entity
             mesh = rhs.mesh;
             lifeTime = rhs.lifeTime;
             timer = rhs.timer;
-            entityID = rhs.entityID;
+            // entityID = rhs.entityID;
             return *this;
         }
 
@@ -74,15 +73,15 @@ namespace Entity
             mesh = rhs.mesh;
             lifeTime = rhs.lifeTime;
             timer = rhs.timer;
-            entityID = rhs.entityID;
+            // entityID = rhs.entityID;
             return *this;
         }
 
-        inline RenderedEntity(const EntityID& id)
-            : EntityID(id)
-        {
+        // inline RenderedEntity(const EntityID& id)
+        //     : EntityID(id)
+        // {
 
-        }
+        // }
         
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 
