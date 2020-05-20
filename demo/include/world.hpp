@@ -130,7 +130,7 @@ public:
     void init();
 
     void updatePhysics();
-    void updateEditorFunctions();
+    // void updateEditorFunctions();
     void updateCameraProjection();
     
     void pauseMenu();

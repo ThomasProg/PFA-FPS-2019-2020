@@ -55,12 +55,11 @@ namespace Entity
 
         inline virtual void raycastCollide() override;
         
-        Enemy() = default;
-        // Enemy(const EntityID& id)
-        //     : BasicEntity(id)
-        // {
+        Enemy() 
+        {
+            collider.isOverlap = true;
+        }
 
-        // }
         ~Enemy() = default;
 
         inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);

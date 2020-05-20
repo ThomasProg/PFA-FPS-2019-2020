@@ -83,6 +83,10 @@ namespace Entity
 
     public:
         
+        Player()
+        {
+            collider.isOverlap = true;
+        }
         
         void setup(Renderer::RendererSystem& renderer, 
                     const Resources::Model* model, 

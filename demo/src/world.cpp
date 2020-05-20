@@ -309,149 +309,139 @@ void World::addBullet(const Physics::Transform& transform)
     bullet->timer = game.engine.lastTime + bullet->lifeTime;
 }
 
-void World::updateEditorFunctions()
-{
-    if (game.engine.isKeyDown(GLFW_KEY_E))
-    {
-        if (!wasEditorKeyPressed)
-        {
-            editorMode.next();
-            wasEditorKeyPressed = true;
-        }
-    }
-    else if (game.engine.isKeyDown(GLFW_KEY_C))
-    {
-        if (!wasEditorKeyPressed)
-        {
-            editorMode.mode = EditorMode::E_TRANSLATION;
-            wasEditorKeyPressed = true;
-        }
-    }
-    else if (game.engine.isKeyDown(GLFW_KEY_V))
-    {
-        if (!wasEditorKeyPressed)
-        {
-            editorMode.nextRotation();
-            wasEditorKeyPressed = true;
-        }
-    }
-    else if (game.engine.isKeyDown(GLFW_KEY_B))
-    {
-        if (!wasEditorKeyPressed)
-        {
-            editorMode.nextScale();
-            wasEditorKeyPressed = true;
-        }
-    }
-    else if (game.engine.isKeyDown(GLFW_KEY_P))
-    {
-        if (!wasEditorKeyPressed)
-        {
-            addGround({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
-            wasEditorKeyPressed = true;
-        }
-    }
-    else if (game.engine.isKeyDown(GLFW_KEY_O))
-    {
-        if (!wasEditorKeyPressed)
-        {
-            addEnemy({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
-            wasEditorKeyPressed = true;
-        }
-    }
-    else 
-    {
-        wasEditorKeyPressed = false;
-    }
+// void World::updateEditorFunctions()
+// {
+//     if (game.engine.isKeyDown(GLFW_KEY_E))
+//     {
+//         if (!wasEditorKeyPressed)
+//         {
+//             editorMode.next();
+//             wasEditorKeyPressed = true;
+//         }
+//     }
+//     else if (game.engine.isKeyDown(GLFW_KEY_C))
+//     {
+//         if (!wasEditorKeyPressed)
+//         {
+//             editorMode.mode = EditorMode::E_TRANSLATION;
+//             wasEditorKeyPressed = true;
+//         }
+//     }
+//     else if (game.engine.isKeyDown(GLFW_KEY_V))
+//     {
+//         if (!wasEditorKeyPressed)
+//         {
+//             editorMode.nextRotation();
+//             wasEditorKeyPressed = true;
+//         }
+//     }
+//     else if (game.engine.isKeyDown(GLFW_KEY_B))
+//     {
+//         if (!wasEditorKeyPressed)
+//         {
+//             editorMode.nextScale();
+//             wasEditorKeyPressed = true;
+//         }
+//     }
+//     else if (game.engine.isKeyDown(GLFW_KEY_P))
+//     {
+//         if (!wasEditorKeyPressed)
+//         {
+//             addGround({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
+//             wasEditorKeyPressed = true;
+//         }
+//     }
+//     else if (game.engine.isKeyDown(GLFW_KEY_O))
+//     {
+//         if (!wasEditorKeyPressed)
+//         {
+//             addEnemy({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
+//             wasEditorKeyPressed = true;
+//         }
+//     }
+//     else 
+//     {
+//         wasEditorKeyPressed = false;
+//     }
 
-    if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) && editorSelectedEntity != nullptr)
-    {
-        fpsCamera.enableInputs = false;
-        switch (editorMode.mode)
-        {
-        case EditorMode::E_TRANSLATION:
-            EditorUtility::moveEntityWithCursor(fpsCamera, *editorSelectedEntity, game.engine);
-            break;
+//     if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) && editorSelectedEntity != nullptr)
+//     {
+//         fpsCamera.enableInputs = false;
+//         switch (editorMode.mode)
+//         {
+//         case EditorMode::E_TRANSLATION:
+//             EditorUtility::moveEntityWithCursor(fpsCamera, *editorSelectedEntity, game.engine);
+//             break;
 
-        case EditorMode::E_ROTATION_X:
-            EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 0);
-            break;
-        case EditorMode::E_ROTATION_Y:
-            EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 1);
-            break;
-        case EditorMode::E_ROTATION_Z:
-            EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 2);
-            break;
+//         case EditorMode::E_ROTATION_X:
+//             EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 0);
+//             break;
+//         case EditorMode::E_ROTATION_Y:
+//             EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 1);
+//             break;
+//         case EditorMode::E_ROTATION_Z:
+//             EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 2);
+//             break;
 
-        case EditorMode::E_SCALE_X:
-            EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 0);
-            break;
-        case EditorMode::E_SCALE_Y:
-            EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 1);
-            break;
-        case EditorMode::E_SCALE_Z:
-            EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 2);
-            break;
+//         case EditorMode::E_SCALE_X:
+//             EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 0);
+//             break;
+//         case EditorMode::E_SCALE_Y:
+//             EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 1);
+//             break;
+//         case EditorMode::E_SCALE_Z:
+//             EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 2);
+//             break;
         
-        default:
-            break;
-        }
-    }
-    else
-    {
-        Entity::BasicEntity* newSelection = nullptr;
-        SegmentHit hit;
-        hit.t = 2.f;
-        for (Entity::BasicEntity* ground : grounds)
-        {
-            SegmentHit tempHit;
-            if (EditorUtility::isInFrontOfPlayer(fpsCamera, *ground, tempHit))
-            {
-                if (tempHit.t < hit.t)
-                {
-                    hit = tempHit;
-                    newSelection = ground;
-                }
-            }
-        }
+//         default:
+//             break;
+//         }
+//     }
+//     else
+//     {
+//         Entity::BasicEntity* newSelection = nullptr;
+//         SegmentHit hit;
+//         hit.t = 2.f;
+//         for (Entity::BasicEntity* ground : grounds)
+//         {
+//             SegmentHit tempHit;
+//             if (EditorUtility::isInFrontOfPlayer(fpsCamera, *ground, tempHit))
+//             {
+//                 if (tempHit.t < hit.t)
+//                 {
+//                     hit = tempHit;
+//                     newSelection = ground;
+//                 }
+//             }
+//         }
 
-        if (newSelection != nullptr)
-        {
-            if (newSelection != editorSelectedEntity)
-            {
-                newSelection->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
+//         if (newSelection != nullptr)
+//         {
+//             if (newSelection != editorSelectedEntity)
+//             {
+//                 newSelection->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
 
-                editorSelectedEntity = newSelection;
-                editorSelectedEntity->mesh.color = {0, 0.4, 0.4, 0.5};
-                editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_FLAT);
-            }
-        }
-        else 
-        {
-            if (editorSelectedEntity != nullptr)
-            {
-                editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
-            }
-            editorSelectedEntity = nullptr;
-        }
+//                 editorSelectedEntity = newSelection;
+//                 editorSelectedEntity->mesh.color = {0, 0.4, 0.4, 0.5};
+//                 editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_FLAT);
+//             }
+//         }
+//         else 
+//         {
+//             if (editorSelectedEntity != nullptr)
+//             {
+//                 editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
+//             }
+//             editorSelectedEntity = nullptr;
+//         }
 
-        fpsCamera.enableInputs = true;
-    } 
-}
+//         fpsCamera.enableInputs = true;
+//     } 
+// }
 
 void World::updatePhysics()
 {
-    //////// CAN BE SET BEFORE
-    for (Entity::Enemy* enemy : enemies)
-    {
-        enemy->collider.isOverlap   = true;
-    }
-
-    if (player.transform->transformMatrixNode.isValid())
-    {
-        player.collider.isOverlap   = true;
-    }
-
+    // === DEMO === //
     Entity::BasicEntity* it = grounds.front();
     it->transform->transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
     it->transform->UpdateLocalTransformMatrix();
@@ -537,8 +527,8 @@ void World::update()
 
         updatePhysics();
 
-        if (isEditorMode)
-            updateEditorFunctions();
+        // if (isEditorMode)
+        //     updateEditorFunctions();
     }
 }
 
