@@ -94,6 +94,12 @@ namespace Entity
                     const Resources::Texture* texture,
                     Physics::TransformGraph& transformParent);
         
+        void setTransform(const Physics::Transform& newTransform)
+        {
+            this->transform.transform = newTransform;
+            transform.UpdateLocalTransformMatrix();
+            transform.transformMatrixNode->setDirtySelfAndChildren();
+        }
 
         ~RenderedEntity() = default;
     };

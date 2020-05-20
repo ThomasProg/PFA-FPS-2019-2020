@@ -1,5 +1,7 @@
 #include "basicEntity.hpp"
 
+#include "enumedResourceManager.hpp"
+
 #include "loader.hpp"
 #include "saver.hpp"
 
@@ -67,13 +69,50 @@ void Entity::BasicEntity::raycastCollide()
     
 }
 
+void Entity::BasicEntity::setResources(const EnumedResourceManager& resourceManager)
+{
+    mesh.model   = &resourceManager.get(E_Model::E_BOX);
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+    mesh.texture = &resourceManager.get(E_Texture::E_GROUND);
+    mesh.linkShaderWithModel();
+}
+
+void Entity::BasicEntity::setTransform(const Physics::Transform& newTransform)
+{
+    // Be sure to set the parent first.
+    assert(transform.transformMatrixNode.isValid());
+
+    this->transform.transform = newTransform;
+    transform.UpdateLocalTransformMatrix();
+    transform.transformMatrixNode->setDirtySelfAndChildren();
+}
+
+void Entity::BasicEntity::setTransformParent(Physics::TransformGraph& transformParent)
+{
+    transform.transformMatrixNode = transformParent.addChild();
+}
+
+void Entity::BasicEntity::addRendering(Renderer::RendererSystem& renderer)
+{
+    meshIt = renderer.addComponent(&mesh);
+}
+
+void Entity::BasicEntity::addPhysics(Physics::PhysicsSystem& physicsSystem)
+{
+    physicCompIt = physicsSystem.addPhysicComponent(this);
+}
+
+void Entity::BasicEntity::addCollisions(Physics::PhysicsSystem& physicsSystem)
+{
+    colliderIt = physicsSystem.addCollider<Box>(this);
+}
+
 void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
             const Resources::Model* model, 
             const Resources::Shader* shader, 
             Physics::TransformGraph& transformParent) 
 {   
     meshIt = renderer.addComponent(&mesh);
-    mesh.transform = &transform;
 
     // transform 
     transform.transformMatrixNode = transformParent.addChild();

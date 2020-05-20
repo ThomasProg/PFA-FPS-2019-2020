@@ -180,7 +180,6 @@ void World::load()
 
     player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
     player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
-    player.collider.transform = player.physicComp.collider.transform = &player.transform;
 
     // if (!isLoaded)
     {
@@ -237,64 +236,37 @@ void World::updateCameraProjection()
 void World::addGround(const Physics::Transform& transform)
 {
     grounds.emplace_back(new Entity::BasicEntity());
-
-    // nextEntity.next();
-
     Entity::BasicEntity* ground = grounds.back();
 
-    // saveSystem.add(ground);
+    ground->setResources(game.engine.resourceManager);
+    ground->setTransformParent(root);            
+    ground->setTransform(transform);
 
-
-    ground->setup(game.engine.rendererSystem, 
-            &game.engine.resourceManager.get(E_Model::E_BOX), 
-            &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
-            &game.engine.resourceManager.get(E_Texture::E_GROUND), 
-            root);
-
-    ground->transform.transform = transform;
-    ground->transform.UpdateLocalTransformMatrix();
-    ground->transform.transformMatrixNode->setDirtySelfAndChildren();
-
-    ground->colliderIt = game.engine.physicsSystem.addCollider<Box>(ground);
-    ground->collider.transform = &ground->transform;
+    ground->addRendering(game.engine.rendererSystem);
+    ground->addCollisions(game.engine.physicsSystem);
 }
 
 void World::addEnemy(const Physics::Transform& transform)
 { 
     enemies.emplace_back(new Entity::Enemy());
-    Entity::Enemy& enemy = *enemies.back();
+    Entity::Enemy* enemy = enemies.back();
 
-    // nextEntity.next();
+    enemy->setResources(game.engine.resourceManager);
+    enemy->setTransformParent(root);            
+    enemy->setTransform(transform);
 
-    // saveSystem.add(&enemy);
+    enemy->addRendering(game.engine.rendererSystem);
+    enemy->addCollisions(game.engine.physicsSystem);
+    enemy->addPhysics(game.engine.physicsSystem);
 
-    enemy.setup(game.engine.rendererSystem, 
-            &game.engine.resourceManager.get(E_Model::E_DOG), 
-            &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
-            &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
-            root);
-
-    enemy.setup2({0,-10,0}, {0.f,0,0});
-
-    enemy.patrolTarget = transform.location;
-
-    enemy.transform.transform = transform;
-    enemy.transform.UpdateLocalTransformMatrix();
-    enemy.transform.transformMatrixNode->setDirtySelfAndChildren();
-
-    enemy.colliderIt = game.engine.physicsSystem.addCollider<Box>(&enemy);
-    enemy.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&enemy);
-    enemy.collider.transform = enemy.physicComp.collider.transform = &enemy.transform;
-    enemy.physicComp.collider.worldCollider.radius = 1.f;
+    enemy->patrolTarget = transform.location;
 }
 
 void World::addBullet(const Physics::Transform& transform)
 {
     bullets.emplace_back(std::make_unique<Entity::RenderedEntity>());
 
-    // nextEntity.next();
-
-    std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.at(bullets.size() - 1);
+    std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.back();
 
     bullet->setup(game.engine.rendererSystem, 
                 &game.engine.resourceManager.get(E_Model::E_BOX), 
@@ -302,9 +274,7 @@ void World::addBullet(const Physics::Transform& transform)
                 &game.engine.resourceManager.get(E_Texture::E_GROUND), 
                 root);
     
-    bullet->transform.transform = transform;
-    bullet->transform.UpdateLocalTransformMatrix();
-    bullet->transform.transformMatrixNode->setDirtySelfAndChildren();
+    bullet->setTransform(transform);
     bullet->timer = game.engine.lastTime + bullet->lifeTime;
 }
 

@@ -50,14 +50,15 @@ namespace Entity
         float detectionRadius = 10.0f;
         float patrolRadius = 5.f;
         Core::Maths::Vec3 position;
-        Core::Maths::Vec3 patrolTarget;
-        Core::Maths::Vec3 chaseTarget;
+        Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
+        Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
 
         inline virtual void raycastCollide() override;
         
         Enemy() 
         {
             collider.isOverlap = true;
+            physicComp.collider.worldCollider.radius = 1.f;
         }
 
         ~Enemy() = default;
@@ -74,6 +75,8 @@ namespace Entity
         void patrol(const Core::Engine& engine);
         bool isPlayerInRange() const;
         void chase(const Core::Engine& engine);
+
+        void setResources(const EnumedResourceManager&);
 
         void takeDamage(int damage);
 

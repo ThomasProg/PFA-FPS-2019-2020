@@ -28,6 +28,14 @@ void Entity::Enemy::update(const Core::Engine& engine)
     }
 }
 
+void Entity::Enemy::setResources(const EnumedResourceManager& resourceManager)
+{
+    mesh.model   = &resourceManager.get(E_Model::E_DOG);
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    mesh.linkShaderWithModel();
+}
+
 void Entity::Enemy::move(const Core::Engine& engine)
 {
     if(state.enemyState != EnemyState::E_FALLING)

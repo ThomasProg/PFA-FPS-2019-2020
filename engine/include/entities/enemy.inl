@@ -7,12 +7,8 @@ inline void Entity::Enemy::setup(Renderer::RendererSystem& renderer,
                     Physics::TransformGraph& transformParent)
 {
     BasicEntity::setup(renderer, model, shader, texture, transformParent);
-}
 
-inline void Entity::Enemy::setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget)
-{
-    this->patrolTarget = patrolTarget;
-    this->chaseTarget = chaseTarget;
+    physicComp.collider.worldCollider.radius = 1.f;
 }
 
 inline void Entity::Enemy::raycastCollide()

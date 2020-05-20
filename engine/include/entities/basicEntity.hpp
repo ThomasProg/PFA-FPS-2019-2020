@@ -9,6 +9,8 @@
 #include "mesh.hpp"
 #include "rendererSystem.hpp"
 
+class EnumedResourceManager;
+
 namespace Entity
 {
     // Example Class for rendering an object
@@ -29,7 +31,10 @@ namespace Entity
 
     public:
 
-        BasicEntity() = default;
+        BasicEntity() 
+        {
+            collider.transform = physicComp.collider.transform = mesh.transform = &transform;
+        }
         // inline BasicEntity(const EntityID& id)
         //     : EntityID(id)
         // {
@@ -49,6 +54,14 @@ namespace Entity
                     const Resources::Shader* shader,
                     const Resources::Texture* texture,
                     Physics::TransformGraph& transformParent);
+
+        void setResources(const EnumedResourceManager&);
+        void setTransform(const Physics::Transform& newTransform);
+        void setTransformParent(Physics::TransformGraph& transformParent);
+
+        void addRendering(Renderer::RendererSystem& renderer);
+        void addPhysics(Physics::PhysicsSystem& physicsSystem);
+        void addCollisions(Physics::PhysicsSystem& physicsSystem);
 
         // save any data you want with this function
         void save(Save::Saver& saver) override;
