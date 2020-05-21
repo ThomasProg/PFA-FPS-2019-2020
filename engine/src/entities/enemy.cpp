@@ -149,7 +149,6 @@ void Entity::Enemy::kill()
 
 void Entity::Enemy::save(Save::Saver& saver)     
 {
-    BasicEntity::save(saver);
     saver.save(angle);
 
     // Death Data
@@ -159,7 +158,6 @@ void Entity::Enemy::save(Save::Saver& saver)
 
 void Entity::Enemy::loadData(Save::Loader& loader) 
 {
-    BasicEntity::loadData(loader);
     loader.load(angle);
 
     // Death Data

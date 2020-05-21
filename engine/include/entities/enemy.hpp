@@ -1,7 +1,11 @@
 #ifndef _ENEMY_HPP_
 #define _ENEMY_HPP_
 
-#include "basicEntity.hpp"
+#include "transformInterface.hpp"
+#include "collisionComponentInterface.hpp"
+#include "physicComponentInterface.hpp"
+#include "renderableInterface.hpp"
+#include "saveInterface.hpp"
 
 #include "saveInterface.hpp"
 
@@ -30,7 +34,11 @@ namespace Entity
             
     };
 
-    class Enemy: public BasicEntity
+    class Enemy : public Physics::TransformInterface,
+                  public Physics::CollisionComponentInterface<Box>, 
+                  public Physics::PhysicComponentInterface, 
+                  public Renderer::RenderableInterface,
+                  public Save::SaveInterface
     {
     private:
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.1f;
@@ -54,24 +62,27 @@ namespace Entity
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
 
-        inline virtual void raycastCollide() override;
+        inline virtual void raycastCollide();
         
         Enemy() 
+            : Physics::CollisionComponentInterface<Box>(&transform),
+              Physics::PhysicComponentInterface(&transform),
+              Renderer::RenderableInterface(&transform)
         {
             collider.isOverlap = true;
             physicComp.collider.worldCollider.radius = 1.f;
-            collider.transform = physicComp.collider.transform = mesh.transform = &transform;
         }
 
         ~Enemy() = default;
 
-        inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
+        // inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
 
-        inline void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader,
-                    const Resources::Texture* texture,
-                    Physics::TransformGraph& transformParent);
+        // inline void setup(Renderer::RendererSystem& renderer, 
+        //             const Resources::Model* model, 
+        //             const Resources::Shader* shader,
+        //             const Resources::Texture* texture,
+        //             Physics::TransformGraph& transformParent);
+        
         void update(const Core::Engine& engine);
         void move(const Core::Engine& engine);
         void patrol(const Core::Engine& engine);

@@ -3,8 +3,12 @@
 
 #include "rendererSystem.hpp"
 
-#include "basicEntity.hpp"
 #include "controllerInterface.hpp"
+#include "transformInterface.hpp"
+#include "renderableInterface.hpp"
+#include "physicComponentInterface.hpp"
+#include "collisionComponentInterface.hpp"
+
 #include "tpsCamera.hpp"
 #include "fpsCamera.hpp"
 
@@ -38,7 +42,11 @@ namespace Entity
     };
 
     // Example Class for Player
-    class Player : public BasicEntity, public Controller::ControllerInterface
+    class Player : public Physics::TransformInterface,
+                   public Renderer::RenderableInterface,
+                   public Physics::CollisionComponentInterface<Box>,
+                   public Physics::PhysicComponentInterface,
+                   public Controller::ControllerInterface
     {
     private:
         static constexpr float movementSpeed  = 10.f;
@@ -86,23 +94,14 @@ namespace Entity
 
     public:
         
-        Player()
+        Player() 
+            : Physics::CollisionComponentInterface<Box>(&transform),
+              Physics::PhysicComponentInterface(&transform),
+              Renderer::RenderableInterface(&transform)
         {
-            collider.transform = physicComp.collider.transform = mesh.transform = &transform;
             collider.isOverlap = true;
             physicComp.collider.worldCollider.radius = 1.f;
         }
-        
-        void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader, 
-                    Physics::TransformGraph& transformParent);
-
-        void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader, 
-                    const Resources::Texture* texture,
-                    Physics::TransformGraph& transformParent);
 
         void inputs(const Core::Engine& engine) override;
 
@@ -112,11 +111,6 @@ namespace Entity
         bool isShooting(const Core::Engine& engine);
         Segment3D shoot() const;
         void dealDamages(float damages);
-
-        // virtual void onCollisionEnter        (const SegmentHit& hit) override;
-        // virtual void onCollisionExit         () override;
-        // virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
-        // virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
 
         virtual void physicCompOnCollisionEnter        (const SegmentHit&) override 
         {

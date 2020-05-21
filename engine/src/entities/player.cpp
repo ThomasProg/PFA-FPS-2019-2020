@@ -13,33 +13,6 @@ bool Entity::PlayerState::isOnGround() const noexcept
     return playerState == E_IDLE || playerState == E_WALKING;
 }
 
-void Entity::Player::setup(Renderer::RendererSystem& renderer, 
-            const Resources::Model* model, 
-            const Resources::Shader* shader, 
-            Physics::TransformGraph& transformParent) 
-{
-    BasicEntity::setup(renderer, model, shader, transformParent);
-    camera.setup(transform);
-
-    camera.transform.transform.location.y = 2.f;
-    camera.transform.UpdateLocalTransformMatrix();
-    camera.transform.transformMatrixNode->setDirtySelfAndChildren();
-}
-
-void Entity::Player::setup(Renderer::RendererSystem& renderer, 
-            const Resources::Model* model, 
-            const Resources::Shader* shader,
-            const Resources::Texture* texture, 
-            Physics::TransformGraph& transformParent) 
-{
-    BasicEntity::setup(renderer, model, shader, texture, transformParent);
-    camera.setup(transform);
-
-    camera.transform.transform.location.y = 2.f;
-    camera.transform.UpdateLocalTransformMatrix();
-    camera.transform.transformMatrixNode->setDirtySelfAndChildren();
-}
-
 void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
     mesh.model   = &resourceManager.get(E_Model::E_DOG);

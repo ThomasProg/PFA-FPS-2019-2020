@@ -1,25 +1,35 @@
 #ifndef _RENDERED_ENTITY_HPP_
 #define _RENDERED_ENTITY_HPP_
 
-#include "rendererSystem.hpp"
+#include "demoResourceManager.hpp"
+
+#include "transformInterface.hpp"
+#include "renderableInterface.hpp"
 
 namespace Entity
 {
-    class RenderedEntity//: public EntityID
+    class RenderedEntity : public Physics::TransformInterface,
+                           public Renderer::RenderableInterface
     {
     private:
         
     public:
-        Physics::GTransform transform;
-        Physics::GraphKey key;
+        // Physics::GTransform transform;
+        // Physics::GraphKey key;
 
-        Renderer::MeshIt meshIt;
-        Renderer::Mesh mesh {&transform};
+        // Renderer::MeshIt meshIt;
+        // Renderer::Mesh mesh {&transform};
 
         float lifeTime = 2.0f;
         float timer;
         
-        RenderedEntity() = default;
+        RenderedEntity()
+            : RenderableInterface(&transform)
+        {
+
+        }
+
+        void setResources(const DemoResourceManager&);
         // RenderedEntity(const RenderedEntity& rhs)
         // {
         //     if (rhs.transform != nullptr)
@@ -83,23 +93,23 @@ namespace Entity
 
         // // }
         
-        void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader, 
-                    Physics::TransformGraph& transformParent);
+        // void setup(Renderer::RendererSystem& renderer, 
+        //             const Resources::Model* model, 
+        //             const Resources::Shader* shader, 
+        //             Physics::TransformGraph& transformParent);
 
-        void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader,
-                    const Resources::Texture* texture,
-                    Physics::TransformGraph& transformParent);
+        // void setup(Renderer::RendererSystem& renderer, 
+        //             const Resources::Model* model, 
+        //             const Resources::Shader* shader,
+        //             const Resources::Texture* texture,
+        //             Physics::TransformGraph& transformParent);
         
-        void setTransform(const Physics::Transform& newTransform)
-        {
-            this->transform.transform = newTransform;
-            transform.UpdateLocalTransformMatrix();
-            transform.transformMatrixNode->setDirtySelfAndChildren();
-        }
+        // void setTransform(const Physics::Transform& newTransform)
+        // {
+        //     this->transform.transform = newTransform;
+        //     transform.UpdateLocalTransformMatrix();
+        //     transform.transformMatrixNode->setDirtySelfAndChildren();
+        // }
 
         ~RenderedEntity() = default;
     };

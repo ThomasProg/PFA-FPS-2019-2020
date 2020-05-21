@@ -267,12 +267,10 @@ void World::addBullet(const Physics::Transform& transform)
 
     std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.back();
 
-    bullet->setup(game.engine.rendererSystem, 
-                &game.engine.resourceManager.get(E_Model::E_BOX), 
-                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
-                &game.engine.resourceManager.get(E_Texture::E_GROUND), 
-                root);
-    
+    bullet->setResources(game.engine.resourceManager);
+    bullet->addRendering(game.engine.rendererSystem);
+
+    bullet->setTransformParent(root);
     bullet->setTransform(transform);
     bullet->timer = game.engine.lastTime + bullet->lifeTime;
 }

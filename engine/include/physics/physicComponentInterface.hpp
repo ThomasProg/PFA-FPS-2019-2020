@@ -20,8 +20,14 @@ namespace Physics
 
         }
     
-        virtual void physicCompOnCollisionEnter (const SegmentHit&) = 0;
-        virtual void physicCompOnCollisionExit  () = 0;
+        virtual void physicCompOnCollisionEnter (const SegmentHit&) 
+        {
+
+        }
+        virtual void physicCompOnCollisionExit  () 
+        {
+            
+        }
         virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
         {
 
