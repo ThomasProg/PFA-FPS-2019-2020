@@ -1,5 +1,7 @@
 #include "rendererSystem.hpp"
 
+#include "shader.hpp"
+
 constexpr size_t Renderer::RendererSystem::maxChildrenAtLoad;
 
 Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponent(Renderer::Mesh* mesh)
@@ -29,7 +31,7 @@ void Renderer::RendererSystem::erase(Renderer::RendererSystem::iterator& it)
     meshes[it] = nullptr;
     freeMeshIndices.emplace_back(it);
 }
-#include "shader.hpp"
+
 void Renderer::RendererSystem::draw(const Camera& camera, Renderer::LightManager& lightManager)
 {
     const Resources::Shader* lastShader = nullptr;
