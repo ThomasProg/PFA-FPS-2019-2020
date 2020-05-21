@@ -69,7 +69,7 @@ void Entity::BasicEntity::raycastCollide()
     
 }
 
-void Entity::BasicEntity::setResources(const EnumedResourceManager& resourceManager)
+void Entity::BasicEntity::setResources(const DemoResourceManager& resourceManager)
 {
     mesh.model   = &resourceManager.get(E_Model::E_BOX);
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);

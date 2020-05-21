@@ -28,7 +28,7 @@ void Entity::Enemy::update(const Core::Engine& engine)
     }
 }
 
-void Entity::Enemy::setResources(const EnumedResourceManager& resourceManager)
+void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
 {
     mesh.model   = &resourceManager.get(E_Model::E_DOG);
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);

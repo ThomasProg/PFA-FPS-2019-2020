@@ -40,7 +40,7 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
     camera.transform.transformMatrixNode->setDirtySelfAndChildren();
 }
 
-void Entity::Player::setResources(const EnumedResourceManager& resourceManager)
+void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
     mesh.model   = &resourceManager.get(E_Model::E_DOG);
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);

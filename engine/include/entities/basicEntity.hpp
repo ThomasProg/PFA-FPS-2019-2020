@@ -11,7 +11,10 @@
 #include "mesh.hpp"
 #include "rendererSystem.hpp"
 
+// forward declarations
+template<typename, typename, typename, typename>
 class EnumedResourceManager;
+using DemoResourceManager = EnumedResourceManager<E_Model, E_Texture, E_Shader, unsigned int>;
 
 namespace Entity
 {
@@ -56,7 +59,7 @@ namespace Entity
                     const Resources::Texture* texture,
                     Physics::TransformGraph& transformParent);
 
-        void setResources(const EnumedResourceManager&);
+        void setResources(const DemoResourceManager&);
         void setTransform(const Physics::Transform& newTransform);
         void setTransformParent(Physics::TransformGraph& transformParent);
 

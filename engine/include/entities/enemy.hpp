@@ -78,7 +78,7 @@ namespace Entity
         bool isPlayerInRange() const;
         void chase(const Core::Engine& engine);
 
-        void setResources(const EnumedResourceManager&);
+        void setResources(const DemoResourceManager&);
 
         void takeDamage(int damage);
 
