@@ -34,7 +34,8 @@ namespace Entity
     {
     private:
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.1f;
-        static constexpr float maxSpeed = 0.07f;
+        // static constexpr float maxSpeed = 0.07f;
+        static constexpr float maxSpeed = 2.f;
 
         float angle = 0.f;
         float speed = 2.f; 

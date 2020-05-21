@@ -19,6 +19,10 @@ namespace Physics
         COLLIDER worldCollider;  
         GTransform* transform = nullptr;
 
+        // Defines this object's layer.
+        // Default layer is 1
+        unsigned int layer = 1 << 0;
+
         bool isEnabled = true;
         bool isOverlap = false;
 

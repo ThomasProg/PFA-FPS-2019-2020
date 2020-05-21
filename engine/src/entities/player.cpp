@@ -50,14 +50,12 @@ void Entity::Player::inputs(const Core::Engine& engine)
     // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
     if (physicComp.collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
     {
-        physicComp.velocity.y = jumpSpeed;
+        physicComp.setForceOnAxis<1>(jumpSpeed, engine);
         // state.playerState = PlayerState::E_JUMPING;
     }
 
-    // Core::Maths::Vec3 forward = camera.camAnchor.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
-    // Core::Maths::Vec3 right   = camera.camAnchor.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 forward = transform.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 right   = transform.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
+    Core::Maths::Vec3 forward = transform.transform.getForwardXZVector() * movementSpeed;
+    Core::Maths::Vec3 right   = transform.transform.getRightXZVector()   * movementSpeed;
 
     Core::Maths::Vec3 addedVelocity;
 
@@ -93,8 +91,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // should not be 0, since it has moved
         if (addedVelocity.vectorSquareLength() != 0)
         {
-            physicComp.velocity.x = addedVelocity.x;
-            physicComp.velocity.z = addedVelocity.z;
+            physicComp.setForceOnAxis<0>(addedVelocity.x, engine);
+            physicComp.setForceOnAxis<2>(addedVelocity.z, engine);
         }
     }
     // else

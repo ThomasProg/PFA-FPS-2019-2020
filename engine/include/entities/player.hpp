@@ -42,7 +42,7 @@ namespace Entity
     {
     private:
         static constexpr float movementSpeed = 10.f;
-        static constexpr float jumpSpeed     = 0.1f;
+        static constexpr float jumpSpeed     = 10.f;
 
 
     public:
@@ -86,6 +86,7 @@ namespace Entity
         Player()
         {
             collider.isOverlap = true;
+            physicComp.collider.worldCollider.radius = 1.f;
         }
         
         void setup(Renderer::RendererSystem& renderer, 

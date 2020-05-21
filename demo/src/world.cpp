@@ -419,7 +419,7 @@ void World::updatePhysics()
     player.onPlayerDeath = [this](){ gameOver(); };
     /////////////
 
-    game.engine.physicsSystem.simulate(game.engine);
+    game.engine.physicsSystem.simulatePhysics(game.engine);
 }
 
 void World::update()   
