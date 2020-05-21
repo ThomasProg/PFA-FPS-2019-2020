@@ -88,6 +88,7 @@ namespace Entity
         
         Player()
         {
+            collider.transform = physicComp.collider.transform = mesh.transform = &transform;
             collider.isOverlap = true;
             physicComp.collider.worldCollider.radius = 1.f;
         }
@@ -130,7 +131,9 @@ namespace Entity
 
         virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
         {
-            if (data.movingEntityID != this)
+            if (data.encounteredEntityID == this)
+                return;
+
             if (data.hit.normal.y < 0.5)
             {
                 dealDamages(1.f);
@@ -139,7 +142,9 @@ namespace Entity
 
         virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
         {
-            if (data.movingEntityID != this)
+            if (data.movingEntityID == this)
+                return;
+
             if (data.hit.normal.y > - 0.5)
             {
                 dealDamages(1.f);

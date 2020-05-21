@@ -141,8 +141,8 @@ void World::makeNewLevel()
     player.setResources(game.engine.resourceManager);
 
     player.addRendering(game.engine.rendererSystem);
-    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
-    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
+    player.addCollisions(game.engine.physicsSystem);
+    player.addPhysics(game.engine.physicsSystem);
 
     player.camera.setup(player.transform);
 

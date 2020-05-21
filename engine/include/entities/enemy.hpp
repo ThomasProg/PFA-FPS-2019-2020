@@ -60,6 +60,7 @@ namespace Entity
         {
             collider.isOverlap = true;
             physicComp.collider.worldCollider.radius = 1.f;
+            collider.transform = physicComp.collider.transform = mesh.transform = &transform;
         }
 
         ~Enemy() = default;
@@ -94,7 +95,9 @@ namespace Entity
         // virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
         virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
         {
-            if (data.movingEntityID != this)
+            if (data.encounteredEntityID == this)
+                return;
+
             if (data.hit.normal.y < -0.5)
             {
                 kill();
@@ -103,7 +106,9 @@ namespace Entity
 
         virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
         {
-            if (data.movingEntityID != this)
+            if (data.movingEntityID == this)
+                return;
+
             if (data.hit.normal.y > 0.5)
             {
                 kill();
