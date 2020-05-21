@@ -45,6 +45,8 @@ void EntityGroup::addPlayer()
     player->camera.attachTo(player->transform);
     player->setTransform({{0, 2.f, 0}});
 
+    player->camera.transform.transform.location.y = 2.f;
+
     if (controller == nullptr)
         controller = player;
     if  (camera == nullptr)

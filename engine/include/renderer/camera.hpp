@@ -4,16 +4,15 @@
 #include "matrix4x4.hpp"
 #include "gTransform.hpp"
 
+#include "transformInterface.hpp"
+
 struct GLFWwindow;
 
 namespace Renderer
 {
-    struct Camera
+    struct Camera : public Physics::TransformInterface
     {
     public:
-        // TODO : use GTransform flag to keep inverse transform ?
-        Physics::GTransform transform;
-
         Core::Maths::Matrix4x4 projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(640, 480, 0.1, 10000, 45.f);
 
         Core::Maths::Matrix4x4 viewProjectionMatrix;

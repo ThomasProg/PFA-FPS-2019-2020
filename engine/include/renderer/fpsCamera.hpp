@@ -9,7 +9,8 @@
 
 namespace Renderer
 {
-    struct FPSCamera : public Camera, public Controller::ControllerInterface
+    struct FPSCamera : public Camera, 
+                       public Controller::ControllerInterface
     {
     public:
         static constexpr size_t nbInputKeys = 4;

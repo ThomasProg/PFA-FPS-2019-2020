@@ -106,11 +106,9 @@ void Entity::Player::inputs(const Core::Engine& engine)
 
     transform.UpdateLocalTransformMatrix();
     transform.transformMatrixNode->setDirtySelfAndChildren();
-    transform.transformMatrixNode->cleanUpdate();
 
     camera.transform.UpdateLocalTransformMatrix();
     camera.transform.transformMatrixNode->setDirtySelfAndChildren(); 
-    camera.transform.transformMatrixNode->cleanUpdate();
 }
 
 void Entity::Player::tryToJump(const Core::Engine& engine)
