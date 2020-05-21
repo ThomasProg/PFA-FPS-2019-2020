@@ -40,6 +40,14 @@ void Entity::Player::setup(Renderer::RendererSystem& renderer,
     camera.transform.transformMatrixNode->setDirtySelfAndChildren();
 }
 
+void Entity::Player::setResources(const EnumedResourceManager& resourceManager)
+{
+    mesh.model   = &resourceManager.get(E_Model::E_DOG);
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    mesh.linkShaderWithModel();
+}
+
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
     // if (!physicCompIt.isValid())

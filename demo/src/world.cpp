@@ -126,8 +126,7 @@ void World::loadFromSavefile(const char* savedFilename)
 
 void World::makeNewLevel()
 {
-    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
-    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
+    // ===== Set up Entities ===== //
 
     addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
     addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
@@ -136,6 +135,24 @@ void World::makeNewLevel()
     addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
 
     addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
+
+    // === Add Player === //
+    player.setTransformParent(root);
+    player.setResources(game.engine.resourceManager);
+
+    player.addRendering(game.engine.rendererSystem);
+    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
+    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
+
+    player.camera.setup(player.transform);
+
+    player.camera.transform.transform.location.y = 2.f;
+    player.camera.transform.UpdateLocalTransformMatrix();
+    player.camera.transform.transformMatrixNode->setDirtySelfAndChildren();
+
+    // === Add other cameras === //
+    fpsCamera.setup(player.transform);
+    tpsCamera.setup(player.transform);
 }
 
 void World::load()
@@ -166,24 +183,6 @@ void World::load()
         l.location = {20.f, -27.f, 12, 0.0}; 
         l.lightType = 3;
         l.ambient = {0.7, 0.7,0.7,0};
-    }
-
-    // ===== Set up Entity ===== //
-
-    player.setup(game.engine.rendererSystem, 
-                &game.engine.resourceManager.get(E_Model::E_DOG), 
-                &game.engine.resourceManager.get(E_Shader::E_LIGHTED), 
-                &game.engine.resourceManager.get(E_Texture::E_DOG_TEXTURE), 
-                root);
-    fpsCamera.setup(player.transform);
-    tpsCamera.setup(player.transform);
-
-    player.colliderIt = game.engine.physicsSystem.addCollider<Box>(&player);
-    player.physicCompIt = game.engine.physicsSystem.addPhysicComponent(&player);
-
-    // if (!isLoaded)
-    {
-        player.physicComp.collider.worldCollider.radius = 1.f;
     }
 
     updateCameraProjection();

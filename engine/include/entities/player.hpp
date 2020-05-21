@@ -106,6 +106,7 @@ namespace Entity
         void inputs(const Core::Engine& engine) override;
 
         void tryToJump(const Core::Engine& engine);
+        void setResources(const EnumedResourceManager&);
 
         bool isShooting(const Core::Engine& engine);
         Segment3D shoot() const;

@@ -32,6 +32,9 @@ inline void Core::Engine::endFrame()
     glfwGetCursorPos(window, &currentMouseLocX, &currentMouseLocY);
     deltaMouseLoc = {float((currentMouseLocX - lastMouseLocX) / double(width)), float((currentMouseLocY - lastMouseLocY) / double(height))};
 
+    if (isKeyDown(GLFW_KEY_O))
+    std::cout << "FPS : " << 1.f / deltaTime << std::endl;
+
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwPollEvents();

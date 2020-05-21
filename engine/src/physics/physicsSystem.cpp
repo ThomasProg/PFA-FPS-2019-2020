@@ -346,7 +346,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
     }
     else 
     {
-        Core::Maths::Vec3 finalLoc = sphere.center + leftVelocity;// * deltaTime; 
+        Core::Maths::Vec3 finalLoc = sphere.center + leftVelocity;
         sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
         return finalLoc;
     }
