@@ -13,6 +13,12 @@ namespace Physics
         Physics::PhysicComponent physicComp;
     
     public:
+        PhysicComponentInterface() = delete;
+        PhysicComponentInterface(Physics::GTransform* transform)
+            : physicComp(transform)
+        {
+
+        }
     
         virtual void physicCompOnCollisionEnter (const SegmentHit&) = 0;
         virtual void physicCompOnCollisionExit  () = 0;

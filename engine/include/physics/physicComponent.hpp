@@ -1,5 +1,5 @@
 #ifndef _PHYSIC_COMPONENT_HPP_
-#define  _PHYSIC_COMPONENT_HPP_
+#define _PHYSIC_COMPONENT_HPP_
 
 #include "vec3.hpp"
 #include "sphere.hpp"
@@ -18,6 +18,8 @@ namespace Physics
         unsigned int collisionLayerMap = (1 << 0) | (1 << 1); 
 
         bool isEnabled = true;
+
+        inline PhysicComponent(GTransform* transform);
 
         template<unsigned int AXIS>
         inline void setForceOnAxis(float force, const Core::Engine& engine);

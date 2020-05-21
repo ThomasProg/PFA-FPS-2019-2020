@@ -17,8 +17,10 @@ namespace Entity
         Physics::GTransform transform;
 
         Ground() 
+            : Renderer::RenderableInterface(&transform),
+              Physics::CollisionComponentInterface<Box>(&transform)
         {
-            collider.transform = &transform;
+            // collider.transform = &transform;
         }
 
         void setResources(const DemoResourceManager&);

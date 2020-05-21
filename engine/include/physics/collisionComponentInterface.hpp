@@ -14,7 +14,9 @@ namespace Physics
         Physics::CollisionComponent<SHAPE> collider;
     
     public:
-    
+        CollisionComponentInterface() = delete;
+        CollisionComponentInterface(Physics::GTransform* transform);
+
         virtual void colliderOnCollisionEnter (const SegmentHit&) = 0;
         virtual void colliderOnCollisionExit  () = 0;
         virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
@@ -28,5 +30,7 @@ namespace Physics
         }
     };
 }
+
+#include "collisionComponentInterface.inl"
 
 #endif

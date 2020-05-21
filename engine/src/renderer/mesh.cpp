@@ -12,6 +12,12 @@
 #include "light.hpp"
 #include "lightManager.hpp"
 
+Renderer::Mesh::Mesh(Physics::GTransform* transform)
+    : transform(transform)
+{
+
+}
+
 void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& lightManager)
 {
     if (transform == nullptr)

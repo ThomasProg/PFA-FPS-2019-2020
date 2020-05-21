@@ -2,6 +2,12 @@
 
 #include "engine.hpp"
 
+inline Physics::PhysicComponent::PhysicComponent(GTransform* transform)
+    : collider(transform)
+{
+
+}
+
 template<unsigned int AXIS>
 inline void Physics::PhysicComponent::setForceOnAxis(float force, const Core::Engine& engine)
 {

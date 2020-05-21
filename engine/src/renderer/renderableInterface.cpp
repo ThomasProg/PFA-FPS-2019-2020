@@ -2,6 +2,12 @@
 
 #include "enumedResourceManager.hpp"
 
+Renderer::RenderableInterface::RenderableInterface(Physics::GTransform* transform)
+    : mesh(transform)
+{
+
+}
+
 // void Renderer::RenderableInterface::setResources(const EnumedResourceManager& resourceManager)
 // {
 //     mesh.model   = &resourceManager.get(E_Model::E_BOX);

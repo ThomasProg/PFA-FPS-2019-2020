@@ -14,7 +14,7 @@ namespace Entity
         Physics::GraphKey key;
 
         Renderer::MeshIt meshIt;
-        Renderer::Mesh mesh;
+        Renderer::Mesh mesh {&transform};
 
         float lifeTime = 2.0f;
         float timer;

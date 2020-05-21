@@ -37,6 +37,9 @@ namespace Entity
     public:
 
         BasicEntity() 
+            : Physics::CollisionComponentInterface<Box>(&transform),
+              Physics::PhysicComponentInterface(&transform),
+              Renderer::RenderableInterface(&transform)
         {
             collider.transform = physicComp.collider.transform = mesh.transform = &transform;
         }

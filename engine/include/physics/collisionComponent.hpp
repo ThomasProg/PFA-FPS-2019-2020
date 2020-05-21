@@ -16,6 +16,8 @@ namespace Physics
     template<typename COLLIDER>
     struct CollisionComponent
     {
+        inline CollisionComponent(GTransform* transform);
+
         COLLIDER worldCollider;  
         GTransform* transform = nullptr;
 
@@ -35,5 +37,6 @@ namespace Physics
     };
 }
 
+#include "collisionComponent.inl"
 
 #endif

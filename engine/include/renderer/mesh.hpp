@@ -35,6 +35,8 @@ namespace Renderer
 
     public:
 
+        Mesh(Physics::GTransform* transform);
+
         void linkShaderWithModel();
 
         void draw(const Renderer::Camera&, Renderer::LightManager& lightManager);
