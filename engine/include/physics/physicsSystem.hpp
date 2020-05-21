@@ -45,7 +45,7 @@ namespace Physics
         std::vector<Physics::CollisionComponentInterface<Box>*> boxes;
         std::vector<Physics::PhysicComponentInterface*> physicComponents;
 
-        static constexpr float gravityAcc = 9.81f * 0.01; 
+        static constexpr float gravityAcc = 9.81f; 
         static constexpr float linearDamping  = 0.98f;
         static constexpr float minimalDistToGround = 0.0001f;
 
@@ -116,7 +116,7 @@ namespace Physics
         void sphereFindOverlappingBoxes(const Sphere& sphere, 
                                         const Core::Maths::Vec3& velocity,
                                         const Physics::PhysicsSystem::PhysicsAdditionalData& data,
-                                        const Physics::PhysicComponentInterface* physicCompID);
+                                        Physics::PhysicComponentInterface* physicCompID);
 
         bool sphereCollisionWithBoxes(const Sphere& sphere, 
                                             const Core::Maths::Vec3& velocity,

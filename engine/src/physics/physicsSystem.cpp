@@ -39,7 +39,7 @@ Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
-    physicComp.velocity.y -= gravityAcc * engine.deltaTime;
+    physicComp.velocity.y -= gravityAcc * engine.deltaTime * engine.deltaTime;
 }
 
 // Core::Maths::Vec3 Physics::PhysicsSystem::collisionPhysicalResponse(Physics::PhysicComponent& physicComp, 
@@ -267,7 +267,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
 void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere, 
                                                       const Core::Maths::Vec3& lastLoc,
                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data,
-                                                      const Physics::PhysicComponentInterface* physicCompID)
+                                                      Physics::PhysicComponentInterface* physicComp)
 {
     Segment3D seg{sphere.center, lastLoc};
     if (seg.squaredLength() < 0.0001)
@@ -291,8 +291,10 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
         {
             // // Add Callbacks to list
             // collisionsCallbacksSentDataList.emplace_back(hit, physicCompEntityID, boxCollider.first);
-            // callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompID, boxCollider.first});
-            boxCollider->colliderOnOverlapEnter(CollisionsCallbacksSentData{hit, physicCompID, boxCollider});
+            // callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicComp, boxCollider.first});
+            CollisionsCallbacksSentData data {hit, physicComp, boxCollider};
+            boxCollider->colliderOnOverlapEnter(data);
+            physicComp->physicCompOnOverlapEnter(data);
         }
     }
 }
@@ -321,14 +323,14 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         if (!it.second)
         {
             // Callback
-            CollisionsCallbacksSentData collisionsCallbacksSentData
-            {
-                std::move(hit),
-                physicComp,
-                collidedMeshInterface
-            };
-            physicComp->physicCompOnCollisionEnter(hit);
-            collidedMeshInterface->colliderOnCollisionEnter(hit);
+            // CollisionsCallbacksSentData collisionsCallbacksSentData
+            // {
+            //     std::move(hit),
+            //     physicComp,
+            //     collidedMeshInterface
+            // };
+            // physicComp->physicCompOnCollisionEnter(hit);
+            // collidedMeshInterface->colliderOnCollisionEnter(hit);
             // callbacks.onCollisionEnter(collisionsCallbacksSentData);
         }
 
@@ -351,166 +353,6 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         return finalLoc;
     }
 }
-
-// void Physics::PhysicsSystem::simulatePhysics(Physics::PhysicComponentInterface* physicComp, 
-//                                             const Physics::PhysicsSystem::PhysicsAdditionalData& data,
-//                                             const Core::Maths::Vec3& leftVelocity)
-// {
-//     if (leftVelocity.vectorSquareLength() < 0.001f)
-//         return;
-
-//     // std::cout << leftVelocity << std::endl;
-//     SegmentHit hit;
-//     hit.t = 2.f;
-//     // Entity::EntityID collidedEntity; // box
-//     Physics::CollisionComponentInterface<Box>* collidedEntity = nullptr; // box
-
-//     if (staticBoxesFirstCollision(physicComp->physicComp, physicComp->physicComp.collider.transform->transform.location, hit, data, collidedEntity, leftVelocity))
-//     {
-//         Core::Maths::Vec3 newLoc = physicComp->physicComp.collider.transform->transform.location + leftVelocity * hit.t;
-//         // std::cout << "Old : " << physicComp.second.collider.transform->transform.location << '\t' << " New : " << newLoc << std::endl; 
-//         // std::cout << "Hit.t : " << hit.t << std::endl;
-//         staticBoxesOverlapCollision(physicComp, 
-//                                     physicComp->physicComp.collider.transform->transform.location, 
-//                                     newLoc, 
-//                                     data);
-
-//         physicComp->physicComp.collider.transform->transform.location = newLoc;
-
-//         if (!physicComp->physicComp.collider.isColliding)
-//         {
-//             physicComp->physicComp.collider.isColliding = true;
-
-//             // Callback
-//             CollisionsCallbacksSentData collisionsCallbacksSentData
-//             {
-//                 std::move(hit),
-//                 physicComp,
-//                 collidedEntity
-//             };
-//             physicComp->physicCompOnCollisionEnter(hit);
-//             collidedEntity->colliderOnCollisionEnter(hit);
-//             // callbacks.onCollisionEnter(collisionsCallbacksSentData);
-//         }
-
-//         Core::Maths::Vec3 newVelo = leftVelocity * hit.t;
-
-//         Core::Maths::Vec3 velocityAfterContact = leftVelocity - newVelo;
-
-//         // hit.normal = hit.normal.unitVector();
-//         float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
-
-//         Core::Maths::Vec3 finalLoc = physicComp->physicComp.collider.transform->transform.location + velocityAfterContact - dot * hit.normal + 0.001f * hit.normal;
-//         physicComp->physicComp.velocity = (leftVelocity - dot * hit.normal);
-//         // std::cout << "left : " << physicComp.second.velocity << std::endl;
-
-//         // // We add a small value, because otherwises, they player would not be able to move due to constant collisions
-//         // return finalLoc + hit.normal * minimalDistToGround;
-//         simulatePhysics(physicComp, data, physicComp->physicComp.velocity);
-//     }
-//     else 
-//     {
-//         if (physicComp->physicComp.collider.isColliding)
-//         {
-//             physicComp->physicComp.collider.isColliding = false;
-
-//             // Callback
-//             // callbacks.onCollisionExit(physicComp.first);
-//             physicComp->physicCompOnCollisionExit();
-//         }
-
-//         physicComp->physicComp.collider.transform->transform.location = physicComp->physicComp.collider.transform->transform.location + leftVelocity;
-//     }
-// }
-
-// template<typename COLLISIONS_CALLBACKS>
-// void Physics::PhysicsSystem::simulatePhysics(std::pair<const Entity::EntityID, Physics::PhysicComponent>& physicComp, 
-//                                                        const Physics::PhysicsSystem::PhysicsAdditionalData& data,
-//                                                        COLLISIONS_CALLBACKS& callbacks)
-// {
-//     if (!physicComp.second.isEnabled)
-//         return;
-
-//     SegmentHit hit;
-//     hit.t = 2.f;
-
-//     Entity::EntityID collidedEntity; // box
-
-//     if (staticBoxesFirstCollision(physicComp.second, physicComp.second.collider.transform->transform.location, hit, data, collidedEntity))
-//     {
-//         Core::Maths::Vec3 newLoc = collisionPhysicalResponse(physicComp.second, physicComp.second.collider.transform->transform.location, hit);
-
-//         staticBoxesOverlapCollision(physicComp.second, physicComp.second.collider.transform->transform.location, newLoc, data, physicComp.first, callbacks);
-
-//         if (!physicComp.second.collider.isColliding)
-//         {
-//             physicComp.second.collider.isColliding = true;
-
-//             // Callback
-//             CollisionsCallbacksSentData collisionsCallbacksSentData
-//             {
-//                 std::move(hit),
-//                 physicComp.first,
-//                 collidedEntity
-//             };
-//             callbacks.onCollisionEnter(collisionsCallbacksSentData);
-//         }
-
-//         physicComp.second.collider.transform->transform.location = newLoc;
-//         return;
-//     }
-    
-//     // is not colliding
-//     else if (physicComp.second.collider.isColliding)
-//     {
-//         physicComp.second.collider.isColliding = false;
-
-//         // Callback
-//         callbacks.onCollisionExit(physicComp.first);
-//     }
-
-//     staticBoxesOverlapCollision(physicComp.second, physicComp.second.collider.transform->transform.location, 
-//                                 physicComp.second.velocity + physicComp.second.collider.transform->transform.location, 
-//                                 data, 
-//                                 physicComp.first, 
-//                                 callbacks);
-
-//     physicComp.second.collider.transform->transform.location = physicComp.second.collider.transform->transform.location + physicComp.second.velocity;
-//     return;
-// }
-
-// void Physics::PhysicsSystem::staticBoxesOverlapCollision(Physics::PhysicComponentInterface* physicComp, 
-//                                                          const Core::Maths::Vec3& startLoc, 
-//                                                          const Core::Maths::Vec3& endLoc, 
-//                                                          const PhysicsAdditionalData& data)
-// {   
-//     Segment3D seg{startLoc, endLoc};
-//     if (seg.squaredLength() < 0.0001)
-//         return;
-//     SegmentHit hit;
-    
-//     // // TODO : opti with reserve
-//     // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
-//     // collisionsCallbacksSentDataList.reserve(nextNbOverlapHint); 
-
-//     // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
-//     for (CollisionComponentInterface<Box>* boxCollider : boxes)
-//     {
-//         if (!boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
-//             continue;
-
-//         boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
-
-//         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, physicComp->physicComp.collider.worldCollider, seg, hit))
-//         {
-//             // // Add Callbacks to list
-//             // collisionsCallbacksSentDataList.emplace_back(hit, physicCompEntityID, boxCollider.first);
-//             // callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicCompEntityID, boxCollider.first});
-//             physicComp->physicCompOnOverlapEnter(CollisionsCallbacksSentData{hit, physicComp, boxCollider});
-//         }
-//     }
-// }
-
 
 
 
