@@ -2,9 +2,11 @@
 #define _BASIC_ENTITY_HPP_
 
 #include "box.hpp"
+
 #include "saveInterface.hpp"
 #include "collisionComponentInterface.hpp"
 #include "physicComponentInterface.hpp"
+#include "renderableInterface.hpp"
 
 #include "mesh.hpp"
 #include "rendererSystem.hpp"
@@ -17,13 +19,12 @@ namespace Entity
     class BasicEntity : //public EntityID, 
                         public Physics::CollisionComponentInterface<Box>, 
                         public Physics::PhysicComponentInterface, 
+                        public Renderer::RenderableInterface,
                         public Save::SaveInterface
     {
     public:
         Physics::GTransform transform;
 
-        Renderer::MeshIt meshIt;
-        Renderer::Mesh mesh;
         // Physics::PhysicComponent physicComponent; // moving sphere 
 
         // to load graphs
@@ -59,7 +60,6 @@ namespace Entity
         void setTransform(const Physics::Transform& newTransform);
         void setTransformParent(Physics::TransformGraph& transformParent);
 
-        void addRendering(Renderer::RendererSystem& renderer);
         void addPhysics(Physics::PhysicsSystem& physicsSystem);
         void addCollisions(Physics::PhysicsSystem& physicsSystem);
 

@@ -92,11 +92,6 @@ void Entity::BasicEntity::setTransformParent(Physics::TransformGraph& transformP
     transform.transformMatrixNode = transformParent.addChild();
 }
 
-void Entity::BasicEntity::addRendering(Renderer::RendererSystem& renderer)
-{
-    meshIt = renderer.addComponent(&mesh);
-}
-
 void Entity::BasicEntity::addPhysics(Physics::PhysicsSystem& physicsSystem)
 {
     physicCompIt = physicsSystem.addPhysicComponent(this);
