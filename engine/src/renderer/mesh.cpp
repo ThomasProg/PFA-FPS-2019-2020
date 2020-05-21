@@ -20,14 +20,14 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
     if (!isDrawn || model == nullptr || shader == nullptr || &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
         return;
 
+    // shader->use();
     glBindVertexArray(model->VAO);
 
-    shader->use();
 
     if(texture != nullptr)
         glBindTexture(GL_TEXTURE_2D, texture->textureData);
 
-    Core::Maths::Matrix4x4 mvp = (cam.projection * cam.transform.transformMatrixNode->worldData.getInverse() * transform->transformMatrixNode->worldData);
+    Core::Maths::Matrix4x4 mvp = (cam.viewProjectionMatrix * transform->transformMatrixNode->worldData);
     mvp.transposeThis();
     
     // ===== Lights ===== //

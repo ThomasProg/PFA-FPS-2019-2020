@@ -529,7 +529,10 @@ void World::renderUI()
 void World::render()   
 {
     if (camera != nullptr)
+    {
+        camera->updateViewProjectionMatrix();
         game.engine.rendererSystem.draw(*camera, lightManager);
+    }
 }
 
 void World::hud()

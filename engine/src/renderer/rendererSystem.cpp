@@ -29,13 +29,20 @@ void Renderer::RendererSystem::erase(Renderer::RendererSystem::iterator& it)
     meshes[it] = nullptr;
     freeMeshIndices.emplace_back(it);
 }
-
+#include "shader.hpp"
 void Renderer::RendererSystem::draw(const Camera& camera, Renderer::LightManager& lightManager)
 {
+    const Resources::Shader* lastShader = nullptr;
     for (Mesh* mesh : meshes)
     {
         if (mesh != nullptr)
         {
+            if (mesh->shader != nullptr && mesh->shader != lastShader)
+            {
+                mesh->shader->use();
+                lastShader = mesh->shader;
+            }
+            
             mesh->draw(camera, lightManager);
         }
     }

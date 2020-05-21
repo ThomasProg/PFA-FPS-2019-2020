@@ -215,6 +215,8 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
 
 void Physics::PhysicsSystem::simulatePhysicsForASphere(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine)
 {
+    assert(physicComp != nullptr);
+    
     // Update Sphere properties
     physicComp->physicComp.collider.worldCollider.center = physicComp->physicComp.collider.transform->transform.location;
 
@@ -297,11 +299,11 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
 
 Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere( 
                                const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                               Physics::PhysicComponentInterface* physicCompID)
+                               Physics::PhysicComponentInterface* physicComp)
 {
-    Sphere& sphere = physicCompID->physicComp.collider.worldCollider;
-    std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities = physicCompID->physicComp.collider.collidingEntities;
-    Core::Maths::Vec3& leftVelocity = physicCompID->physicComp.velocity;
+    Sphere& sphere = physicComp->physicComp.collider.worldCollider;
+    std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities = physicComp->physicComp.collider.collidingEntities;
+    Core::Maths::Vec3& leftVelocity = physicComp->physicComp.velocity;
 
     if (leftVelocity.vectorSquareLength() < 0.00001f)
     {
@@ -322,10 +324,10 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
             CollisionsCallbacksSentData collisionsCallbacksSentData
             {
                 std::move(hit),
-                physicCompID,
+                physicComp,
                 collidedMeshInterface
             };
-            physicCompID->physicCompOnCollisionEnter(hit);
+            physicComp->physicCompOnCollisionEnter(hit);
             collidedMeshInterface->colliderOnCollisionEnter(hit);
             // callbacks.onCollisionEnter(collisionsCallbacksSentData);
         }
@@ -336,16 +338,16 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         leftVelocity -= dot * hit.normal;
         leftVelocity *= 0.9f;
 
-        sphereFindOverlappingBoxes(sphere, finalLoc, data, physicCompID);
+        sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
 
         sphere.center = finalLoc;
 
-        return simulateCollisionsForASphere(data, physicCompID);
+        return simulateCollisionsForASphere(data, physicComp);
     }
     else 
     {
         Core::Maths::Vec3 finalLoc = sphere.center + leftVelocity;// * deltaTime; 
-        sphereFindOverlappingBoxes(sphere, finalLoc, data, physicCompID);
+        sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
         return finalLoc;
     }
 }
