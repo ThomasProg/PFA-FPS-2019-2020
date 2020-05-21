@@ -439,6 +439,8 @@ void World::update()
             }
         }
 
+        player.tryToJump(game.engine);
+
         if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT))
         {
             Segment3D directionHit = player.shoot();

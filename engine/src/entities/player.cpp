@@ -47,12 +47,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
     
     std::vector<unsigned int>::iterator it;
 
-    // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
-    if (physicComp.collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
-    {
-        physicComp.setForceOnAxis<1>(jumpSpeed, engine);
-        // state.playerState = PlayerState::E_JUMPING;
-    }
+    if (engine.isKeyDown(inputKeys.jump))
+        lastJumpPressTime = glfwGetTime();
 
     Core::Maths::Vec3 forward = transform.transform.getForwardXZVector() * movementSpeed;
     Core::Maths::Vec3 right   = transform.transform.getRightXZVector()   * movementSpeed;
@@ -134,6 +130,15 @@ void Entity::Player::inputs(const Core::Engine& engine)
     camera.transform.UpdateLocalTransformMatrix();
     camera.transform.transformMatrixNode->setDirtySelfAndChildren(); 
     camera.transform.transformMatrixNode->cleanUpdate();
+}
+
+void Entity::Player::tryToJump(const Core::Engine& engine)
+{
+    if (physicComp.collider.collidingEntities.size() > 0 && glfwGetTime() - lastJumpPressTime < jumpCoyoteTime)
+    {
+        physicComp.velocity.y = jumpSpeed; // impulse
+        state.playerState = PlayerState::E_JUMPING;
+    }
 }
 
 bool Entity::Player::isShooting(const Core::Engine& engine)

@@ -41,8 +41,9 @@ namespace Entity
     class Player : public BasicEntity, public Controller::ControllerInterface
     {
     private:
-        static constexpr float movementSpeed = 10.f;
-        static constexpr float jumpSpeed     = 10.f;
+        static constexpr float movementSpeed  = 10.f;
+        static constexpr float jumpSpeed      = 0.1f;
+        static constexpr float jumpCoyoteTime = 0.1f;
 
 
     public:
@@ -50,6 +51,8 @@ namespace Entity
         float maxLifePoints = 10.f;
         unsigned int nbBullet = 60;
         unsigned int maxNbBullet = 60;
+
+        float lastJumpPressTime = -123456789.f;
         
         // Renderer::TPSCamera camera;
         Renderer::FPSCamera camera;
@@ -101,6 +104,8 @@ namespace Entity
                     Physics::TransformGraph& transformParent);
 
         void inputs(const Core::Engine& engine) override;
+
+        void tryToJump(const Core::Engine& engine);
 
         bool isShooting(const Core::Engine& engine);
         Segment3D shoot() const;
