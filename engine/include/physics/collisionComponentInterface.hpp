@@ -21,6 +21,11 @@ namespace Physics
         {
 
         }
+
+        void addCollisions(Physics::PhysicsSystem& physicsSystem)
+        {
+            colliderIt = physicsSystem.addCollider<Box>(this);
+        }
     };
 }
 

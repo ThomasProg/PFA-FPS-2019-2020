@@ -77,31 +77,6 @@ void Entity::BasicEntity::setResources(const DemoResourceManager& resourceManage
     mesh.linkShaderWithModel();
 }
 
-void Entity::BasicEntity::setTransform(const Physics::Transform& newTransform)
-{
-    // Be sure to set the parent first.
-    assert(transform.transformMatrixNode.isValid());
-
-    this->transform.transform = newTransform;
-    transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->setDirtySelfAndChildren();
-}
-
-void Entity::BasicEntity::setTransformParent(Physics::TransformGraph& transformParent)
-{
-    transform.transformMatrixNode = transformParent.addChild();
-}
-
-void Entity::BasicEntity::addPhysics(Physics::PhysicsSystem& physicsSystem)
-{
-    physicCompIt = physicsSystem.addPhysicComponent(this);
-}
-
-void Entity::BasicEntity::addCollisions(Physics::PhysicsSystem& physicsSystem)
-{
-    colliderIt = physicsSystem.addCollider<Box>(this);
-}
-
 void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
             const Resources::Model* model, 
             const Resources::Shader* shader, 

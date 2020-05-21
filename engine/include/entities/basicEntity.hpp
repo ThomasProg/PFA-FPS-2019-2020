@@ -7,6 +7,7 @@
 #include "collisionComponentInterface.hpp"
 #include "physicComponentInterface.hpp"
 #include "renderableInterface.hpp"
+#include "transformInterface.hpp"
 
 #include "mesh.hpp"
 #include "rendererSystem.hpp"
@@ -19,14 +20,14 @@ using DemoResourceManager = EnumedResourceManager<E_Model, E_Texture, E_Shader, 
 namespace Entity
 {
     // Example Class for rendering an object
-    class BasicEntity : //public EntityID, 
+    class BasicEntity : public Physics::TransformInterface,
                         public Physics::CollisionComponentInterface<Box>, 
                         public Physics::PhysicComponentInterface, 
                         public Renderer::RenderableInterface,
                         public Save::SaveInterface
     {
     public:
-        Physics::GTransform transform;
+        // Physics::GTransform transform;
 
         // Physics::PhysicComponent physicComponent; // moving sphere 
 
@@ -60,11 +61,6 @@ namespace Entity
                     Physics::TransformGraph& transformParent);
 
         void setResources(const DemoResourceManager&);
-        void setTransform(const Physics::Transform& newTransform);
-        void setTransformParent(Physics::TransformGraph& transformParent);
-
-        void addPhysics(Physics::PhysicsSystem& physicsSystem);
-        void addCollisions(Physics::PhysicsSystem& physicsSystem);
 
         // save any data you want with this function
         void save(Save::Saver& saver) override;
