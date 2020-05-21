@@ -37,7 +37,7 @@ namespace Renderer
 
     public:
 
-        void setup(Physics::GTransform& parent);
+        void attachTo(Physics::GTransform& parent);
 
         // Runs camera inputs (camera movement and rotation).
         void inputs(const Core::Engine& engine) override;

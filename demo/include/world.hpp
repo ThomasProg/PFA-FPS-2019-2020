@@ -21,6 +21,8 @@
 
 #include "lightManager.hpp"
 
+#include "entityGroup.hpp"
+
 #include <list>
 #include <unordered_map>
 
@@ -63,36 +65,14 @@ class Game;
 //     }
 // };
 
-class World : public Resources::Scene, public Save::SaveInterface
+class World : public Resources::Scene
 {
 private:
     // Entity::EntityID nextEntity = 10u;
 
     Game& game;
-    Renderer::LightManager lightManager;
 
-    Physics::TransformGraph root;
-
-    // Save::SaveSystem saveSystem;
-
-    Entity::Player player;
-    // std::list<Entity::BasicEntity> grounds;
-    // std::list<Entity::Enemy> enemies;
-    // std::vector<Entity::BasicEntity*> grounds;
-    std::vector<Entity::Ground*> grounds;
-    std::vector<Entity::Enemy*> enemies;
-    // std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
-    // std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
-
-    std::vector<std::unique_ptr<Entity::RenderedEntity>> bullets;
-
-    // Entity::Enemy enemy;
-
-    Renderer::TPSCamera tpsCamera;
-    Renderer::FPSCamera fpsCamera;
-
-    Controller::ControllerInterface* controller = &player;
-    Renderer::Camera* camera = &player.camera;
+    EntityGroup entityGroup;
 
     Entity::BasicEntity* editorSelectedEntity = nullptr;
 
@@ -120,7 +100,6 @@ public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
 
-    void setKeys(bool isAzerty);
     void loadFromSavefile(const char* savedFilename);
     void makeNewLevel();
 
@@ -139,12 +118,9 @@ public:
     void hud();
     void gameOver();
 
-    void addGround(const Physics::Transform& transform);
-    void addEnemy(const Physics::Transform& transform);
-    void addBullet(const Physics::Transform& transform);
-
-    void save(Save::Saver& saver) override;
-    void loadData(Save::Loader& loader) override;
+    // void addGround(const Physics::Transform& transform);
+    // void addEnemy(const Physics::Transform& transform);
+    // void addBullet(const Physics::Transform& transform);
 };
 
 #endif

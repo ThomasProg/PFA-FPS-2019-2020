@@ -2,6 +2,7 @@
 #define _SAVER_HPP_
 
 #include <fstream>
+#include <iostream>
 
 namespace Save
 {

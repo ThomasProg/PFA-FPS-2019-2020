@@ -18,103 +18,61 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-void World::save(Save::Saver& saver) 
-{
-    // saver.save(nextEntity);
-    saver.save(grounds.size());
-    saver.save(enemies.size());
-}
+// void World::save(Save::Saver& saver) 
+// {
+//     // saver.save(nextEntity);
+//     saver.save(grounds.size());
+//     saver.save(enemies.size());
+// }
 
-void World::loadData(Save::Loader& loader) 
-{
-    // loader.load(nextEntity);
+// void World::loadData(Save::Loader& loader) 
+// {
+//     // loader.load(nextEntity);
 
-    std::size_t nbGrounds;
-    loader.load(nbGrounds);
+//     std::size_t nbGrounds;
+//     loader.load(nbGrounds);
 
-    for (std::size_t i = 0; i < nbGrounds; i++)
-    {
-        // std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace(Entity::EntityID{i}, Entity::EntityID{i});
-        // if (it.second) // if insertion took place
-        {
-            // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
-            // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
-            // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
-            // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
-            // nextEntity.next();
-            addGround({{}});
-        }
-    }
+//     for (std::size_t i = 0; i < nbGrounds; i++)
+//     {
+//         // std::pair<std::unordered_map<Entity::EntityID, Entity::BasicEntity>::iterator, bool> it = grounds.emplace(Entity::EntityID{i}, Entity::EntityID{i});
+//         // if (it.second) // if insertion took place
+//         {
+//             // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
+//             // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
+//             // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
+//             // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
+//             // nextEntity.next();
+//             addGround({{}});
+//         }
+//     }
 
-    std::size_t nbEnemies;
-    loader.load(nbEnemies);
+//     std::size_t nbEnemies;
+//     loader.load(nbEnemies);
 
-    for (std::size_t i = 0; i < nbEnemies; i++)
-    {
-        // enemies.emplace_back();
-        // saveSystem.add(&enemies.back());
-        // std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace(Entity::EntityID{i}, Entity::EntityID{i});
-        // if (it.second) // if insertion took place
-        // {
-        //     saveSystem.add(&it.first->second);
-            addEnemy({{}});
-            // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
-            // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
-            // it.first->second.colliderIt->transform = it.first->second.physicCompIt->collider.transform = &it.first->second.mesh->transform;
-            // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
-            // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
-            // nextEntity.next();
-        // }
-    }
-}
+//     for (std::size_t i = 0; i < nbEnemies; i++)
+//     {
+//         // enemies.emplace_back();
+//         // saveSystem.add(&enemies.back());
+//         // std::pair<std::unordered_map<Entity::EntityID, Entity::Enemy>::iterator, bool> it = enemies.emplace(Entity::EntityID{i}, Entity::EntityID{i});
+//         // if (it.second) // if insertion took place
+//         // {
+//         //     saveSystem.add(&it.first->second);
+//             addEnemy({{}});
+//             // it.first->second.colliderIt = game.engine.physicsSystem.addCollider<Box>(it.first->second);
+//             // it.first->second.physicCompIt = game.engine.physicsSystem.addPhysicComponent(it.first->second);
+//             // it.first->second.colliderIt->transform = it.first->second.physicCompIt->collider.transform = &it.first->second.mesh->transform;
+//             // game.engine.physicsSystem.loadPhysicComponentItContainer(it.first->second.physicCompIt, it.first->first);
+//             // game.engine.physicsSystem.loadColliderItContainer(it.first->second.colliderIt, it.first->first);
+//             // nextEntity.next();
+//         // }
+//     }
+// }
 
 
 World::World(Game& game, bool isLoaded, bool isEditorMode)
-    : game(game), isLoaded(isLoaded), isEditorMode(isEditorMode)
+    : game(game), entityGroup(game.engine), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
     bool ret = Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
-}
-
-void World::setKeys(bool isAzerty)
-{
-    if (isAzerty)
-    {
-        player.inputKeys.keys = 
-        {
-            GLFW_KEY_Z,
-            GLFW_KEY_S,
-            GLFW_KEY_D,
-            GLFW_KEY_Q,
-            GLFW_KEY_SPACE
-        };
-
-        fpsCamera.inputKeys.keys = 
-        {
-            GLFW_KEY_Z,
-            GLFW_KEY_S,
-            GLFW_KEY_D,
-            GLFW_KEY_Q,
-        };
-    }
-    else 
-    {
-        player.inputKeys.keys = 
-        {
-            GLFW_KEY_W,
-            GLFW_KEY_S,
-            GLFW_KEY_D,
-            GLFW_KEY_A,
-            GLFW_KEY_SPACE
-        };
-
-        fpsCamera.inputKeys.keys = 
-        {
-            GLFW_KEY_W,
-            GLFW_KEY_S,
-            GLFW_KEY_D,
-            GLFW_KEY_A,
-        };
-    }
 }
 
 void World::loadFromSavefile(const char* savedFilename)
@@ -128,37 +86,24 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
-    addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
-    addGround({{5.f, -35, -20}, {0.f,0,0}, {20,1,40}});
+    entityGroup.addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
+    entityGroup.addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addGround({{5.f, -35, -20}, {0.f,0,0}, {20,1,40}});
 
-    addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
+    entityGroup.addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
 
-    addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
 
     // === Add Player === //
-    player.setTransformParent(root);
-    player.setResources(game.engine.resourceManager);
+    entityGroup.addPlayer();
 
-    player.addRendering(game.engine.rendererSystem);
-    player.addCollisions(game.engine.physicsSystem);
-    player.addPhysics(game.engine.physicsSystem);
-
-    player.camera.setup(player.transform);
-
-    player.camera.transform.transform.location.y = 2.f;
-    player.camera.transform.UpdateLocalTransformMatrix();
-    player.camera.transform.transformMatrixNode->setDirtySelfAndChildren();
-
-    // === Add other cameras === //
-    fpsCamera.setup(player.transform);
-    tpsCamera.setup(player.transform);
+    // // === Add other cameras === //
+    // fpsCamera.setup(player.transform);
+    // tpsCamera.setup(player.transform);
 }
 
 void World::load()
 {
-    setKeys(game.isAzerty);
-
     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
 
     // lock cursor
@@ -175,46 +120,37 @@ void World::load()
     else 
         makeNewLevel();
 
-    lightManager.lightsBufferInit(10);
-    lightManager.lights.emplace_back();
-    lightManager.lights.emplace_back();
-    {
-        Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
-        l.location = {20.f, -27.f, 12, 0.0}; 
-        l.lightType = 3;
-        l.ambient = {0.7, 0.7,0.7,0};
-    }
+    entityGroup.setKeys(game.isAzerty);
+
+    // lightManager.lightsBufferInit(10);
+    // lightManager.lights.emplace_back();
+    // lightManager.lights.emplace_back();
+    // {
+    //     Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
+    //     l.location = {20.f, -27.f, 12, 0.0}; 
+    //     l.lightType = 3;
+    //     l.ambient = {0.7, 0.7,0.7,0};
+    // }
 
     updateCameraProjection();
 
-    if (isEditorMode)
-    {
-        controller = &fpsCamera;
-        camera = &fpsCamera;
-    }
+    // if (isEditorMode)
+    // {
+    //     controller = &fpsCamera;
+    //     camera = &fpsCamera;
+    // }
 }
 
 World::~World()
 {
-    for (Entity::Enemy* enemy : enemies)
-        if (enemy != nullptr)
-            delete enemy;
-
-    for (Entity::Ground* ground : grounds)
-        if (ground != nullptr)
-            delete ground;
-
-
-    enemies.clear();
-    grounds.clear();
     game.engine.rendererSystem.reset();
     game.engine.physicsSystem.reset(); 
 }
 
 void World::inputs()
 {
-    if (controller != nullptr && !isPauseMenuOpen)
-        controller->inputs(game.engine);
+    if (entityGroup.controller != nullptr && !isPauseMenuOpen)
+        entityGroup.controller->inputs(game.engine);
 
     if (game.engine.isKeyDown(GLFW_KEY_ESCAPE))
     {
@@ -228,51 +164,8 @@ void World::inputs()
 
 void World::updateCameraProjection()
 {
-    player.camera.projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(game.engine.width, game.engine.height, 0.1, 10000, 90.f);
-    fpsCamera.projection = player.camera.projection;
-}
-
-void World::addGround(const Physics::Transform& transform)
-{
-    grounds.emplace_back(new Entity::Ground());
-    Entity::Ground* ground = grounds.back();
-
-    ground->setResources(game.engine.resourceManager);
-    ground->setTransformParent(root);            
-    ground->setTransform(transform);
-
-    ground->addRendering(game.engine.rendererSystem);
-    ground->addCollisions(game.engine.physicsSystem);
-}
-
-void World::addEnemy(const Physics::Transform& transform)
-{ 
-    enemies.emplace_back(new Entity::Enemy());
-    Entity::Enemy* enemy = enemies.back();
-
-    enemy->setResources(game.engine.resourceManager);
-    enemy->setTransformParent(root);            
-    enemy->setTransform(transform);
-
-    enemy->addRendering(game.engine.rendererSystem);
-    enemy->addCollisions(game.engine.physicsSystem);
-    enemy->addPhysics(game.engine.physicsSystem);
-
-    enemy->patrolTarget = transform.location;
-}
-
-void World::addBullet(const Physics::Transform& transform)
-{
-    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>());
-
-    std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.back();
-
-    bullet->setResources(game.engine.resourceManager);
-    bullet->addRendering(game.engine.rendererSystem);
-
-    bullet->setTransformParent(root);
-    bullet->setTransform(transform);
-    bullet->timer = game.engine.lastTime + bullet->lifeTime;
+    entityGroup.player->camera.projection = Core::Maths::Matrix4x4::CreatePerspectiveProjectionMatrix(game.engine.width, game.engine.height, 0.1, 10000, 90.f);
+    // entityGroup.fpsCamera.projection = player.camera.projection;
 }
 
 // void World::updateEditorFunctions()
@@ -408,12 +301,12 @@ void World::addBullet(const Physics::Transform& transform)
 void World::updatePhysics()
 {
     // === DEMO === //
-    Entity::Ground* it = grounds.front();
+    Entity::Ground* it = entityGroup.grounds.front();
     it->transform.transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
     it->transform.UpdateLocalTransformMatrix();
     it->transform.transformMatrixNode->setDirtySelfAndChildren();
 
-    player.onPlayerDeath = [this](){ gameOver(); };
+    entityGroup.player->onPlayerDeath = [this](){ gameOver(); };
     /////////////
 
     game.engine.physicsSystem.simulatePhysics(game.engine);
@@ -427,61 +320,61 @@ void World::update()
     if (isPauseMenuOpen == false)
     {
         // Update entities
-        for (Entity::Enemy* enemy : enemies)
+        for (Entity::Enemy* enemy : entityGroup.enemies)
         {
-            if (player.transform.transformMatrixNode.isValid())
+            if (entityGroup.player->transform.transformMatrixNode.isValid())
             {
-                enemy->chaseTarget = player.transform.transformMatrixNode->worldData.getTranslationVector();
+                enemy->chaseTarget = entityGroup.player->transform.transformMatrixNode->worldData.getTranslationVector();
                 enemy->update(game.engine);
             }
         }
 
-        player.tryToJump(game.engine);
+        entityGroup.player->tryToJump(game.engine);
 
         if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT))
         {
-            Segment3D directionHit = player.shoot();
+            Segment3D directionHit = entityGroup.player->shoot();
             SegmentHit hit;
             Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
 
             if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
             {
                 //test hit enemy
-                std::vector<Entity::Enemy*>::iterator it = enemies.begin();
-                while (it != enemies.end() && (*it) != touchEntity)
+                std::vector<Entity::Enemy*>::iterator it = entityGroup.enemies.begin();
+                while (it != entityGroup.enemies.end() && (*it) != touchEntity)
                 {
                     it++;
                 }
-                if (it != enemies.end())
+                if (it != entityGroup.enemies.end())
                 {
                     //hit: add a box during 2s
                     (*it)->takeDamage(5);
-                    addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
+                    entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
                 }
                 else 
                 {
                     //test hit ground/wall
-                    std::vector<Entity::Ground*>::iterator it = grounds.begin();
-                    while (it != grounds.end() && (*it) != touchEntity)
+                    std::vector<Entity::Ground*>::iterator it = entityGroup.grounds.begin();
+                    while (it != entityGroup.grounds.end() && (*it) != touchEntity)
                     {
                         it++;
                     }
-                    if (it != grounds.end())
+                    if (it != entityGroup.grounds.end())
                     {
-                        addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
                     }
                 }
             }
         }
 
-        if(bullets.size() > 0)
+        if(entityGroup.bullets.size() > 0)
         {
-            std::vector<std::unique_ptr<Entity::RenderedEntity>>::iterator r = bullets.begin();
-            while(bullets.size() != 0 && game.engine.lastTime >= r->get()->timer)
+            std::vector<std::unique_ptr<Entity::RenderedEntity>>::iterator r = entityGroup.bullets.begin();
+            while(entityGroup.bullets.size() != 0 && game.engine.lastTime >= r->get()->timer)
             {
                 // (*r)->mesh.erase();
                 game.engine.rendererSystem.erase((*r)->meshIt);
-                r = bullets.erase(r);
+                r = entityGroup.bullets.erase(r);
             }
                
         }
@@ -527,10 +420,10 @@ void World::renderUI()
 
 void World::render()   
 {
-    if (camera != nullptr)
+    if (entityGroup.camera != nullptr)
     {
-        camera->updateViewProjectionMatrix();
-        game.engine.rendererSystem.draw(*camera, lightManager);
+        entityGroup.camera->updateViewProjectionMatrix();
+        game.engine.rendererSystem.draw(*entityGroup.camera, entityGroup.lightManager);
     }
 }
 
@@ -542,14 +435,14 @@ void World::hud()
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
     ImGui::SetCursorPosY(game.engine.height - 30.f);
-    assert(player.maxLifePoints != 0.f);
+    assert(entityGroup.player->maxLifePoints != 0.f);
     ImGui::SetWindowFontScale(1.0);
-    ImGui::ProgressBar(player.lifePoints / player.maxLifePoints, ImVec2(200,20));
+    ImGui::ProgressBar(entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, ImVec2(200,20));
 
     ImGui::SetCursorPosY(game.engine.height - 30.f);
     ImGui::SetCursorPosX(game.engine.width - 100.f);
     ImGui::SetWindowFontScale(1.5);
-    ImGui::Text("%i / %i", player.nbBullet, player.maxNbBullet);
+    ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
 
     ImGui::SetCursorPosY(game.engine.height / 2 - imageHeight / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - imageWidth / 2);
