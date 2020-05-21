@@ -16,20 +16,41 @@ EntityGroup::EntityGroup(Core::Engine& engine)
 
 EntityGroup::~EntityGroup()
 {
+    engine.rendererSystem.erase(player->meshIt);
+
+    if (player != nullptr)
+        delete player;
+
     for (Entity::Enemy* enemy : enemies)
+    {
         if (enemy != nullptr)
+        {
+            engine.rendererSystem.erase(enemy->meshIt);
             delete enemy;
+        }
+    }
 
     for (Entity::Ground* ground : grounds)
+    {
         if (ground != nullptr)
+        {
+            engine.rendererSystem.erase(ground->meshIt);
             delete ground;
+        }
+    }
+
+    for (std::unique_ptr<Entity::RenderedEntity>& bullet : bullets)
+    {
+        engine.rendererSystem.erase(bullet->meshIt);
+    }
 
 
+    player = nullptr;
     enemies.clear();
     grounds.clear();
 }
 
-void EntityGroup::addPlayer()
+void EntityGroup::addPlayer(const Physics::Transform& transform)
 {
     if (player != nullptr)
         delete player;
@@ -43,7 +64,7 @@ void EntityGroup::addPlayer()
     player->addPhysics(engine.physicsSystem);
 
     player->camera.attachTo(player->transform);
-    player->setTransform({{0, 2.f, 0}});
+    player->setTransform(transform);
 
     player->camera.transform.transform.location.y = 2.f;
 

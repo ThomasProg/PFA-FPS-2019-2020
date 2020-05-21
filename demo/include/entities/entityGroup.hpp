@@ -51,9 +51,9 @@ public:
 
     ~EntityGroup();
 
-    void addPlayer();
+    void addPlayer(const Physics::Transform& transform);
     void addGround(const Physics::Transform& transform);
-    void addEnemy(const Physics::Transform& transform);
+    void addEnemy (const Physics::Transform& transform);
     void addBullet(const Physics::Transform& transform);
 
     void setKeys(bool isAzerty);

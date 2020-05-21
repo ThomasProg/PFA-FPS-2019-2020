@@ -95,7 +95,7 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
 
     // === Add Player === //
-    entityGroup.addPlayer();
+    entityGroup.addPlayer({});
 
     // // === Add other cameras === //
     // fpsCamera.setup(player.transform);
@@ -143,7 +143,7 @@ void World::load()
 
 World::~World()
 {
-    game.engine.rendererSystem.reset();
+    // TODO : remove Physic Comps from physicsSystem
     game.engine.physicsSystem.reset(); 
 }
 
