@@ -3,24 +3,24 @@
 
 #include "collisionComponentInterface.hpp"
 #include "renderableInterface.hpp"
+#include "transformInterface.hpp"
 
 #include "ground.hpp"
 
+#include  "demoResourceManager.hpp"
+
 namespace Entity
 {
-    class Ground : public Renderer::RenderableInterface,
+    class Ground : public Physics::TransformInterface,
+                   public Renderer::RenderableInterface,
                    public Physics::CollisionComponentInterface<Box>
     {
-    private:
-
     public:
-        Physics::GTransform transform;
-
         Ground() 
             : Renderer::RenderableInterface(&transform),
               Physics::CollisionComponentInterface<Box>(&transform)
         {
-            // collider.transform = &transform;
+
         }
 
         void setResources(const DemoResourceManager&);

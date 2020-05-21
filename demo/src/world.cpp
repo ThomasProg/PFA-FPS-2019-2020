@@ -200,7 +200,7 @@ World::~World()
         if (enemy != nullptr)
             delete enemy;
 
-    for (Entity::BasicEntity* ground : grounds)
+    for (Entity::Ground* ground : grounds)
         if (ground != nullptr)
             delete ground;
 
@@ -234,8 +234,8 @@ void World::updateCameraProjection()
 
 void World::addGround(const Physics::Transform& transform)
 {
-    grounds.emplace_back(new Entity::BasicEntity());
-    Entity::BasicEntity* ground = grounds.back();
+    grounds.emplace_back(new Entity::Ground());
+    Entity::Ground* ground = grounds.back();
 
     ground->setResources(game.engine.resourceManager);
     ground->setTransformParent(root);            
@@ -410,7 +410,7 @@ void World::addBullet(const Physics::Transform& transform)
 void World::updatePhysics()
 {
     // === DEMO === //
-    Entity::BasicEntity* it = grounds.front();
+    Entity::Ground* it = grounds.front();
     it->transform.transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
     it->transform.UpdateLocalTransformMatrix();
     it->transform.transformMatrixNode->setDirtySelfAndChildren();
@@ -463,7 +463,7 @@ void World::update()
                 else 
                 {
                     //test hit ground/wall
-                    std::vector<Entity::BasicEntity*>::iterator it = grounds.begin();
+                    std::vector<Entity::Ground*>::iterator it = grounds.begin();
                     while (it != grounds.end() && (*it) != touchEntity)
                     {
                         it++;

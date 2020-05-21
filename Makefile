@@ -13,7 +13,7 @@ CXX=g++
 
 LDLIBS= -Llib -lglfw -lGL -ldl
 SRC=$(wildcard demo/src/*.cpp)\
-	$(wildcard demo/entities/src/*.cpp)\
+	$(wildcard demo/src/entities/*.cpp)\
 	$(wildcard engine/src/*.cpp)\
 	$(wildcard engine/src/core/*.cpp)\
 	$(wildcard engine/src/core/maths/*.cpp)\
