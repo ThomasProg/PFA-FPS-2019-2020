@@ -3,7 +3,6 @@
 EntityGroup::EntityGroup(Core::Engine& engine)
     : engine(engine)
 {
-    lightManager.lightsBufferInit(10);
     lightManager.lights.emplace_back();
     lightManager.lights.emplace_back();
     {
@@ -48,73 +47,6 @@ EntityGroup::~EntityGroup()
     player = nullptr;
     enemies.clear();
     grounds.clear();
-}
-
-void EntityGroup::addPlayer(const Physics::Transform& transform)
-{
-    if (player != nullptr)
-        delete player;
-
-    player = new Entity::Player();
-    player->setTransformParent(root);
-    player->setResources(engine.resourceManager);
-
-    player->addRendering(engine.rendererSystem);
-    player->addCollisions(engine.physicsSystem);
-    player->addPhysics(engine.physicsSystem);
-
-    player->camera.attachTo(player->transform);
-    player->setTransform(transform);
-
-    player->camera.transform.transform.location.y = 2.f;
-
-    if (controller == nullptr)
-        controller = player;
-    if  (camera == nullptr)
-        camera = &player->camera;
-}
-
-void EntityGroup::addGround(const Physics::Transform& transform)
-{
-    Entity::Ground* ground = new Entity::Ground();
-    grounds.emplace_back(ground);
-
-    ground->setResources(engine.resourceManager);
-    ground->setTransformParent(root);            
-    ground->setTransform(transform);
-
-    ground->addRendering(engine.rendererSystem);
-    ground->addCollisions(engine.physicsSystem);
-}
-
-void EntityGroup::addEnemy(const Physics::Transform& transform)
-{ 
-    Entity::Enemy* enemy = new Entity::Enemy();
-    enemies.emplace_back(enemy);
-
-    enemy->setResources(engine.resourceManager);
-    enemy->setTransformParent(root);            
-    enemy->setTransform(transform);
-
-    enemy->addRendering(engine.rendererSystem);
-    enemy->addCollisions(engine.physicsSystem);
-    enemy->addPhysics(engine.physicsSystem);
-
-    enemy->patrolTarget = transform.location;
-}
-
-void EntityGroup::addBullet(const Physics::Transform& transform)
-{
-    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>());
-
-    std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.back();
-
-    bullet->setResources(engine.resourceManager);
-    bullet->addRendering(engine.rendererSystem);
-
-    bullet->setTransformParent(root);
-    bullet->setTransform(transform);
-    bullet->timer = engine.lastTime + bullet->lifeTime;
 }
 
 void EntityGroup::setKeys(bool isAzerty)

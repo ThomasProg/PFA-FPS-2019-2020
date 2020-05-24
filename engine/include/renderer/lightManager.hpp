@@ -16,7 +16,7 @@ namespace Renderer
         std::vector<Light> lights;
         GLuint lightsUniformBuffer = 0;
 
-        inline void lightsBufferInit(unsigned int nbMaxLights, GLenum usage = GL_DYNAMIC_DRAW)
+        inline LightManager(unsigned int nbMaxLights, GLenum usage = GL_DYNAMIC_DRAW)
         {
             glGenBuffers(1, &lightsUniformBuffer);
             glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBuffer);

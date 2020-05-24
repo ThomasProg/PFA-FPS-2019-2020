@@ -24,22 +24,15 @@ public:
     Core::Engine& engine;
     Physics::TransformGraph root;
 
-    Renderer::LightManager lightManager;
+    Renderer::LightManager lightManager {30};
 
     // Save::SaveSystem saveSystem;
 
     Entity::Player* player = nullptr;
-    // std::list<Entity::BasicEntity> grounds;
-    // std::list<Entity::Enemy> enemies;
-    // std::vector<Entity::BasicEntity*> grounds;
     std::vector<Entity::Ground*> grounds;
     std::vector<Entity::Enemy*> enemies;
-    // std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
-    // std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
 
     std::vector<std::unique_ptr<Entity::RenderedEntity>> bullets;
-
-    // Entity::Enemy enemy;
 
     // Renderer::TPSCamera tpsCamera;
     // Renderer::FPSCamera fpsCamera;
@@ -51,12 +44,24 @@ public:
 
     ~EntityGroup();
 
-    void addPlayer(const Physics::Transform& transform);
-    void addGround(const Physics::Transform& transform);
-    void addEnemy (const Physics::Transform& transform);
-    void addBullet(const Physics::Transform& transform);
+    template<class... ARGS>
+    Renderer::Light& addLight (ARGS&&... args);
+
+    template<class... ARGS>
+    Entity::Player* addPlayer(const Physics::Transform& transform, ARGS&&... args);
+
+    template<class... ARGS>
+    Entity::Ground* addGround(const Physics::Transform& transform, ARGS&&... args);
+
+    template<class... ARGS>
+    Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... args);
+
+    template<class... ARGS>
+    std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... args);
 
     void setKeys(bool isAzerty);
 };
+
+#include "entityGroup.inl"
 
 #endif

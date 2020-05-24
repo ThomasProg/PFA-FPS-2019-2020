@@ -14,6 +14,13 @@ namespace Renderer
         // Data sent to GPU
         LightData lightData;
 
+        Light() = default;
+        Light(const LightData& data)
+            : lightData(data)
+        {
+
+        }
+
         Physics::GTransform gTransform;
         
         // Updates lightingData location

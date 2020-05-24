@@ -34,7 +34,7 @@ namespace Entity
             
     };
 
-    class Enemy : public Physics::TransformInterface,
+    class Enemy final : public Physics::TransformInterface,
                   public Physics::CollisionComponentInterface<Box>, 
                   public Physics::PhysicComponentInterface, 
                   public Renderer::RenderableInterface,
