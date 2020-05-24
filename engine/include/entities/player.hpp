@@ -42,11 +42,11 @@ namespace Entity
     };
 
     // Example Class for Player
-    class Player : public Physics::TransformInterface,
-                   public Renderer::RenderableInterface,
-                   public Physics::CollisionComponentInterface<Box>,
-                   public Physics::PhysicComponentInterface,
-                   public Controller::ControllerInterface
+    class Player final : public Physics::TransformInterface,
+                         public Renderer::RenderableInterface,
+                         public Physics::CollisionComponentInterface<Box>,
+                         public Physics::PhysicComponentInterface,
+                         public Controller::ControllerInterface
     {
     private:
         static constexpr float movementSpeed  = 10.f;
@@ -112,18 +112,18 @@ namespace Entity
         Segment3D shoot() const;
         void dealDamages(float damages);
 
-        virtual void physicCompOnCollisionEnter        (const SegmentHit&) override 
+        void physicCompOnCollisionEnter        (const SegmentHit&) override 
         {
             // std::cout << "Enter collision" << std::endl;
         }
 
-        virtual void physicCompOnCollisionExit        () override 
+        void physicCompOnCollisionExit        () override 
         {
             // std::cout << "Exit collision" << std::endl;
         }
 
 
-        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
         {
             if (data.encounteredEntityID == this)
                 return;
@@ -134,7 +134,7 @@ namespace Entity
             }
         }
 
-        virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+        void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
         {
             if (data.movingEntityID == this)
                 return;

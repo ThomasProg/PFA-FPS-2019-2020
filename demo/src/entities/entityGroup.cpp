@@ -76,8 +76,8 @@ void EntityGroup::addPlayer(const Physics::Transform& transform)
 
 void EntityGroup::addGround(const Physics::Transform& transform)
 {
-    grounds.emplace_back(new Entity::Ground());
-    Entity::Ground* ground = grounds.back();
+    Entity::Ground* ground = new Entity::Ground();
+    grounds.emplace_back(ground);
 
     ground->setResources(engine.resourceManager);
     ground->setTransformParent(root);            
@@ -89,8 +89,8 @@ void EntityGroup::addGround(const Physics::Transform& transform)
 
 void EntityGroup::addEnemy(const Physics::Transform& transform)
 { 
-    enemies.emplace_back(new Entity::Enemy());
-    Entity::Enemy* enemy = enemies.back();
+    Entity::Enemy* enemy = new Entity::Enemy();
+    enemies.emplace_back(enemy);
 
     enemy->setResources(engine.resourceManager);
     enemy->setTransformParent(root);            
