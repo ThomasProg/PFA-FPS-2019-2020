@@ -2,6 +2,7 @@
 #define _COLLISION_COMPONENT_HPP_
 
 #include "segmentHit.hpp"
+#include "aabb.hpp"
 #include <map>
 
 struct Box;
@@ -20,6 +21,7 @@ namespace Physics
 
         COLLIDER worldCollider;  
         GTransform* transform = nullptr;
+        AABB aabb;
 
         // Defines this object's layer.
         // Default layer is 1

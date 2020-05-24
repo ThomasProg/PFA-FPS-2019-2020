@@ -21,6 +21,7 @@ SRC=$(wildcard demo/src/*.cpp)\
 	$(wildcard engine/src/resources/*.cpp)\
 	$(wildcard engine/src/renderer/*.cpp)\
 	$(wildcard engine/src/physics/*.cpp)\
+	$(wildcard engine/src/physics/shapes/*.cpp)\
 	$(wildcard engine/src/core/dataStructure/*.cpp)\
 	$(wildcard engine/src/primitives/*.cpp)\
 	$(wildcard engine/src/entities/*.cpp)\

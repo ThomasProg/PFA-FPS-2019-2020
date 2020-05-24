@@ -10,7 +10,10 @@
 // since the translation is defined in the transform matrix
 struct Box
 {
-    Box() = default;
+    Box() 
+    {
+        aabb.size = {1,1,1};
+    }
 
     static constexpr unsigned int nbPoints = 8;
 
@@ -21,11 +24,6 @@ struct Box
 
     // Contains Translation, Rotation and Size/Scale of the cube.
     Core::Maths::Matrix4x4 transform;
-
-    void updateMatrixSizeFromMatrix()
-    {
-        aabb.size = {1,1,1};//1.f / transform.getScale();
-    }
 
     std::array<Core::Maths::Vec3, nbPoints> getPoints() const
     {

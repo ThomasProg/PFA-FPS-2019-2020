@@ -244,11 +244,6 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
         if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
             continue;
 
-        // boxCollider->collider.worldCollider.transform = boxCollider->collider.transform->transformMatrixNode->worldData; 
-        //                                             // * physicComp.collider.transform->transformMatrixNode->worldData.getInverse();
-
-        boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
-
         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, segmentHit))
         {
             if (segmentHit.t <= hit.t)
@@ -284,8 +279,6 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
     {
         if (!boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
             continue;
-
-        boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
 
         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, hit))
         {
