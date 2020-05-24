@@ -9,112 +9,23 @@
 #include "engine.hpp"
 #include "camera.hpp"
 
-// template<typename T = Box>
 template<>
 Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Physics::CollisionComponentInterface<Box>* collider)
 {
-    // boxes.emplace(entity, Physics::CollisionComponent<Box>());
-    // return Physics::PhysicsSystem::ColliderIt<Box>{entity, &boxes};
-
     boxes.emplace_back(collider);
     return Physics::PhysicsSystem::ColliderIt<Box>{boxes.size() - 1};
 }
 
 Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
 {
-    // physicComponents.emplace(entity, Physics::PhysicComponent());
-    // return Physics::PhysicsSystem::PhysicCompIt{entity, &physicComponents};
     physicComponents.emplace_back(physicComp);
     return Physics::PhysicsSystem::PhysicCompIt{physicComponents.size() - 1};
 }
-
-
-// template<> 
-// void Physics::PhysicsSystem::loadColliderItContainer<Box>(ColliderIt<Box>& it, const Entity::EntityID& entityID)
-// {
-//     it.entityID = entityID;
-//     it.mapPtr = &boxes;
-// }
-
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
     physicComp.velocity.y -= gravityAcc * engine.deltaTime * engine.deltaTime;
 }
-
-// Core::Maths::Vec3 Physics::PhysicsSystem::collisionPhysicalResponse(Physics::PhysicComponent& physicComp, 
-//                                                            const Core::Maths::Vec3& startLoc, 
-//                                                            SegmentHit& hit)
-// {
-//     Core::Maths::Vec3 newLoc = physicComp.velocity * hit.t + startLoc;
-
-//     Core::Maths::Vec3 velocityAfterContact = physicComp.velocity * (1.f - hit.t);
-
-//     // hit.normal = hit.normal.unitVector();
-//     float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
-
-//     Core::Maths::Vec3 finalLoc = startLoc + physicComp.velocity - dot * hit.normal;
-//     physicComp.velocity = (physicComp.velocity - dot * hit.normal);
-
-//     // We add a small value, because otherwises, they player would not be able to move due to constant collisions
-//     return finalLoc + hit.normal * minimalDistToGround;
-// }
-
-
-// bool Physics::PhysicsSystem::staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
-//                                                        SegmentHit& hit, const PhysicsAdditionalData& data, 
-//                                                        Physics::CollisionComponentInterface<Box>*& collidedEntityID,
-//                                                        const Core::Maths::Vec3& velocity)
-// {
-//     bool hasCollided = false;
-//     SegmentHit segmentHit;
-    
-//     Segment3D seg{startLoc, startLoc + velocity};
-
-//     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
-//     {
-//         if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
-//             continue;
-
-//         // boxCollider->collider.worldCollider.transform = boxCollider.second.transform->transformMatrixNode->worldData; 
-//         //                                             // * physicComp.collider.transform->transformMatrixNode->worldData.getInverse();
-
-//         boxCollider->collider.worldCollider.updateMatrixSizeFromMatrix();
-
-//         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, physicComp.collider.worldCollider, seg, segmentHit))
-//         {
-//             if (segmentHit.t <= hit.t)
-//             {
-//                 hit = segmentHit;
-
-//                 hasCollided = true;
-//                 collidedEntityID = boxCollider;
-//             }
-//         }
-//     }
-
-//     return hasCollided;
-// }
-
-
-// bool Physics::PhysicsSystem::isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward)
-// {
-//     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
-//     {
-//         SegmentHit hit;
-//         Segment3D seg;
-//         seg.p1 = {0.f, 0, 0};
-//         seg.p2 = {0.f, 0, -10};
-//         seg.p1 = camera.transform.transformMatrixNode->worldData * seg.p1;
-//         seg.p2 = camera.transform.transformMatrixNode->worldData * seg.p2;
-
-//         if (Collisions::boxSegmentCollision(boxCollider->collider.worldCollider, seg, hit))
-//         {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
 
 bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Box>*& touchedEntity) const
 {
@@ -144,27 +55,13 @@ void Physics::PhysicsSystem::reset()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
 {
     // Update boxes transform
     for (Physics::CollisionComponentInterface<Box>* box : boxes)
     {
         box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->worldData;
+        box->collider.aabb.setFrom(box->collider.worldCollider);
     }
 
     for (Physics::PhysicComponentInterface* physicComp : physicComponents)
@@ -172,6 +69,7 @@ void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
         if (!physicComp->physicComp.isEnabled)
             continue;
         
+        physicComp->physicComp.collider.aabb.setFrom(physicComp->physicComp.collider.worldCollider);
         simulatePhysicsForPhysicComp(physicComp, engine);
     }
 }
@@ -235,13 +133,27 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
 {
     bool hasCollided = false;
     SegmentHit segmentHit;
-    
+
+    // TODO : Remove and replace args
+    AABB aabbFromSphere;
+    aabbFromSphere.setFrom(sphere);  
+
+    Sphere s2 = sphere;
+    s2.center += velocity;
+    AABB aabbFromSphere2;
+    aabbFromSphere2.setFrom(s2);  
+
+    AABB totalAabb = aabbFromSphere + aabbFromSphere2;
+    //////////////////////////////////  
+
     Segment3D seg{sphere.center, sphere.center + velocity};
 
-    // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
         if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
+            continue;
+
+        if (!Collisions::aabbAabbCollision(boxCollider->collider.aabb, totalAabb))
             continue;
 
         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, segmentHit))
@@ -315,16 +227,8 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         std::pair<std::map<CollisionComponentInterface<Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
         if (!it.second)
         {
-            // Callback
-            // CollisionsCallbacksSentData collisionsCallbacksSentData
-            // {
-            //     std::move(hit),
-            //     physicComp,
-            //     collidedMeshInterface
-            // };
-            // physicComp->physicCompOnCollisionEnter(hit);
-            // collidedMeshInterface->colliderOnCollisionEnter(hit);
-            // callbacks.onCollisionEnter(collisionsCallbacksSentData);
+            physicComp->physicCompOnCollisionEnter(hit);
+            collidedMeshInterface->colliderOnCollisionEnter(hit);
         }
 
         Core::Maths::Vec3 velocityAfterContact = leftVelocity * (1.f - hit.t);

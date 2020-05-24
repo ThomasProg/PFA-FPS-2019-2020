@@ -17,6 +17,8 @@ struct AABB
 
     void setFrom(const Sphere&);
     void setFrom(const Box&);
+
+    AABB operator+(const AABB&) const;
 };
 
 inline std::ostream& operator<<(std::ostream& stream, const AABB& aabb)
