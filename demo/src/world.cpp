@@ -72,7 +72,7 @@
 World::World(Game& game, bool isLoaded, bool isEditorMode)
     : game(game), entityGroup(game.engine), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
-    bool ret = Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
+    // bool ret = Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
 }
 
 void World::loadFromSavefile(const char* savedFilename)
@@ -429,7 +429,7 @@ void World::render()
 
 void World::hud()
 {
-    Menu::preparePanel(ImVec2(0, 0), {game.engine.width, game.engine.height}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
+    Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);

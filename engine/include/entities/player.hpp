@@ -95,9 +95,9 @@ namespace Entity
     public:
         
         Player() 
-            : Physics::CollisionComponentInterface<Box>(&transform),
-              Physics::PhysicComponentInterface(&transform),
-              Renderer::RenderableInterface(&transform)
+            : Renderer::RenderableInterface(&transform),
+              Physics::CollisionComponentInterface<Box>(&transform),
+              Physics::PhysicComponentInterface(&transform)
         {
             collider.isOverlap = true;
             physicComp.collider.worldCollider.radius = 1.f;

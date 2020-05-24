@@ -19,10 +19,10 @@ namespace Renderer
         {
             struct 
             {
-                unsigned int forward  = GLFW_KEY_W,
-                             backward = GLFW_KEY_S,
-                             right    = GLFW_KEY_D,
-                             left     = GLFW_KEY_A;
+                unsigned int forward,
+                             backward,
+                             right,
+                             left;
             };
 
             std::array<unsigned int, nbInputKeys> keys;

@@ -13,13 +13,13 @@ template<>
 Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Physics::CollisionComponentInterface<Box>* collider)
 {
     boxes.emplace_back(collider);
-    return Physics::PhysicsSystem::ColliderIt<Box>{boxes.size() - 1};
+    return Physics::PhysicsSystem::ColliderIt<Box>{((unsigned int) boxes.size()) - 1u};
 }
 
 Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
 {
     physicComponents.emplace_back(physicComp);
-    return Physics::PhysicsSystem::PhysicCompIt{physicComponents.size() - 1};
+    return Physics::PhysicsSystem::PhysicCompIt{((unsigned int) physicComponents.size()) - 1u};
 }
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)

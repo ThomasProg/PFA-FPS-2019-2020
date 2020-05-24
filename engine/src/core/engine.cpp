@@ -46,7 +46,7 @@ Core::Engine::Engine()
     glfwGetCursorPos(window, &currentMouseLocX, &currentMouseLocY);
     lastMouseLocX = currentMouseLocX;
     lastMouseLocY = currentMouseLocY;
-    deltaMouseLoc = {(currentMouseLocX - lastMouseLocX) / width, (currentMouseLocY - lastMouseLocY) / height};
+    deltaMouseLoc = {float((currentMouseLocX - lastMouseLocX) / width), float((currentMouseLocY - lastMouseLocY) / height)};
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);  

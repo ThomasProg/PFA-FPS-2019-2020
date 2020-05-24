@@ -10,7 +10,7 @@ Renderer::RendererSystem::iterator Renderer::RendererSystem::addComponent(Render
     if (freeMeshIndices.empty())
     {
         meshes.emplace_back(mesh);
-        return iterator{meshes.size() - 1};
+        return iterator{((unsigned int) meshes.size()) - 1u};
     }
     else 
     {

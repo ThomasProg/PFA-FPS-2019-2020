@@ -201,7 +201,7 @@ bool Collisions::infiniteCylinderSegmentCollision(const Cylinder& cylinder, cons
 
     const float s = (cylinder.dirInWorldLoc - cylinder.location).vectorSquareLength();
 
-    const float segSquaredLength = segment.squaredLength();
+    // const float segSquaredLength = segment.squaredLength();
     const float squaredRadius = cylinder.radius * cylinder.radius;
 
     // The basic condition would be : 
