@@ -45,19 +45,19 @@ public:
     ~EntityGroup();
 
     template<class... ARGS>
-    Renderer::Light& addLight (ARGS&&... args);
+    Renderer::Light& addLight (ARGS&&... lightArgs);
 
     template<class... ARGS>
-    Entity::Player* addPlayer(const Physics::Transform& transform, ARGS&&... args);
+    Entity::Player* addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs);
 
     template<class... ARGS>
-    Entity::Ground* addGround(const Physics::Transform& transform, ARGS&&... args);
+    Entity::Ground* addGround(const Physics::Transform& transform, ARGS&&... groundArgs);
 
     template<class... ARGS>
-    Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... args);
+    Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... enemyArgs);
 
     template<class... ARGS>
-    std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... args);
+    std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
 
     void setKeys(bool isAzerty);
 };

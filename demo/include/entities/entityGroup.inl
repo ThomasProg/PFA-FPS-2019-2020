@@ -1,19 +1,19 @@
 #include "entityGroup.hpp"
 
 template<class... ARGS>
-Renderer::Light& EntityGroup::addLight(ARGS&&... args)
+Renderer::Light& EntityGroup::addLight(ARGS&&... lightArgs)
 {
-    lightManager.lights.emplace_back(std::forward<ARGS>(args)...);
+    lightManager.lights.emplace_back(std::forward<ARGS>(lightArgs)...);
     return lightManager.lights.back();
 }
 
 template<class... ARGS>
-Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS&&... args)
+Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs)
 {
     if (player != nullptr)
         delete player;
 
-    player = new Entity::Player(std::forward<ARGS>(args)...);
+    player = new Entity::Player(std::forward<ARGS>(playerArgs)...);
     if (player == nullptr)
         return nullptr;
 
@@ -38,9 +38,9 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
 }
 
 template<class... ARGS>
-Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS&&... args)
+Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS&&... groundArgs)
 {
-    Entity::Ground* ground = new Entity::Ground(std::forward<ARGS>(args)...);
+    Entity::Ground* ground = new Entity::Ground(std::forward<ARGS>(groundArgs)...);
     if (ground == nullptr)
         return nullptr;
 
@@ -56,13 +56,13 @@ Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS
 }
 
 template<class... ARGS>
-Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&... args)
+Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&... enemyArgs)
 { 
     Entity::Enemy* enemy = new Entity::Enemy();
     if (enemy == nullptr)
         return nullptr;
 
-    enemies.emplace_back(enemy, std::forward<ARGS>(args)...);
+    enemies.emplace_back(enemy, std::forward<ARGS>(enemyArgs)...);
 
     enemy->setResources(engine.resourceManager);
     enemy->setTransformParent(root);            
@@ -77,9 +77,9 @@ Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&
 }
 
 template<class... ARGS>
-std::unique_ptr<Entity::RenderedEntity>& EntityGroup::addBullet(const Physics::Transform& transform, ARGS&&... args)
+std::unique_ptr<Entity::RenderedEntity>& EntityGroup::addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs)
 {
-    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>(std::forward<ARGS>(args)...));
+    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>(std::forward<ARGS>(bulletArgs)...));
 
     std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.back();
 
