@@ -19,4 +19,10 @@ struct AABB
     void setFrom(const Box&);
 };
 
+inline std::ostream& operator<<(std::ostream& stream, const AABB& aabb)
+{
+    stream << "location : " << aabb.location << "\tsize  : " << aabb.centeredAABB.size << std::endl;
+    return stream;
+}
+
 #endif
