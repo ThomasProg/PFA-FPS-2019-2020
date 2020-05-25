@@ -216,8 +216,6 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
 {
     Sphere& sphere = physicComp->physicComp.collider.worldCollider;
     std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities = physicComp->physicComp.collider.collidingEntities;
-    Core::Maths::Vec3& leftVelocity = physicComp->physicComp.velocity;
-    // Core::Maths::Vec3 usedVelocity = leftVelocity * engine.deltaTime;
 
     if (usedVelocity.vectorSquareLength() < 0.00001f)
     {
@@ -239,12 +237,50 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         }
 
         Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
-        float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
-        Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity * hit.t + velocityAfterContact - dot * hit.normal;
-        physicComp->physicComp.velocity -= dot*hit.normal;
-        physicComp->physicComp.velocity *= 0.9f;
-        usedVelocity -= dot * hit.normal;
+        float dot = Core::Maths::Vec3::dotProduct(velocityAfterContact, hit.normal);
+        Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * 0.00001f;
+
+        {
+            Core::Maths::Vec3 otherFinalLoc = sphere.center + usedVelocity - dot * hit.normal;
+            usedVelocity = otherFinalLoc - (sphere.center + hit.t * usedVelocity);
+        }
+
+        {
+            // TODO : verify if correct 
+            float dot2 = Core::Maths::Vec3::dotProduct(physicComp->physicComp.velocity/* - usedVelocity * hit.t*/, hit.normal);
+            Core::Maths::Vec3 otherFinalLoc = sphere.center + physicComp->physicComp.velocity - dot2 * hit.normal;
+            physicComp->physicComp.velocity = otherFinalLoc - (sphere.center + hit.t * usedVelocity);
+            physicComp->physicComp.velocity *= linearDamping;
+        }
+
         usedVelocity *= 0.9f;
+
+        // // Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
+        // // float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
+        // // Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity - dot * hit.normal * 1.001;
+
+        // Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
+        // float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
+        // Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity - dot * hit.normal;
+
+        // std::cout << physicComp->physicComp.velocity  << std::endl;
+
+        // std::cout << - dot << std::endl;
+        // float dot2 = Core::Maths::Vec3::dotProduct(hit.normal, physicComp->physicComp.velocity);
+        // if (dot2 > 0) 
+        //     return sphere.center;
+        // Core::Maths::Vec3 np = sphere.center - dot2 * hit.normal;
+        // Core::Maths::Vec3 nb = sphere.center + 2.f * (np - sphere.center);
+        
+        // physicComp->physicComp.velocity = nb - (sphere.center + usedVelocity * hit.t);
+        // std::cout << physicComp->physicComp.velocity  << std::endl;
+        // // physicComp->physicComp.velocity -= dot*hit.normal;
+        // physicComp->physicComp.velocity *= 0.9f;
+        // return sphere.center;
+        // // usedVelocity -= dot * hit.normal;
+        // usedVelocity *= 0.9f;
+
+        // return sphere.center;
 
         sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
 

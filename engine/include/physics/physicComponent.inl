@@ -9,16 +9,16 @@ inline Physics::PhysicComponent::PhysicComponent(GTransform* transform)
 }
 
 template<unsigned int AXIS>
-inline void Physics::PhysicComponent::setForceOnAxis(float force, const Core::Engine& engine)
+inline void Physics::PhysicComponent::setVelocityOnAxis(float newVelocity, const Core::Engine& engine)
 {
-    // m / s         (N / kg) * s   = kg * m * s^(-2) * s = m / s
-    velocity[AXIS] = (force / mass) * engine.deltaTime;
+    // m / s         m / s
+    velocity[AXIS] = newVelocity;
 }
 
-inline void Physics::PhysicComponent::setForce(const Core::Maths::Vec3& force, const Core::Engine& engine)
+inline void Physics::PhysicComponent::setVelocity(const Core::Maths::Vec3& newVelocity, const Core::Engine& engine)
 {
-    // m / s         (N / kg) * s   = kg * m * s^(-2) * s = m / s
-    velocity = (force / mass) * engine.deltaTime;
+    // m / s         m / s
+    velocity = newVelocity;
 }
 
 inline void Physics::PhysicComponent::addForce(const Core::Maths::Vec3& force, const Core::Engine& engine)

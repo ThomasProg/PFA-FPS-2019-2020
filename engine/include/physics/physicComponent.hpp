@@ -23,9 +23,9 @@ namespace Physics
         inline PhysicComponent(GTransform* transform);
 
         template<unsigned int AXIS>
-        inline void setForceOnAxis(float force, const Core::Engine& engine);
+        inline void setVelocityOnAxis(float force, const Core::Engine& engine);
 
-        inline void setForce(const Core::Maths::Vec3& force, const Core::Engine& engine);
+        inline void setVelocity(const Core::Maths::Vec3& force, const Core::Engine& engine);
         inline void addForce(const Core::Maths::Vec3& force, const Core::Engine& engine);
         inline void addImpulse(const Core::Maths::Vec3& impulse);
     };

@@ -87,15 +87,16 @@ void World::makeNewLevel()
     // ===== Set up Entities ===== //
 
     entityGroup.addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
+    entityGroup.addGround({{10.f, -20, 0}, {0.f,0,0}, {1,20,2}});
     entityGroup.addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
     entityGroup.addGround({{5.f, -35, -20}, {0.f,0,0}, {20,1,40}});
 
     entityGroup.addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
 
-    entityGroup.addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
+    // entityGroup.addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
 
     // === Add Player === //
-    entityGroup.addPlayer({{0,50,0}});
+    entityGroup.addPlayer({{10,10,20.0 + 0.0}});
 
     for (uint i = 0; i < 100; i++)
     {

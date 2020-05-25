@@ -15,7 +15,7 @@ bool Entity::PlayerState::isOnGround() const noexcept
 
 void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_DOG);
+    mesh.model   = &resourceManager.get(E_Model::E_SPHERE);
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
     mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
     mesh.linkShaderWithModel();
@@ -68,8 +68,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // should not be 0, since it has moved
         if (addedVelocity.vectorSquareLength() != 0)
         {
-            physicComp.setForceOnAxis<0>(addedVelocity.x, engine);
-            physicComp.setForceOnAxis<2>(addedVelocity.z, engine);
+            physicComp.setVelocityOnAxis<0>(addedVelocity.x, engine);
+            physicComp.setVelocityOnAxis<2>(addedVelocity.z, engine);
         }
     }
     // else
