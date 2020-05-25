@@ -79,9 +79,11 @@ private:
     /////////// UI ////////////////
     bool isPauseMenuOpen {false};
     bool inGame {true};
+    bool gOver {false};
     int imageWidth = 0;
     int imageHeight = 0;
     GLuint imageText = 0;
+    float t = 0;
     //////////////////////////////
 
     // Searching if a file exists is expensive,

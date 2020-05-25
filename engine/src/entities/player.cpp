@@ -141,9 +141,11 @@ Segment3D Entity::Player::shoot() const
 void Entity::Player::dealDamages(float damages)
 {
     lifePoints -= damages;
-    if (onPlayerDeath && lifePoints <= 0.f)
+    if (/*onPlayerDeath && */lifePoints <= 0.f)
     {
-        onPlayerDeath();
+        state.playerState = PlayerState::E_DEAD;
+        //onPlayerDeath();
+        gOver = true;
     }
 }
 

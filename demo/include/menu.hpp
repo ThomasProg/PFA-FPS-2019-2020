@@ -24,9 +24,6 @@ public:
     Menu(Game& game);
 
     bool isMainMenuOpen{true};
-    bool option{false};
-    bool isPauseMenuOpen{false};
-    bool isGameOverOpen {false};
 
     void update() override;   
     void renderUI() override; 
@@ -36,7 +33,6 @@ public:
     static void preparePanel(ImVec2 pos, ImVec2 size, ImVec4 buttonColor, ImVec4 buttonColorActive, ImVec4 windowColor);
     void mainMenu();
     bool setupMainMenuButtons(); // returns true if we quit the game, prevents memory error
-    void renderPanelOptions(); 
 };
 
 #endif

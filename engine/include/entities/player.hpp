@@ -66,9 +66,10 @@ namespace Entity
         Renderer::FPSCamera camera;
 
         std::function<void()> onPlayerDeath = nullptr;
-
-    private:
         PlayerState state;
+
+        //// UI ///////
+        bool gOver {false};
 
         // ====== Input Keys ====== //
     public:

@@ -5,7 +5,8 @@
 Menu::Menu(Game& game)
     : game(game), isLoadAvailable(Resources::File::doesFileExist(Game::savedFilename))
 {
-
+    glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 }
 
 void Menu::update()
@@ -47,9 +48,6 @@ void Menu::mainMenu()
     bool bQuit = setupMainMenuButtons();
     if (bQuit)
         return;
-
-    if (option)
-        renderPanelOptions();
 }
 
 bool Menu::setupMainMenuButtons()
@@ -59,7 +57,7 @@ bool Menu::setupMainMenuButtons()
     ImGui::Indent(game.engine.width / 2.5);
 
     //////////////////////////////////////
-    //ImGui::PushFont(font);
+    ImGui::PushFont(game.engine.font);
     ImGui::SetCursorPosY(50.0f);
     ImGui::SetCursorPosX(100.0f);
     ImGui::PushStyleColor(ImGuiCol_Text, PURPLE);
@@ -69,36 +67,12 @@ bool Menu::setupMainMenuButtons()
     ImGui::SetWindowFontScale(1);
     //////////////////////////////////////
 
-    ImGui::SetCursorPosY(game.engine.height / 3.5);
-    if (ImGui::Button("New Game", ImVec2(game.engine.width / 5, game.engine.height / 10)))
+    ImGui::SetCursorPosY(game.engine.height / 3);
+    if (ImGui::Button("Start", ImVec2(game.engine.width / 5, game.engine.height / 10)))
         game.loadLevel(false);
 
-    if (isLoadAvailable)
-    {
-        ImGui::SetCursorPosY(game.engine.height / 2.3);
-        if (ImGui::Button("Load Game", ImVec2(game.engine.width / 5, game.engine.height / 10)))
-        {
-            game.loadLevel(true);
-        }
-    }
-
-    ImGui::SetCursorPosY(game.engine.height / 1.7);
-    if (ImGui::Button("Controls", ImVec2(game.engine.width / 5, game.engine.height / 10)))
-    {
-        option = !option;
-        //isMainMenuOpen = !isMainMenuOpen;
-    }
-
-
-    ImGui::SetCursorPosY(game.engine.height / 1.35);
-    if (ImGui::Button("Load Level Editor", ImVec2(game.engine.width / 5, game.engine.height / 10)))
-    {
-        game.loadLevel(true, true);
-        //isMainMenuOpen = !isMainMenuOpen;
-    }
-
     bool bQuit = false;
-    ImGui::SetCursorPosY(game.engine.height / 1.13);
+    ImGui::SetCursorPosY(game.engine.height / 2);
     if (ImGui::Button("Quit", ImVec2(game.engine.width / 5, game.engine.height / 10)))
     {
         bQuit = true;
@@ -106,38 +80,8 @@ bool Menu::setupMainMenuButtons()
     }
 
     ImGui::PopStyleColor(4);
-    //ImGui::PopFont();
+    ImGui::PopFont();
     ImGui::End();
 
     return bQuit;
-}
-
-void Menu::renderPanelOptions()
-{
-    preparePanel({0, 0}, {float(game.engine.width), float(game.engine.height)}, PURPLE, PINK, GREY);
-    ImGui::Begin("Options", &option, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
-
-    ImGui::SetCursorPosY(50);
-    ImGui::SetCursorPosX(100.0f);
-    ImGui::PushStyleColor(ImGuiCol_Text, PURPLE);
-    ImGui::SetWindowFontScale(3.0);
-    ImGui::Text("OPTIONS");
-    ImGui::PopStyleColor(1);
-    ImGui::SetWindowFontScale(1);
-
-    ImGui::SetCursorPosY(150);
-    ImGui::Text("The game is in Qwerty if you want to change it check \"Azerty\"  box here : ");
-
-    ImGui::SetCursorPosY(200);
-    ImGui::Checkbox("Azerty", &game.isAzerty);
-
-    ImGui::SetCursorPosY(300);
-    if (ImGui::Button("Return main menu", ImVec2(game.engine.width / 5, game.engine.height / 10)))
-    {
-        option = !option;
-    }
-
-    ImGui::PopStyleColor(4);
-    //ImGui::PopFont();
-    ImGui::End();
 }

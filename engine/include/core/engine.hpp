@@ -40,7 +40,8 @@ namespace Core
         int height = 800;
         int oldWidth  = width;
         int oldHeight = height;    
-        bool hasWindowSizeChanged = true;    
+        bool hasWindowSizeChanged = true;
+        ImFont* font;    
 
         bool show_demo_window = true;
         bool show_another_window = false;

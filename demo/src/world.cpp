@@ -72,7 +72,7 @@
 World::World(Game& game, bool isLoaded, bool isEditorMode)
     : game(game), entityGroup(game.engine), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
-    // bool ret = Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
+    Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
 }
 
 void World::loadFromSavefile(const char* savedFilename)
@@ -306,7 +306,7 @@ void World::updatePhysics()
     it->transform.UpdateLocalTransformMatrix();
     it->transform.transformMatrixNode->setDirtySelfAndChildren();
 
-    entityGroup.player->onPlayerDeath = [this](){ gameOver(); };
+    //entityGroup.player->onPlayerDeath = [this](){ gameOver(); };
     /////////////
 
     game.engine.physicsSystem.simulatePhysics(game.engine);
@@ -395,21 +395,38 @@ void World::update()
 
 void World::gameOver()
 {
-    if (Resources::File::doesFileExist(game.savedFilename))
+    Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+
+    ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
+    //ImGui::PushFont(font);
+
+    ImGui::SetCursorPosY(game.engine.height / 2);
+    ImGui::SetCursorPosX(game.engine.width / 2);
+    ImGui::SetWindowFontScale(2.0);
+    ImGui::Text("You Loose");
+
+    ImGui::PopStyleColor(5);
+    //ImGui::PopFont();
+    ImGui::End();
+
+    t += game.engine.deltaTime;
+    if (t >= 3)
     {
-        game.loadLevel(false);
-    }
-    else
-    {
-        game.loadLevel(false);
-    }
-    
+        entityGroup.player->gOver = false;
+        game.loadMenu();
+        t = 0;
+    } 
 }
 
 void World::renderUI() 
 {
     if (isPauseMenuOpen)
         pauseMenu();
+    else if(entityGroup.player->gOver)
+    {
+        gameOver();
+    }  
     else
         hud();
         
@@ -440,7 +457,7 @@ void World::hud()
     ImGui::ProgressBar(entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, ImVec2(200,20));
 
     ImGui::SetCursorPosY(game.engine.height - 30.f);
-    ImGui::SetCursorPosX(game.engine.width - 100.f);
+    ImGui::SetCursorPosX(game.engine.width - 130.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
 
@@ -457,12 +474,19 @@ void World::pauseMenu()
 {
     Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, PURPLE, PINK, DARKERGREY);
     
-    ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoTitleBar);
-    ImGui::Indent(400 / 2 - 50);
+    ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
     ImGui::SetWindowFontScale(1.0);
-    ImGui::SetCursorPosY(30.0f);
-    if (ImGui::Button("Back to game", ImVec2(100, 50)))
+    ImGui::Indent(400/2 - 100);
+    
+
+    ImGui::SetCursorPosY(50.f);
+    ImGui::SetWindowFontScale(1.5);
+    ImGui::Text("Pause");
+
+    ImGui::SetCursorPosY(125.0f);
+    ImGui::SetWindowFontScale(1.0);
+    if (ImGui::Button("Back to game", ImVec2(200, 50)))
     {
         ImGui::SetMouseCursor(ImGuiMouseCursor_None);
         glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);        
@@ -470,26 +494,11 @@ void World::pauseMenu()
         inGame = true;
     }
 
-    ImGui::SetCursorPosX(130.0f);
-    ImGui::SetCursorPosY(110.0f);
-    if (ImGui::Button("Back to main menu", ImVec2(150, 50)))
+    ImGui::SetCursorPosY(225.0f);
+    if (ImGui::Button("Back to main menu", ImVec2(200, 50)))
     {        
         isPauseMenuOpen = !isPauseMenuOpen;
         game.loadMenu();
-    }
-
-    ImGui::SetCursorPosY(190.0f);
-    if (ImGui::Button("Save", ImVec2(100, 50)))
-    {
-        // saveSystem.save(Game::savedFilename);
-        isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
-    }
-
-    if (isLoadAvailable)
-    {
-        ImGui::SetCursorPosY(270.0f);
-        if (ImGui::Button("Load", ImVec2(100, 50)))
-            game.loadLevel(true);
     }
 
     ImGui::PopStyleColor(4);

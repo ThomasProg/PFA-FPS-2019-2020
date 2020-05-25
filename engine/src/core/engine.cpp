@@ -36,6 +36,7 @@ Core::Engine::Engine()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    font = io.Fonts -> AddFontFromFileTTF("resources/font/NaughtyMonster.ttf", 20);
 
     ImGui::StyleColorsDark();
 
