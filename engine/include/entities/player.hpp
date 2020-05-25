@@ -49,8 +49,8 @@ namespace Entity
                          public Controller::ControllerInterface
     {
     private:
-        static constexpr float movementSpeed  = 10.f;
-        static constexpr float jumpSpeed      = 0.1f;
+        static constexpr float movementSpeed  = 10.f * 1.f;
+        static constexpr float jumpSpeed      = 10.0f;
         static constexpr float jumpCoyoteTime = 0.1f;
 
 

@@ -68,8 +68,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // should not be 0, since it has moved
         if (addedVelocity.vectorSquareLength() != 0)
         {
-            physicComp.setForceOnAxis<0>(addedVelocity.x, engine);
-            physicComp.setForceOnAxis<2>(addedVelocity.z, engine);
+            physicComp.setVelocityOnAxis<0>(addedVelocity.x, engine);
+            physicComp.setVelocityOnAxis<2>(addedVelocity.z, engine);
         }
     }
     // else

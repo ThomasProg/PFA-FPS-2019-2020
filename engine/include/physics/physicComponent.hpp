@@ -11,6 +11,7 @@ namespace Physics
     {
         Core::Maths::Vec3 velocity = Core::Maths::Vec3{0.f, 0, 0};
         Physics::CollisionComponent<Sphere> collider;
+        float mass = 1.f;
 
         // Used to test collisions with other colliders.
         // If (collisionLayer & other.layer != 0) is true, then the collision is tested.
@@ -22,9 +23,9 @@ namespace Physics
         inline PhysicComponent(GTransform* transform);
 
         template<unsigned int AXIS>
-        inline void setForceOnAxis(float force, const Core::Engine& engine);
+        inline void setVelocityOnAxis(float force, const Core::Engine& engine);
 
-        inline void setForce(const Core::Maths::Vec3& force, const Core::Engine& engine);
+        inline void setVelocity(const Core::Maths::Vec3& force, const Core::Engine& engine);
         inline void addForce(const Core::Maths::Vec3& force, const Core::Engine& engine);
         inline void addImpulse(const Core::Maths::Vec3& impulse);
     };
