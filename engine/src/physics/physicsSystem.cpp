@@ -24,6 +24,7 @@ Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
+    // m / s                 (N / kg) * s   = kg * m * s^(-2) * s = m / s
     physicComp.velocity.y -= (gravityAcc *  physicComp.mass) * engine.deltaTime;
 }
 

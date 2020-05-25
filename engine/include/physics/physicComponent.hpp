@@ -11,7 +11,7 @@ namespace Physics
     {
         Core::Maths::Vec3 velocity = Core::Maths::Vec3{0.f, 0, 0};
         Physics::CollisionComponent<Sphere> collider;
-        float mass = 4.f;
+        float mass = 1.f;
 
         // Used to test collisions with other colliders.
         // If (collisionLayer & other.layer != 0) is true, then the collision is tested.
