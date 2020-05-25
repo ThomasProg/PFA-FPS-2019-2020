@@ -111,7 +111,9 @@ namespace Physics
 
         Core::Maths::Vec3 simulateCollisionsForASphere(
                                               const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                                              Physics::PhysicComponentInterface* physicCompID);
+                                              Physics::PhysicComponentInterface* physicCompID,
+                                              const Core::Engine& engine,
+                                              Core::Maths::Vec3& usedVelocity);
 
         void sphereFindOverlappingBoxes(const Sphere& sphere, 
                                         const Core::Maths::Vec3& velocity,

@@ -95,7 +95,12 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
 
     // === Add Player === //
-    entityGroup.addPlayer({});
+    entityGroup.addPlayer({{0,50,0}});
+
+    for (uint i = 0; i < 100; i++)
+    {
+        entityGroup.addBullet({});
+    }
 
     // // === Add other cameras === //
     // fpsCamera.setup(player.transform);

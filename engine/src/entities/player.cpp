@@ -143,6 +143,7 @@ void Entity::Player::dealDamages(float damages)
     lifePoints -= damages;
     if (onPlayerDeath && lifePoints <= 0.f)
     {
+        state.playerState = PlayerState::E_DEAD;
         onPlayerDeath();
     }
 }

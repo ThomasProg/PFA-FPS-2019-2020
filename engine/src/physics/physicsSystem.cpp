@@ -24,7 +24,7 @@ Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
-    physicComp.velocity.y -= gravityAcc * engine.deltaTime * engine.deltaTime;
+    physicComp.velocity.y -= gravityAcc * engine.deltaTime;// * engine.deltaTime;
 }
 
 bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Box>*& touchedEntity) const
@@ -108,6 +108,7 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
     simulateGravity(physicComp->physicComp, engine);
 
     physicComp->physicComp.collider.transform->UpdateLocalTransformMatrix();
+    physicComp->physicComp.collider.transform->transformMatrixNode->setDirtySelfAndChildren();
     physicComp->physicComp.collider.transform->transformMatrixNode->cleanUpdate();
 }
 
@@ -120,9 +121,11 @@ void Physics::PhysicsSystem::simulatePhysicsForASphere(Physics::PhysicComponentI
 
     Physics::PhysicsSystem::PhysicsAdditionalData playerIgnoreData;
     playerIgnoreData.ignoredEntities.emplace(nullptr);
+    Core::Maths::Vec3 usedVelo = physicComp->physicComp.velocity * engine.deltaTime;
     physicComp->physicComp.collider.transform->transform.location = simulateCollisionsForASphere( 
                                                                                     playerIgnoreData,  
-                                                                                    physicComp);
+                                                                                    physicComp,
+                                                                                    engine, usedVelo);
 }
 
 bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere, 
@@ -206,13 +209,16 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
 
 Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere( 
                                const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                               Physics::PhysicComponentInterface* physicComp)
+                               Physics::PhysicComponentInterface* physicComp,
+                               const Core::Engine& engine,
+                               Core::Maths::Vec3& usedVelocity)
 {
     Sphere& sphere = physicComp->physicComp.collider.worldCollider;
     std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities = physicComp->physicComp.collider.collidingEntities;
     Core::Maths::Vec3& leftVelocity = physicComp->physicComp.velocity;
+    // Core::Maths::Vec3 usedVelocity = leftVelocity * engine.deltaTime;
 
-    if (leftVelocity.vectorSquareLength() < 0.00001f)
+    if (usedVelocity.vectorSquareLength() < 0.00001f)
     {
         return sphere.center;
     }
@@ -222,7 +228,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
     // Entity::EntityID collidedEntity; // box
     Physics::CollisionComponentInterface<Box>* collidedMeshInterface; // box
 
-    if (sphereCollisionWithBoxes(sphere, leftVelocity, data, hit, collidedMeshInterface))
+    if (sphereCollisionWithBoxes(sphere, usedVelocity, data, hit, collidedMeshInterface))
     {
         std::pair<std::map<CollisionComponentInterface<Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
         if (!it.second)
@@ -231,21 +237,23 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
             collidedMeshInterface->colliderOnCollisionEnter(hit);
         }
 
-        Core::Maths::Vec3 velocityAfterContact = leftVelocity * (1.f - hit.t);
+        Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
         float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
-        Core::Maths::Vec3 finalLoc = sphere.center + velocityAfterContact - dot * hit.normal;
-        leftVelocity -= dot * hit.normal;
-        leftVelocity *= 0.9f;
+        Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity * hit.t + velocityAfterContact - dot * hit.normal;
+        physicComp->physicComp.velocity -= dot*hit.normal;
+        physicComp->physicComp.velocity *= 0.9f;
+        usedVelocity -= dot * hit.normal;
+        usedVelocity *= 0.9f;
 
         sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
 
         sphere.center = finalLoc;
 
-        return simulateCollisionsForASphere(data, physicComp);
+        return simulateCollisionsForASphere(data, physicComp, engine, usedVelocity);
     }
     else 
     {
-        Core::Maths::Vec3 finalLoc = sphere.center + leftVelocity;
+        Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity;
         sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
         return finalLoc;
     }

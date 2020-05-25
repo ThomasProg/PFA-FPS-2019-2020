@@ -50,7 +50,7 @@ namespace Entity
     {
     private:
         static constexpr float movementSpeed  = 10.f;
-        static constexpr float jumpSpeed      = 0.1f;
+        static constexpr float jumpSpeed      = 10.0f;
         static constexpr float jumpCoyoteTime = 0.1f;
 
 
