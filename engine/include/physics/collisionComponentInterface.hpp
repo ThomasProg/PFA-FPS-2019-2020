@@ -6,18 +6,37 @@
 
 namespace Physics
 {
+    template<typename SHAPE>
     class CollisionComponentInterface
     {
     public:
-        Physics::PhysicsSystem::ColliderIt<Box> colliderIt;
+        Physics::PhysicsSystem::ColliderIt<SHAPE> colliderIt;
+        Physics::CollisionComponent<SHAPE> collider;
     
     public:
-    
-        virtual void onCollisionEnter        (const SegmentHit&) = 0;
-        virtual void onCollisionExit         () = 0;
-        virtual void onOverlapEnterSelfHit   (const SegmentHit&) = 0;
-        virtual void onOverlapEnterAnotherHit(const SegmentHit&) = 0;
+        CollisionComponentInterface() = delete;
+        CollisionComponentInterface(Physics::GTransform* transform);
+
+        virtual void colliderOnCollisionEnter (const SegmentHit&)
+        {
+            
+        }
+        virtual void colliderOnCollisionExit  ()
+        {
+
+        }
+        virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
+        {
+
+        }
+
+        void addCollisions(Physics::PhysicsSystem& physicsSystem)
+        {
+            colliderIt = physicsSystem.addCollider<Box>(this);
+        }
     };
 }
+
+#include "collisionComponentInterface.inl"
 
 #endif

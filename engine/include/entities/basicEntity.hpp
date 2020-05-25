@@ -1,75 +1,91 @@
-#ifndef _BASIC_ENTITY_HPP_
-#define _BASIC_ENTITY_HPP_
+// #ifndef _BASIC_ENTITY_HPP_
+// #define _BASIC_ENTITY_HPP_
 
-#include "entityID.hpp"
-#include "rendererSystem.hpp"
-#include "physicsSystem.hpp"
-#include "resourceManager.hpp"
+// #include "box.hpp"
 
-#include "box.hpp"
-#include "saveInterface.hpp"
-#include "collisionComponentInterface.hpp"
-#include "physicComponentInterface.hpp"
+// #include "saveInterface.hpp"
+// #include "collisionComponentInterface.hpp"
+// #include "physicComponentInterface.hpp"
+// #include "renderableInterface.hpp"
+// #include "transformInterface.hpp"
 
-namespace Entity
-{
-    // Example Class for rendering an object
-    class BasicEntity : public EntityID, 
-                        public Physics::CollisionComponentInterface, 
-                        public Physics::PhysicComponentInterface, 
-                        public Save::SaveInterface
-    {
-    public:
-        Physics::GTransform* transform = nullptr;
-        Renderer::MeshIt mesh;
-        // Physics::PhysicComponent physicComponent; // moving sphere 
+// #include "mesh.hpp"
+// #include "rendererSystem.hpp"
 
-        // to load graphs
-        Physics::GraphKey key;
+// // forward declarations
+// template<typename, typename, typename, typename>
+// class EnumedResourceManager;
+// using DemoResourceManager = EnumedResourceManager<E_Model, E_Texture, E_Shader, unsigned int>;
 
-        bool isEnabled = true;
+// namespace Entity
+// {
+//     // Example Class for rendering an object
+//     class BasicEntity : public Physics::TransformInterface,
+//                         public Physics::CollisionComponentInterface<Box>, 
+//                         public Physics::PhysicComponentInterface, 
+//                         public Renderer::RenderableInterface,
+//                         public Save::SaveInterface
+//     {
+//     public:
+//         // Physics::GTransform transform;
 
-    public:
+//         // Physics::PhysicComponent physicComponent; // moving sphere 
 
-        BasicEntity() = default;
-        inline BasicEntity(const EntityID& id)
-            : EntityID(id)
-        {
+//         // to load graphs
+//         // Physics::GraphKey key;
 
-        }
-        ~BasicEntity()
-        {
-            if (transform != nullptr)
-            {
-                delete transform;
-            }
-        }
+//     public:
 
-        void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader, 
-                    Physics::TransformGraph& transformParent);
+//         BasicEntity() 
+//             : Physics::CollisionComponentInterface<Box>(&transform),
+//               Physics::PhysicComponentInterface(&transform),
+//               Renderer::RenderableInterface(&transform)
+//         {
 
-        virtual void raycastCollide();
+//         }
+//         // inline BasicEntity(const EntityID& id)
+//         //     : EntityID(id)
+//         // {
 
-        void setup(Renderer::RendererSystem& renderer, 
-                    const Resources::Model* model, 
-                    const Resources::Shader* shader,
-                    const Resources::Texture* texture,
-                    Physics::TransformGraph& transformParent);
+//         // }
+//         ~BasicEntity() = default;
 
-        // save any data you want with this function
-        void save(Save::Saver& saver) override;
-        // loads the data loaded from the save file
-        void loadData(Save::Loader& loader) override;
-        // after loading data, this function will be called to set pointers, iterators, references...
-        void loadLinks(Physics::TransformGraph& root);
+//         void setup(Renderer::RendererSystem& renderer, 
+//                     const Resources::Model* model, 
+//                     const Resources::Shader* shader, 
+//                     Physics::TransformGraph& transformParent);
 
-        virtual void onCollisionEnter        (const SegmentHit&) override {}
-        virtual void onCollisionExit         () override {}
-        virtual void onOverlapEnterSelfHit   (const SegmentHit&) override {}
-        virtual void onOverlapEnterAnotherHit(const SegmentHit&) override {}
-    };
-}
+//         virtual void raycastCollide();
 
-#endif
+//         void setup(Renderer::RendererSystem& renderer, 
+//                     const Resources::Model* model, 
+//                     const Resources::Shader* shader,
+//                     const Resources::Texture* texture,
+//                     Physics::TransformGraph& transformParent);
+
+//         void setResources(const DemoResourceManager&);
+
+//         // save any data you want with this function
+//         void save(Save::Saver& saver) override;
+//         // loads the data loaded from the save file
+//         void loadData(Save::Loader& loader) override;
+//         // after loading data, this function will be called to set pointers, iterators, references...
+//         void loadLinks(Physics::TransformGraph& root);
+
+//         virtual void physicCompOnCollisionEnter        (const SegmentHit&) override {}
+//         virtual void physicCompOnCollisionExit         () override {}
+//         virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+//         {
+
+//         }
+
+//         virtual void colliderOnCollisionEnter (const SegmentHit&) override {};
+//         virtual void colliderOnCollisionExit  () override {};
+//         virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
+//         {
+
+//         }
+//     };
+// }
+
+// #endif

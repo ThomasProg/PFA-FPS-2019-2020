@@ -7,8 +7,9 @@
 
 #include "vec2.hpp"
 
-#include "enumedResourceManager.hpp"
+#include "demoResourceManager.hpp"
 #include "physicsSystem.hpp"
+#include "rendererSystem.hpp"
 #include "saveSystem.hpp"
 
 
@@ -22,8 +23,9 @@ namespace Core
         Save::SaveSystem saveSystem;
 
     public:
-        EnumedResourceManager resourceManager;
+        DemoResourceManager resourceManager;
         Physics::PhysicsSystem physicsSystem;
+        Renderer::RendererSystem rendererSystem;
 
         /* data */
         GLFWwindow* window;

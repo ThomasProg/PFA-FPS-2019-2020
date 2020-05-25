@@ -31,6 +31,7 @@ Resources::Model::Model(Primitives&& primitive)
     {
         positions.emplace_back(primitive.vertices[primitive.indices[i]]);
     }
+    this->normals    = std::move(primitive.normals);
     this->textCoords = std::move(primitive.uvs);
 }
 

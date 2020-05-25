@@ -1,5 +1,7 @@
 #include "shader.hpp"
 
+#include "lightData.hpp"
+
 #include "file.hpp"
 #include "log.hpp"
 
@@ -154,3 +156,18 @@ void Resources::Shader::linkModel(const Resources::Model& model) const
 //     glBindVertexArray(0);
 // }
 
+void Resources::Shader::linkLight(unsigned int lightID, const Renderer::LightData& lightData, GLuint lightsUniformBuffer) const
+{
+    GLuint lightsID = glGetUniformBlockIndex(programID, "lightsBlock");
+    if (lightsID == GL_INVALID_INDEX)   
+        std::cout << "\"lightsBlock\" variable doesn't exist or was removed!" << std::endl;
+        // Core::Debug::Log::addMessage(_LOG_ERROR_("\"lightsBlock\" variable doesn't exist or was removed!"), true);
+    else 
+    {
+        glUniformBlockBinding(programID, lightsID, 0);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, lightsUniformBuffer);
+        glBufferSubData(GL_UNIFORM_BUFFER, lightID * sizeof(Renderer::LightData), sizeof(Renderer::LightData), &lightData);
+        glBindBufferBase(GL_UNIFORM_BUFFER, lightsID, lightsUniformBuffer);
+    }
+}

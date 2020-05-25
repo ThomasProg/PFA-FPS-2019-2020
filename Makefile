@@ -1,7 +1,8 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
 CXXFLAGS=-O0 -g -Wall -MMD -Wno-unused-function
-CXXFLAGS+=-Iengine/include -Idemo/include -Iengine/include/core -Iengine/include/core/maths\
+CXXFLAGS+=-Idemo/include -Idemo/include/entities\
+		  -Iengine/include -Iengine/include/core -Iengine/include/core/maths\
 		  -Iengine/include/resources -Iengine/include/renderer -Iengine/include/physics -Iengine/include/physics/shapes\
 		  -Iengine/include/core/debug -Iengine/include/core/dataStructure -Iengine/include/primitives\
 		  -Iengine/include/entities -Iengine/include/controllers -Iengine/include/save -Iengine/include/imgui
@@ -10,8 +11,9 @@ CFLAGS=$(CXXFLAGS)
 CC=gcc
 CXX=g++
 
-LDLIBS= -Llib -lglfw -lGL -ldl -msse2
+LDLIBS= -Llib -lglfw -lGL -ldl
 SRC=$(wildcard demo/src/*.cpp)\
+	$(wildcard demo/src/entities/*.cpp)\
 	$(wildcard engine/src/*.cpp)\
 	$(wildcard engine/src/core/*.cpp)\
 	$(wildcard engine/src/core/maths/*.cpp)\
@@ -19,6 +21,7 @@ SRC=$(wildcard demo/src/*.cpp)\
 	$(wildcard engine/src/resources/*.cpp)\
 	$(wildcard engine/src/renderer/*.cpp)\
 	$(wildcard engine/src/physics/*.cpp)\
+	$(wildcard engine/src/physics/shapes/*.cpp)\
 	$(wildcard engine/src/core/dataStructure/*.cpp)\
 	$(wildcard engine/src/primitives/*.cpp)\
 	$(wildcard engine/src/entities/*.cpp)\

@@ -17,6 +17,8 @@ namespace Core::Maths
         Vec4(float x, float y, float z, float w);
         Vec4(const Vec3& vec3, float w = 1.f);
 
+        Vec4& operator=(const Vec4&) noexcept = default;
+
         Vec4 operator*(const Matrix4x4&) const = delete; //line convention
         Vec4 operator-(const Vec4&) const;
         float& operator[](unsigned int index);

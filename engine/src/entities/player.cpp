@@ -3,6 +3,9 @@
 
 #include "utilities.hpp"
 
+#include "segment3D.hpp"
+#include "engine.hpp"
+
 #define _IS_MOUSE_ENABLED_ 1
 
 bool Entity::PlayerState::isOnGround() const noexcept
@@ -10,46 +13,26 @@ bool Entity::PlayerState::isOnGround() const noexcept
     return playerState == E_IDLE || playerState == E_WALKING;
 }
 
-void Entity::Player::setup(Renderer::RendererSystem& renderer, 
-            const Resources::Model* model, 
-            const Resources::Shader* shader, 
-            Physics::TransformGraph& transformParent) 
+void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
-    BasicEntity::setup(renderer, model, shader, transformParent);
-    camera.setup(*transform);
-
-    camera.transform.transform.location.y = 2.f;
-    camera.transform.UpdateLocalTransformMatrix();
-    camera.transform.transformMatrixNode->setDirtySelfAndChildren();
-}
-
-void Entity::Player::setup(Renderer::RendererSystem& renderer, 
-            const Resources::Model* model, 
-            const Resources::Shader* shader,
-            const Resources::Texture* texture, 
-            Physics::TransformGraph& transformParent) 
-{
-    BasicEntity::setup(renderer, model, shader, texture, transformParent);
-    camera.setup(*transform);
-
-    camera.transform.transform.location.y = 2.f;
-    camera.transform.UpdateLocalTransformMatrix();
-    camera.transform.transformMatrixNode->setDirtySelfAndChildren();
+    mesh.model   = &resourceManager.get(E_Model::E_DOG);
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    mesh.linkShaderWithModel();
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
-    // if (state.isOnGround() && glfwGetKey(engine.window, inputKeys.jump))
-    if (physicCompIt->collider.collidingEntities.size() > 0 && glfwGetKey(engine.window, inputKeys.jump))
-    {
-        physicCompIt->velocity.y = jumpSpeed;
-        // state.playerState = PlayerState::E_JUMPING;
-    }
+    // if (!physicCompIt.isValid())
+    //     return;
+    
+    std::vector<unsigned int>::iterator it;
 
-    // Core::Maths::Vec3 forward = camera.camAnchor.transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
-    // Core::Maths::Vec3 right   = camera.camAnchor.transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 forward = transform->transform.getForwardXZVector() * (engine.deltaTime * movementSpeed);
-    Core::Maths::Vec3 right   = transform->transform.getRightXZVector()   * (engine.deltaTime * movementSpeed);
+    if (engine.isKeyDown(inputKeys.jump))
+        lastJumpPressTime = glfwGetTime();
+
+    Core::Maths::Vec3 forward = transform.transform.getForwardXZVector() * movementSpeed;
+    Core::Maths::Vec3 right   = transform.transform.getRightXZVector()   * movementSpeed;
 
     Core::Maths::Vec3 addedVelocity;
 
@@ -85,14 +68,14 @@ void Entity::Player::inputs(const Core::Engine& engine)
         // should not be 0, since it has moved
         if (addedVelocity.vectorSquareLength() != 0)
         {
-            physicCompIt->velocity.x = addedVelocity.x;
-            physicCompIt->velocity.z = addedVelocity.z;
+            physicComp.setForceOnAxis<0>(addedVelocity.x, engine);
+            physicComp.setForceOnAxis<2>(addedVelocity.z, engine);
         }
     }
     // else
     // {
-    //     physicCompIt->velocity.x = 0.f;
-    //     physicCompIt->velocity.z = 0.f;        
+    //     physicComp.velocity.x = 0.f;
+    //     physicComp.velocity.z = 0.f;        
     // }
 
     // camera.inputs(engine);
@@ -118,16 +101,23 @@ void Entity::Player::inputs(const Core::Engine& engine)
     if (glfwGetKey(engine.window, GLFW_KEY_L))
         deltaMouseX = -rotationSpeedOnKey;
 
-    transform->transform.rotation.y += deltaMouseX * rotationSpeed;
+    transform.transform.rotation.y += deltaMouseX * rotationSpeed;
     camera.transform.transform.rotation.x = clamp(camera.transform.transform.rotation.x + deltaMouseY * rotationSpeed, float(- M_PI / 2.f), float(M_PI / 2.f));
 
-    transform->UpdateLocalTransformMatrix();
-    transform->transformMatrixNode->setDirtySelfAndChildren();
-    transform->transformMatrixNode->cleanUpdate();
+    transform.UpdateLocalTransformMatrix();
+    transform.transformMatrixNode->setDirtySelfAndChildren();
 
     camera.transform.UpdateLocalTransformMatrix();
     camera.transform.transformMatrixNode->setDirtySelfAndChildren(); 
-    camera.transform.transformMatrixNode->cleanUpdate();
+}
+
+void Entity::Player::tryToJump(const Core::Engine& engine)
+{
+    if (physicComp.collider.collidingEntities.size() > 0 && glfwGetTime() - lastJumpPressTime < jumpCoyoteTime)
+    {
+        physicComp.velocity.y = jumpSpeed; // impulse
+        state.playerState = PlayerState::E_JUMPING;
+    }
 }
 
 bool Entity::Player::isShooting(const Core::Engine& engine)
@@ -159,28 +149,33 @@ void Entity::Player::dealDamages(float damages)
 
 
 
-void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
-{
-    state.playerState = PlayerState::E_IDLE;
-}
+// void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
+// {
+//     state.playerState = PlayerState::E_IDLE;
+// }
 
-void Entity::Player::onCollisionExit() 
-{
-    state.playerState = PlayerState::E_JUMPING;
-}
+// void Entity::Player::onCollisionExit() 
+// {
+//     state.playerState = PlayerState::E_JUMPING;
+// }
 
-void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
-{
-    if (hit.normal.y < 0.5)
-    {
-        dealDamages(1.f);
-    }
-}
+// void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
+// {
+//     if (hit.normal.y < 0.5)
+//     {
+//         dealDamages(1.f);
+//     }
+// }
 
-void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
-{
-    if (hit.normal.y > - 0.5)
-    {
-        dealDamages(1.f);
-    }
-}
+// void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
+// {
+//     if (hit.normal.y > - 0.5)
+//     {
+//         dealDamages(1.f);
+//     }
+// }
+
+// void Entity::Player::onOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
+// {
+        
+// }

@@ -18,7 +18,7 @@ namespace Core::Maths
         Matrix(const Matrix&);
         Matrix(Matrix&&);
         Matrix(const Matrix*);
-        virtual ~Matrix();
+        ~Matrix();
 
         static Matrix identity(const unsigned int size);
         static Matrix zero(const unsigned int nbLines, const unsigned int nbColumns);

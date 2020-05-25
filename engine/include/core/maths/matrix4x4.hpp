@@ -14,7 +14,7 @@ namespace Core::Maths
     struct Vec3;
     struct Vec4;
 
-    class Matrix4x4 : public Matrix
+    class Matrix4x4 final : public Matrix
     {
     private:
         static constexpr unsigned int nbElements = 16;

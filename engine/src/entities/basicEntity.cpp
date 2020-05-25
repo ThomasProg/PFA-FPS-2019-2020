@@ -1,104 +1,105 @@
-#include "basicEntity.hpp"
+// #include "basicEntity.hpp"
 
-#include "loader.hpp"
-#include "saver.hpp"
+// #include "enumedResourceManager.hpp"
 
-// save any data you want with this function
-void Entity::BasicEntity::save(Save::Saver& saver)
-{
-    // Entity
-    saver.save(entityID);
+// #include "loader.hpp"
+// #include "saver.hpp"
 
-    // Renderer
-    bool isMeshValid = mesh.isValid() && transform->transformMatrixNode.isValid();
-    saver.save(isMeshValid);
-    if (isMeshValid)
-        saver.save(transform->transformMatrixNode->graphID);
+// // save any data you want with this function
+// void Entity::BasicEntity::save(Save::Saver& saver)
+// {
+//     // // Entity
+//     // saver.save(entityID);
 
-    // Physics
-    bool isPhysicCompValid = physicCompIt.isValid();
-    saver.save(isPhysicCompValid); 
-    if (isPhysicCompValid)
-        saver.save(physicCompIt->velocity);
-}
+//     // // Renderer
+//     // bool isMeshValid = mesh.isValid() && transform->transformMatrixNode.isValid();
+//     // saver.save(isMeshValid);
+//     // if (isMeshValid)
+//     //     saver.save(transform->transformMatrixNode->graphID);
 
-// loads the data loaded from the save file
-void Entity::BasicEntity::loadData(Save::Loader& loader)
-{
-    // Entity
-    loader.load(entityID);
+//     // // Physics
+//     // bool isPhysicCompValid = physicCompIt.isValid();
+//     // saver.save(isPhysicCompValid); 
+//     // if (isPhysicCompValid)
+//     //     saver.save(physicCompIt->velocity);
+// }
 
-    // Renderer
-    bool isMeshValid;
-    loader.load(isMeshValid);
-    if (isMeshValid)
-        loader.load(key);
+// // loads the data loaded from the save file
+// void Entity::BasicEntity::loadData(Save::Loader& loader)
+// {
+//     // // Entity
+//     // loader.load(entityID);
 
-    // // Physics
-    // bool isPhysicCompValid;
-    // loader.load(isPhysicCompValid);
-    // if (isPhysicCompValid)
-    //     loader.load(physicCompIt->velocity);
+//     // // Renderer
+//     // bool isMeshValid;
+//     // loader.load(isMeshValid);
+//     // if (isMeshValid)
+//     //     loader.load(key);
 
-    loader.tryToDisplayError(__FILE__);
-}
+//     // // // Physics
+//     // // bool isPhysicCompValid;
+//     // // loader.load(isPhysicCompValid);
+//     // // if (isPhysicCompValid)
+//     // //     loader.load(physicCompIt->velocity);
 
-// after loading data, this function will be called to set pointers, iterators, references...
-void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
-{
-    if (!(key == 0))
-    {
-        root.foreach([&](Physics::TransformGraph& g)
-        {
-            if (g.graphID == key)
-            {
-                if (transform->transformMatrixNode.isValid())
-                {
-                    transform->transformMatrixNode.erase();
-                }
-                transform->transformMatrixNode = Physics::TransformGraph::iterator{&g};
-            }
-        });
-    }
-}
+//     // loader.tryToDisplayError(__FILE__);
+// }
 
-void Entity::BasicEntity::raycastCollide()
-{
+// // // after loading data, this function will be called to set pointers, iterators, references...
+// // void Entity::BasicEntity::loadLinks(Physics::TransformGraph& root)
+// // {
+// //     if (!(key == 0))
+// //     {
+// //         root.foreach([&](Physics::TransformGraph& g)
+// //         {
+// //             if (g.graphID == key)
+// //             {
+// //                 if (transform->transformMatrixNode.isValid())
+// //                 {
+// //                     transform->transformMatrixNode.erase();
+// //                 }
+// //                 transform->transformMatrixNode = Physics::TransformGraph::iterator{&g};
+// //             }
+// //         });
+// //     }
+// // }
+
+// void Entity::BasicEntity::raycastCollide()
+// {
     
-}
+// }
 
-void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
-            const Resources::Model* model, 
-            const Resources::Shader* shader, 
-            Physics::TransformGraph& transformParent) 
-{
-    if (transform == nullptr)
-    {
-        transform = new Physics::GTransform();
-    }
-        
-    if (!mesh.isValid())
-    {
-        mesh = renderer.addComponentTo(*this);
-        mesh->transform = transform;
-    }
+// void Entity::BasicEntity::setResources(const DemoResourceManager& resourceManager)
+// {
+//     mesh.model   = &resourceManager.get(E_Model::E_BOX);
+//     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+//     mesh.texture = &resourceManager.get(E_Texture::E_GROUND);
+//     mesh.linkShaderWithModel();
+// }
 
-    // transform 
-    transform->transformMatrixNode = transformParent.addChild();
+// void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
+//             const Resources::Model* model, 
+//             const Resources::Shader* shader, 
+//             Physics::TransformGraph& transformParent) 
+// {   
+//     meshIt = renderer.addComponent(&mesh);
 
-    // resources
-    mesh->model  = model;
-    mesh->shader = shader;
-    mesh->linkShaderWithModel();
-}
+//     // transform 
+//     transform.transformMatrixNode = transformParent.addChild();
 
-void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
-            const Resources::Model* model, 
-            const Resources::Shader* shader,
-            const Resources::Texture* texture,
-            Physics::TransformGraph& transformParent) 
-{
-    setup(renderer, model, shader, transformParent);
-    mesh->texture = texture;
-}
+//     // resources
+//     mesh.model  = model;
+//     mesh.shader = shader;
+//     mesh.linkShaderWithModel();
+// }
+
+// void Entity::BasicEntity::setup(Renderer::RendererSystem& renderer, 
+//             const Resources::Model* model, 
+//             const Resources::Shader* shader,
+//             const Resources::Texture* texture,
+//             Physics::TransformGraph& transformParent) 
+// {
+//     setup(renderer, model, shader, transformParent);
+//     mesh.texture = texture;
+// }
     

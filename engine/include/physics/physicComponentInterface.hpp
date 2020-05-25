@@ -10,13 +10,35 @@ namespace Physics
     {
     public:
         Physics::PhysicsSystem::PhysicCompIt physicCompIt;
+        Physics::PhysicComponent physicComp;
     
     public:
+        PhysicComponentInterface() = delete;
+        PhysicComponentInterface(Physics::GTransform* transform)
+            : physicComp(transform)
+        {
+
+        }
     
-        virtual void onCollisionEnter        (const SegmentHit&) = 0;
-        virtual void onCollisionExit         () = 0;
-        virtual void onOverlapEnterSelfHit   (const SegmentHit&) = 0;
-        virtual void onOverlapEnterAnotherHit(const SegmentHit&) = 0;
+        virtual void physicCompOnCollisionEnter (const SegmentHit&) 
+        {
+
+        }
+        virtual void physicCompOnCollisionExit  () 
+        {
+            
+        }
+        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
+        {
+
+        }
+        // virtual void physicCompOnOverlapEnterSelfHit   (const SegmentHit&) = 0;
+        // virtual void physicCompOnOverlapEnterAnotherHit(const SegmentHit&) = 0;
+
+        void addPhysics(Physics::PhysicsSystem& physicsSystem)
+        {
+            physicCompIt = physicsSystem.addPhysicComponent(this);
+        }
     };
 }
 #endif

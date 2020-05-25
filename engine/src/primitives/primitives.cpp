@@ -40,12 +40,13 @@ Primitives Primitives::CreateSphere(unsigned int l, unsigned int L)
         }
     }
 
-    return Primitives{std::move(vertices), std::move(indices)};
+    return Primitives{std::move(vertices), {}, std::move(indices)};
 }
 
 Primitives Primitives::CreateCube()
 {
     std::vector<Core::Maths::Vec3> vertices;
+    std::vector<Core::Maths::Vec3> normals;
     std::vector<Core::Maths::Vec2> uvs;
     std::vector<unsigned int> indices;
 
@@ -86,6 +87,9 @@ Primitives Primitives::CreateCube()
     indices.push_back(1);
     indices.push_back(3);
 
+    for (unsigned int i = 0; i < 6; i++)
+        normals.emplace_back(-1, 0, 0);
+
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 1.f);
@@ -100,6 +104,9 @@ Primitives Primitives::CreateCube()
     indices.push_back(5);
     indices.push_back(0);
     indices.push_back(2);
+
+    for (unsigned int i = 0; i < 6; i++)
+        normals.emplace_back(0, 0, 1);
 
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);
@@ -116,6 +123,9 @@ Primitives Primitives::CreateCube()
     indices.push_back(5);
     indices.push_back(3);
 
+    for (unsigned int i = 0; i < 6; i++)
+        normals.emplace_back(0, -1, 0);
+
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 1.f);
     uvs.emplace_back(0.f, 0.f);
@@ -130,6 +140,9 @@ Primitives Primitives::CreateCube()
     indices.push_back(3);
     indices.push_back(1);
     indices.push_back(6);
+
+    for (unsigned int i = 0; i < 6; i++)
+        normals.emplace_back(0, 0, -1);
 
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 1.f);
@@ -146,6 +159,9 @@ Primitives Primitives::CreateCube()
     indices.push_back(1);
     indices.push_back(0);
 
+    for (unsigned int i = 0; i < 6; i++)
+        normals.emplace_back(0, 1, 0);
+
     uvs.emplace_back(0.f, 1.f);
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);
@@ -161,6 +177,9 @@ Primitives Primitives::CreateCube()
     indices.push_back(4);
     indices.push_back(5);
 
+    for (unsigned int i = 0; i < 6; i++)
+        normals.emplace_back(1, 0, 0);
+
     uvs.emplace_back(1.f, 1.f);
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 1.f);
@@ -168,7 +187,7 @@ Primitives Primitives::CreateCube()
     uvs.emplace_back(1.f, 0.f);
     uvs.emplace_back(0.f, 0.f);
 
-    return Primitives{std::move(vertices), std::move(indices), std::move(uvs)};
+    return Primitives{std::move(vertices), std::move(normals), std::move(indices), std::move(uvs)};
 }
 
 Primitives Primitives::CreateTriangle()
@@ -189,6 +208,6 @@ Primitives Primitives::CreateTriangle()
     vertices.push_back(v3);
     indices.push_back(3);
 
-    return Primitives{std::move(vertices), std::move(indices)};
+    return Primitives{std::move(vertices), {}, std::move(indices)};
 }
 

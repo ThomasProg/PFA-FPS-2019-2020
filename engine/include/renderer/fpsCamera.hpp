@@ -9,7 +9,8 @@
 
 namespace Renderer
 {
-    struct FPSCamera : public Camera, public Controller::ControllerInterface
+    struct FPSCamera : public Camera, 
+                       public Controller::ControllerInterface
     {
     public:
         static constexpr size_t nbInputKeys = 4;
@@ -18,10 +19,10 @@ namespace Renderer
         {
             struct 
             {
-                unsigned int forward  = GLFW_KEY_W,
-                             backward = GLFW_KEY_S,
-                             right    = GLFW_KEY_D,
-                             left     = GLFW_KEY_A;
+                unsigned int forward,
+                             backward,
+                             right,
+                             left;
             };
 
             std::array<unsigned int, nbInputKeys> keys;
@@ -37,7 +38,7 @@ namespace Renderer
 
     public:
 
-        void setup(Physics::GTransform& parent);
+        void attachTo(Physics::GTransform& parent);
 
         // Runs camera inputs (camera movement and rotation).
         void inputs(const Core::Engine& engine) override;

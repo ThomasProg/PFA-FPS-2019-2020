@@ -17,76 +17,62 @@
 #include "renderedEntity.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
+#include "ground.hpp"
+
+#include "lightManager.hpp"
+
+#include "entityGroup.hpp"
 
 #include <list>
 #include <unordered_map>
 
 class Game;
 
-class EditorMode
-{
-public:
-    using EnumType = unsigned char;
+// class EditorMode
+// {
+// public:
+//     using EnumType = unsigned char;
 
-    enum : EnumType
-    {
-        E_TRANSLATION = 0,
-        E_ROTATION_X,
-        E_ROTATION_Y,
-        E_ROTATION_Z,
-        E_SCALE_X,
-        E_SCALE_Y,
-        E_SCALE_Z,
-        E_LAST
-    } mode;
+//     enum : EnumType
+//     {
+//         E_TRANSLATION = 0,
+//         E_ROTATION_X,
+//         E_ROTATION_Y,
+//         E_ROTATION_Z,
+//         E_SCALE_X,
+//         E_SCALE_Y,
+//         E_SCALE_Z,
+//         E_LAST
+//     } mode;
 
-    void next()
-    {
-        mode = static_cast<decltype(mode)>((static_cast<EnumType>(mode) + 1) % E_LAST); 
-    }
+//     void next()
+//     {
+//         mode = static_cast<decltype(mode)>((static_cast<EnumType>(mode) + 1) % E_LAST); 
+//     }
 
-    void nextRotation()
-    {
-        mode = static_cast<decltype(mode)>(static_cast<EnumType>(mode) + 1); 
-        if (static_cast<EnumType>(mode) > E_ROTATION_Z || static_cast<EnumType>(mode) < E_ROTATION_X)
-            mode = E_ROTATION_X;
-    }
+//     void nextRotation()
+//     {
+//         mode = static_cast<decltype(mode)>(static_cast<EnumType>(mode) + 1); 
+//         if (static_cast<EnumType>(mode) > E_ROTATION_Z || static_cast<EnumType>(mode) < E_ROTATION_X)
+//             mode = E_ROTATION_X;
+//     }
 
-    void nextScale()
-    {
-        mode = static_cast<decltype(mode)>(static_cast<EnumType>(mode) + 1); 
-        if (static_cast<EnumType>(mode) > E_SCALE_Z || static_cast<EnumType>(mode) < E_SCALE_X)
-            mode = E_SCALE_X;
-    }
-};
+//     void nextScale()
+//     {
+//         mode = static_cast<decltype(mode)>(static_cast<EnumType>(mode) + 1); 
+//         if (static_cast<EnumType>(mode) > E_SCALE_Z || static_cast<EnumType>(mode) < E_SCALE_X)
+//             mode = E_SCALE_X;
+//     }
+// };
 
-class World : public Resources::Scene, public Save::SaveInterface
+class World : public Resources::Scene
 {
 private:
-    Entity::EntityID nextEntity = 10u;
+    // Entity::EntityID nextEntity = 10u;
 
     Game& game;
-    Renderer::RendererSystem rendererSystem;
 
-    Physics::TransformGraph root;
-
-    Save::SaveSystem saveSystem;
-
-    Entity::Player player;
-    // std::list<Entity::BasicEntity> grounds;
-    // std::list<Entity::Enemy> enemies;
-
-    std::unordered_map<Entity::EntityID, Entity::BasicEntity> grounds;
-    std::unordered_map<Entity::EntityID, Entity::Enemy> enemies;
-    std::vector<Entity::RenderedEntity> bullets;
-
-    // Entity::Enemy enemy;
-
-    Renderer::TPSCamera tpsCamera;
-    Renderer::FPSCamera fpsCamera;
-
-    Controller::ControllerInterface* controller = &player;
-    Renderer::Camera* camera = &player.camera;
+    EntityGroup entityGroup;
 
     Entity::BasicEntity* editorSelectedEntity = nullptr;
 
@@ -107,28 +93,13 @@ private:
 
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
-    EditorMode editorMode {EditorMode::E_TRANSLATION};
+    // EditorMode editorMode {EditorMode::E_TRANSLATION};
 
-    class CollisionsCallbacks
-    {
-    private:
-        World& world;
-
-    public:
-        CollisionsCallbacks(World& world) : world(world) {}
-
-        void onCollisionEnter (Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
-        void onCollisionExit  (const Entity::EntityID& entityID);
-        void onOverlap        (const Physics::PhysicsSystem::CollisionsCallbacksSentData& collisionData);
-    };
-    
-    CollisionsCallbacks collisionsCallbacks {*this};
 
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
 
-    void setKeys(bool isAzerty);
     void loadFromSavefile(const char* savedFilename);
     void makeNewLevel();
 
@@ -140,21 +111,16 @@ public:
     void init();
 
     void updatePhysics();
-    void updateEditorFunctions();
+    // void updateEditorFunctions();
     void updateCameraProjection();
     
     void pauseMenu();
     void hud();
     void gameOver();
 
-    void addGround(const Physics::Transform& transform);
-    void addEnemy(const Physics::Transform& transform);
-    void addBullet(const Physics::Transform& transform);
-
-    void save(Save::Saver& saver) override;
-    void loadData(Save::Loader& loader) override;
-
-    Physics::CollisionComponentInterface* getCollisionComponentEntityFromID(const Entity::EntityID& entityID);
+    // void addGround(const Physics::Transform& transform);
+    // void addEnemy(const Physics::Transform& transform);
+    // void addBullet(const Physics::Transform& transform);
 };
 
 #endif

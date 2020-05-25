@@ -10,6 +10,11 @@
 #include <string>
 #include <vector>
 
+namespace Renderer
+{
+    struct LightData;
+}
+
 namespace Resources 
 {
     class Shader
@@ -64,6 +69,10 @@ namespace Resources
         inline void use() const;
 
         inline GLuint getUniformLocation(const char* str) const;
+
+
+        // Send lightingData subBlock to GPU
+        void linkLight(unsigned int lightID, const Renderer::LightData& lightData, GLuint lightsUniformBuffer) const;
     };
 }
 

@@ -3,30 +3,19 @@
 
 #include "resourceManager.hpp"
 
-class EnumedResourceManager : public Resources::ResourceManager<unsigned char>
+template<typename MODEL_ENUM, typename TEXTURE_ENUM, typename SHADER_ENUM, typename CAPACITY_TYPE = unsigned int>
+class EnumedResourceManager : public Resources::ResourceManager<CAPACITY_TYPE>
 {
+    static_assert(std::is_enum<MODEL_ENUM>::value);
+    static_assert(std::is_enum<TEXTURE_ENUM>::value);
+    static_assert(std::is_enum<SHADER_ENUM>::value);
+
 public:
+    using ContainerCapacityType = CAPACITY_TYPE;
 
-    using ContainerCapacityType = Type::ContainerCapacityType;
-
-    enum class E_Model : EnumedResourceManager::ContainerCapacityType
-    {
-        E_SPHERE = 0,
-        E_BOX,
-        E_DOG,
-    };
-
-    enum class E_Texture : EnumedResourceManager::ContainerCapacityType
-    {
-        E_DOG_TEXTURE = 0,
-        E_GROUND
-    };
-
-    enum class E_Shader : EnumedResourceManager::ContainerCapacityType
-    {
-        E_FLAT = 0,
-        E_TEXTURED,
-    };
+    using E_Model   = MODEL_ENUM;
+    using E_Texture = TEXTURE_ENUM;
+    using E_Shader  = SHADER_ENUM;
 
 private:
     // Returns const elements
@@ -49,8 +38,6 @@ public:
     void add(Resources::Texture&& texture, E_Texture textureID);
 };
 
-using E_Model   = EnumedResourceManager::E_Model;
-using E_Shader  = EnumedResourceManager::E_Shader;
-using E_Texture = EnumedResourceManager::E_Texture;
+#include "enumedResourceManager.inl"
 
 #endif 
