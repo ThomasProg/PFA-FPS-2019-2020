@@ -24,7 +24,7 @@ Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
 {
-    physicComp.velocity.y -= gravityAcc * engine.deltaTime;// * engine.deltaTime;
+    physicComp.velocity.y -= (gravityAcc *  physicComp.mass) * engine.deltaTime;
 }
 
 bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Box>*& touchedEntity) const
