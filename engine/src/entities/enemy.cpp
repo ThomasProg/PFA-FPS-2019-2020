@@ -59,7 +59,6 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
     if (state.enemyState == EnemyState::E_CHASING)
     {
-        std::cout << "chasing" << std::endl;
         Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform.transformMatrixNode->worldData.getTranslationVector();
         firstPointOfCircle.x += patrolRadius;
         firstPointOfCircle.y = 0;
