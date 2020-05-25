@@ -59,6 +59,7 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
     if (state.enemyState == EnemyState::E_CHASING)
     {
+        std::cout << "chasing" << std::endl;
         Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform.transformMatrixNode->worldData.getTranslationVector();
         firstPointOfCircle.x += patrolRadius;
         firstPointOfCircle.y = 0;
@@ -83,12 +84,11 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
     else if (state.enemyState == EnemyState::E_PATROLLING)
     {
         // Core::Maths::Cylindrical cylindricCoord = Core::Maths::Cylindrical::convertToCylindrical(position - patrolTarget);
-        
         Core::Maths::Vec3 v;
 
-        v.x = cos(angle + engine.deltaTime * speed / patrolRadius);
+        v.x = cos(angle);
         v.y = 0;
-        v.z = sin(angle + engine.deltaTime * speed / patrolRadius);
+        v.z = sin(angle);
 
         v *= patrolRadius;
 
@@ -99,7 +99,7 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
         physicComp.velocity = v - transform.transform.location;
         physicComp.velocity.y = f;
 
-        angle += engine.deltaTime * speed / patrolRadius;
+        angle += speed / patrolRadius * engine.deltaTime;
     }
 }
 
@@ -111,15 +111,15 @@ void Entity::Enemy::chase(const Core::Engine& engine)
     Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
     Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
 
-    velocityXZ += direction * engine.deltaTime;
+    velocityXZ += direction * speed;
 
     if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
     {
         velocityXZ = velocityXZ.unitVector() * maxSpeed;
     }
 
-    physicComp.velocity.x = velocityXZ.x;
-    physicComp.velocity.z = velocityXZ.z;
+    physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
+    physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
     // Core::Maths::Vec3 direction = (position - chaseTarget).unitVector();
     // mesh->transform.transform.location += direction;
     transform.UpdateLocalTransformMatrix();

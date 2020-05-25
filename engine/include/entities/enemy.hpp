@@ -41,16 +41,16 @@ namespace Entity
                   public Save::SaveInterface
     {
     private:
-        static constexpr float epsilonReturnPatrolDistanceToPoint = 0.1f;
+        static constexpr float epsilonReturnPatrolDistanceToPoint = 0.5f;
         // static constexpr float maxSpeed = 0.07f;
-        static constexpr float maxSpeed = 0.02f;
+        static constexpr float maxSpeed = 5.f;
 
         float angle = 0.f;
         float speed = 2.f; 
 
         bool  isDead = false;
         float timeLeftTillRespawn = 0.f;
-        static constexpr float respawnCooldown = 5.f;
+        static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
         int life = 10;
 
