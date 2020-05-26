@@ -185,7 +185,7 @@ void Resources::Model::setupModel()
 
     // //Texture
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, textCoords.size() * sizeof(textCoords), &textCoords[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, textCoords.size() * sizeof(textCoords[0]), &textCoords[0], GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(1);
 
