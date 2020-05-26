@@ -86,6 +86,8 @@ private:
     float t = 0;
     //////////////////////////////
 
+    float playTime = 0.f;
+
     // Searching if a file exists is expensive,
     // so at the start and each time we start the game,
     // we modify this value to know when we open the menu.
