@@ -20,12 +20,14 @@ enum class E_Model : DemoResourceManager::ContainerCapacityType
     E_SPHERE = 0,
     E_BOX,
     E_DOG,
+    E_GUN,
 };
 
 enum class E_Texture : DemoResourceManager::ContainerCapacityType
 {
     E_DOG_TEXTURE = 0,
-    E_GROUND
+    E_GROUND,
+    E_GUN,
 };
 
 enum class E_Shader : DemoResourceManager::ContainerCapacityType

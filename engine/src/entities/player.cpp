@@ -15,9 +15,9 @@ bool Entity::PlayerState::isOnGround() const noexcept
 
 void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_DOG);
+    mesh.model   = &resourceManager.get(E_Model::E_GUN);
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    mesh.texture = &resourceManager.get(E_Texture::E_GUN);
     mesh.linkShaderWithModel();
 }
 
