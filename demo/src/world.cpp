@@ -390,8 +390,8 @@ void World::update()
                     else 
                     {
                         //test hit ground/wall
-                        std::vector<Entity::Ground*>::iterator it = entityGroup.grounds.begin();
-                        while (it != entityGroup.grounds.end() && (*it) != touchEntity)
+                        std::vector<std::unique_ptr<Entity::Ground>>::iterator it = entityGroup.grounds.begin();
+                        while (it != entityGroup.grounds.end() && (*it).get() != touchEntity)
                         {
                             it++;
                         }

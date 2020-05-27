@@ -30,7 +30,7 @@ public:
     // Save::SaveSystem saveSystem;
 
     std::unique_ptr<Entity::Player> player = nullptr;
-    std::vector<Entity::Ground*> grounds;
+    std::vector<std::unique_ptr<Entity::Ground>> grounds;
     std::vector<Entity::Enemy*> enemies;
 
     std::vector<std::unique_ptr<Entity::RenderedEntity>> bullets;

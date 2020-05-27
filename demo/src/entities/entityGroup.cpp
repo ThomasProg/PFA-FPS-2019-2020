@@ -26,15 +26,6 @@ EntityGroup::~EntityGroup()
         }
     }
 
-    for (Entity::Ground* ground : grounds)
-    {
-        if (ground != nullptr)
-        {
-            engine.rendererSystem.erase(ground->meshIt);
-            delete ground;
-        }
-    }
-
     for (std::unique_ptr<Entity::RenderedEntity>& bullet : bullets)
     {
         engine.rendererSystem.erase(bullet->meshIt);
