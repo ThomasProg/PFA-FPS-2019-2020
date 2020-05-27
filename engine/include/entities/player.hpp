@@ -60,6 +60,9 @@ namespace Entity
         unsigned int nbBullet = 60;
         unsigned int maxNbBullet = 60;
 
+        float shootCooldown = 0.3f;
+        float lastShootTime = - shootCooldown;
+
         float lastJumpPressTime = -123456789.f;
         
         // Renderer::TPSCamera camera;

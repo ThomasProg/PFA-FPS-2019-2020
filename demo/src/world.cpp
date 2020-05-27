@@ -349,6 +349,8 @@ void World::update()
 
     if (isPauseMenuOpen == false)
     {
+        playTime += game.engine.deltaTime;
+
         // Update entities
         for (Entity::Enemy* enemy : entityGroup.enemies)
         {
@@ -363,35 +365,40 @@ void World::update()
 
         if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT))
         {
-            Segment3D directionHit = entityGroup.player->shoot();
-            SegmentHit hit;
-            Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
-
-            if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
+            if (entityGroup.player != nullptr && playTime - entityGroup.player->lastShootTime >= entityGroup.player->shootCooldown)
             {
-                //test hit enemy
-                std::vector<Entity::Enemy*>::iterator it = entityGroup.enemies.begin();
-                while (it != entityGroup.enemies.end() && (*it) != touchEntity)
+                entityGroup.player->lastShootTime = playTime;
+
+                Segment3D directionHit = entityGroup.player->shoot();
+                SegmentHit hit;
+                Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
+
+                if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
                 {
-                    it++;
-                }
-                if (it != entityGroup.enemies.end())
-                {
-                    //hit: add a box during 2s
-                    (*it)->takeDamage(5);
-                    entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
-                }
-                else 
-                {
-                    //test hit ground/wall
-                    std::vector<Entity::Ground*>::iterator it = entityGroup.grounds.begin();
-                    while (it != entityGroup.grounds.end() && (*it) != touchEntity)
+                    //test hit enemy
+                    std::vector<Entity::Enemy*>::iterator it = entityGroup.enemies.begin();
+                    while (it != entityGroup.enemies.end() && (*it) != touchEntity)
                     {
                         it++;
                     }
-                    if (it != entityGroup.grounds.end())
+                    if (it != entityGroup.enemies.end())
                     {
-                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                        //hit: add a box during 2s
+                        (*it)->takeDamage(5);
+                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
+                    }
+                    else 
+                    {
+                        //test hit ground/wall
+                        std::vector<Entity::Ground*>::iterator it = entityGroup.grounds.begin();
+                        while (it != entityGroup.grounds.end() && (*it) != touchEntity)
+                        {
+                            it++;
+                        }
+                        if (it != entityGroup.grounds.end())
+                        {
+                            entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                        }
                     }
                 }
             }
@@ -409,12 +416,12 @@ void World::update()
                
         }
 
-        // Save game
-        if (glfwGetKey(game.engine.window, GLFW_KEY_F5))
-        {
-            // saveSystem.save(Game::savedFilename);
-            isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
-        }
+        // // Save game
+        // if (glfwGetKey(game.engine.window, GLFW_KEY_F5))
+        // {
+        //     // saveSystem.save(Game::savedFilename);
+        //     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
+        // }
 
         updatePhysics();
 
