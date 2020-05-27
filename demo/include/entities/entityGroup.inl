@@ -10,10 +10,7 @@ Renderer::Light& EntityGroup::addLight(ARGS&&... lightArgs)
 template<class... ARGS>
 Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs)
 {
-    if (player != nullptr)
-        delete player;
-
-    player = new Entity::Player(std::forward<ARGS>(playerArgs)...);
+    player = std::make_unique<Entity::Player>(std::forward<ARGS>(playerArgs)...);
     if (player == nullptr)
         return nullptr;
 
@@ -30,11 +27,11 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
     player->camera.transform.transform.location.y = 2.f;
 
     if (controller == nullptr)
-        controller = player;
+        controller = player.get();
     if  (camera == nullptr)
         camera = &player->camera;
 
-    return player;
+    return player.get();
 }
 
 template<class... ARGS>

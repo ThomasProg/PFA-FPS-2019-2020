@@ -17,9 +17,6 @@ EntityGroup::~EntityGroup()
 {
     engine.rendererSystem.erase(player->meshIt);
 
-    if (player != nullptr)
-        delete player;
-
     for (Entity::Enemy* enemy : enemies)
     {
         if (enemy != nullptr)

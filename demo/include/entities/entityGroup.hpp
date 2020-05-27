@@ -8,6 +8,7 @@
 #include "renderedEntity.hpp"
 #include "ground.hpp"
 
+#include <memory>
 #include <vector>
 
 namespace Core
@@ -28,7 +29,7 @@ public:
 
     // Save::SaveSystem saveSystem;
 
-    Entity::Player* player = nullptr;
+    std::unique_ptr<Entity::Player> player = nullptr;
     std::vector<Entity::Ground*> grounds;
     std::vector<Entity::Enemy*> enemies;
 
