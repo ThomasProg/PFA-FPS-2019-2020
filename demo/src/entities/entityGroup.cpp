@@ -17,14 +17,14 @@ EntityGroup::~EntityGroup()
 {
     engine.rendererSystem.erase(player->meshIt);
 
-    for (Entity::Enemy* enemy : enemies)
-    {
-        if (enemy != nullptr)
-        {
-            engine.rendererSystem.erase(enemy->meshIt);
-            delete enemy;
-        }
-    }
+    // for (Entity::Enemy* enemy : enemies)
+    // {
+    //     if (enemy != nullptr)
+    //     {
+    //         engine.rendererSystem.erase(enemy->meshIt);
+    //         delete enemy;
+    //     }
+    // }
 
     for (std::unique_ptr<Entity::RenderedEntity>& bullet : bullets)
     {
@@ -89,8 +89,7 @@ void EntityGroup::removeEnemyFromSytems(Entity::Enemy* enemy)
 
 void EntityGroup::removeEnemy(unsigned int index)
 {
-    delete enemies[index];
-    enemies[index] = enemies.back();
+    enemies[index] = std::move(enemies.back());
     enemies.pop_back();
 }
 
@@ -100,7 +99,7 @@ void EntityGroup::colletGarbage()
     {
         if (enemies[i]->state.enemyState == Entity::EnemyState::E_DEAD)
         {
-            removeEnemyFromSytems(enemies[i]);
+            removeEnemyFromSytems(enemies[i].get());
             removeEnemy(i);
         }
     }

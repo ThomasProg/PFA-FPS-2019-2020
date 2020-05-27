@@ -352,7 +352,7 @@ void World::update()
         playTime += game.engine.deltaTime;
 
         // Update entities
-        for (Entity::Enemy* enemy : entityGroup.enemies)
+        for (std::unique_ptr<Entity::Enemy>& enemy : entityGroup.enemies)
         {
             if (entityGroup.player->transform.transformMatrixNode.isValid())
             {
@@ -376,8 +376,8 @@ void World::update()
                 if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
                 {
                     //test hit enemy
-                    std::vector<Entity::Enemy*>::iterator it = entityGroup.enemies.begin();
-                    while (it != entityGroup.enemies.end() && (*it) != touchEntity)
+                    std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
+                    while (it != entityGroup.enemies.end() && (*it).get() != touchEntity)
                     {
                         it++;
                     }
