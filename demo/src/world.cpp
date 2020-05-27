@@ -98,6 +98,27 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{-2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
 
+    entityGroup.addEnemy({{60.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{62.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{64.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{62.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{62.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{60.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addEnemy({{180.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addEnemy({{220.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{220.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{220.f, 0, 68}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addEnemy({{220.f, 0, 120}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{222.f, 0, 120}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{218.f, 0, 120}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{220.f, 0, 122}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{222.f, 0, 122}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{218.f, 0, 122}, {0.f,0,0}, {1,1,1}});
+
+
     // === Add Player === //
     entityGroup.addPlayer({{0,0,10.0 + 0.0}});
 
