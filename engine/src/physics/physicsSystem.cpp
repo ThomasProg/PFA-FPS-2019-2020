@@ -77,6 +77,8 @@ bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Phys
 
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
+        if (boxCollider == nullptr)
+            continue;
 
         SegmentHit tempHit;
         if (Collisions::boxSegmentCollision(boxCollider->collider.worldCollider, seg, tempHit))
@@ -104,13 +106,16 @@ void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
     // Update boxes transform
     for (Physics::CollisionComponentInterface<Box>* box : boxes)
     {
+        if (box == nullptr)
+            continue;
+
         box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->worldData;
         box->collider.aabb.setFrom(box->collider.worldCollider);
     }
 
     for (Physics::PhysicComponentInterface* physicComp : physicComponents)
     {
-        if (!physicComp->physicComp.isEnabled)
+        if (physicComp == nullptr || !physicComp->physicComp.isEnabled)
             continue;
         
         physicComp->physicComp.collider.aabb.setFrom(physicComp->physicComp.collider.worldCollider);
@@ -197,7 +202,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
 
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
-        if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
+        if (boxCollider == nullptr || !boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
             continue;
 
         if (!Collisions::aabbAabbCollision(boxCollider->collider.aabb, totalAabb))
@@ -236,7 +241,7 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
     // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
-        if (!boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
+        if (boxCollider == nullptr || !boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
             continue;
 
         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, hit))

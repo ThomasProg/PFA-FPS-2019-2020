@@ -9,12 +9,12 @@
 
 void Entity::Enemy::update(const Core::Engine& engine)
 {   
-    if (isDead)
+    if (state.enemyState == EnemyState::E_DEAD)
     {
         timeLeftTillRespawn -= engine.deltaTime;
         if (timeLeftTillRespawn <= 0.f)
         {
-            isDead = false;
+            state.enemyState = EnemyState::E_IDLE; 
             timeLeftTillRespawn = 0.f;
 
             collider.isEnabled = true;
@@ -106,7 +106,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
 {
     state.enemyState = EnemyState::E_CHASING;
 
-    const Core::Maths::Vec3 loc = transform.transformMatrixNode->worldData.getTranslationVector();
+    const Core::Maths::Vec3& loc = transform.transformMatrixNode->worldData.getTranslationVector();
     Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
     Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
 
@@ -119,8 +119,6 @@ void Entity::Enemy::chase(const Core::Engine& engine)
 
     physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
     physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
-    // Core::Maths::Vec3 direction = (position - chaseTarget).unitVector();
-    // mesh->transform.transform.location += direction;
     transform.UpdateLocalTransformMatrix();
     transform.transformMatrixNode->cleanUpdate();
 }
@@ -137,7 +135,7 @@ bool Entity::Enemy::isPlayerInRange() const
 void Entity::Enemy::kill()
 {
     timeLeftTillRespawn = respawnCooldown;
-    isDead = true;
+    state.enemyState = EnemyState::E_DEAD;
 
     collider.isEnabled = false;
     physicComp.isEnabled = false;
@@ -146,25 +144,25 @@ void Entity::Enemy::kill()
 }
 
 
-void Entity::Enemy::save(Save::Saver& saver)     
-{
-    saver.save(angle);
+// void Entity::Enemy::save(Save::Saver& saver)     
+// {
+//     saver.save(angle);
 
-    // Death Data
-    saver.save(isDead);
-    saver.save(timeLeftTillRespawn);
-}
+//     // Death Data
+//     saver.save(isDead);
+//     saver.save(timeLeftTillRespawn);
+// }
 
-void Entity::Enemy::loadData(Save::Loader& loader) 
-{
-    loader.load(angle);
+// void Entity::Enemy::loadData(Save::Loader& loader) 
+// {
+//     loader.load(angle);
 
-    // Death Data
-    loader.load(isDead);
-    loader.load(timeLeftTillRespawn);
+//     // Death Data
+//     loader.load(isDead);
+//     loader.load(timeLeftTillRespawn);
 
-    loader.tryToDisplayError(__FILE__);
-}
+//     loader.tryToDisplayError(__FILE__);
+// }
 
 // void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
 // {

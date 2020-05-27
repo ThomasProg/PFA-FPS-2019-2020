@@ -55,11 +55,15 @@ public:
 
     template<class... ARGS>
     Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... enemyArgs);
+    void removeEnemy(unsigned int index);
+    void removeEnemyFromSytems(Entity::Enemy* enemy);
 
     template<class... ARGS>
     std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
 
     void setKeys(bool isAzerty);
+
+    void colletGarbage();
 };
 
 #include "entityGroup.inl"

@@ -90,3 +90,30 @@ void EntityGroup::setKeys(bool isAzerty)
         // };
     }
 }
+
+void EntityGroup::removeEnemyFromSytems(Entity::Enemy* enemy)
+{
+    engine.rendererSystem.erase(enemy->meshIt);
+    engine.physicsSystem.erase(enemy->colliderIt);
+    engine.physicsSystem.erase(enemy->physicCompIt);
+}
+
+
+void EntityGroup::removeEnemy(unsigned int index)
+{
+    delete enemies[index];
+    enemies[index] = enemies.back();
+    enemies.pop_back();
+}
+
+void EntityGroup::colletGarbage()
+{
+    for (uint i = 0; i < enemies.size(); i++)
+    {
+        if (enemies[i]->state.enemyState == Entity::EnemyState::E_DEAD)
+        {
+            removeEnemyFromSytems(enemies[i]);
+            removeEnemy(i);
+        }
+    }
+}

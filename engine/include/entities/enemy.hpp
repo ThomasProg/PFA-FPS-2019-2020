@@ -48,7 +48,6 @@ namespace Entity
         float angle = 0.f;
         float speed = 2.f; 
 
-        bool  isDead = false;
         float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
@@ -61,8 +60,6 @@ namespace Entity
         Core::Maths::Vec3 position;
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
-
-        inline virtual void raycastCollide();
         
         Enemy() 
             : Physics::CollisionComponentInterface<Box>(&transform),
@@ -74,14 +71,6 @@ namespace Entity
         }
 
         ~Enemy() = default;
-
-        // inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
-
-        // inline void setup(Renderer::RendererSystem& renderer, 
-        //             const Resources::Model* model, 
-        //             const Resources::Shader* shader,
-        //             const Resources::Texture* texture,
-        //             Physics::TransformGraph& transformParent);
         
         void update(const Core::Engine& engine);
         void move(const Core::Engine& engine);
@@ -96,8 +85,8 @@ namespace Entity
         void kill();
         // ~Enemy() {};
 
-        void save(Save::Saver& saver)       override;
-        void loadData(Save::Loader& loader) override;
+        void save(Save::Saver& saver)       override {}
+        void loadData(Save::Loader& loader) override {}
 
 
         // virtual void onCollisionEnter        (const SegmentHit& hit) override;
