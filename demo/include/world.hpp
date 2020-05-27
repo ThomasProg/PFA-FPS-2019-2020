@@ -120,6 +120,7 @@ public:
     
     void pauseMenu();
     void hud();
+    void gameWin();
     void gameOver();
 
     // void addGround(const Physics::Transform& transform);

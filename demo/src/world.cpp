@@ -404,6 +404,11 @@ void World::update()
             }
         }
 
+        if (entityGroup.enemies.size() == 0)
+        {
+            gameWin();
+        }
+
         if(entityGroup.bullets.size() > 0)
         {
             std::vector<std::unique_ptr<Entity::RenderedEntity>>::iterator r = entityGroup.bullets.begin();
@@ -428,6 +433,11 @@ void World::update()
         // if (isEditorMode)
         //     updateEditorFunctions();
     }
+}
+
+void World::gameWin()
+{
+
 }
 
 void World::gameOver()
