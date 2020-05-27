@@ -16,15 +16,15 @@ EntityGroup::EntityGroup(Core::Engine& engine)
 EntityGroup::~EntityGroup()
 {
     engine.rendererSystem.erase(player->meshIt);
-    // engine.physicsSystem.erase(player->colliderIt);
-    // engine.physicsSystem.erase(player->physicCompIt);
+    engine.physicsSystem.erase(player->colliderIt);
+    engine.physicsSystem.erase(player->physicCompIt);
 
     for (std::unique_ptr<Entity::Ground>& ground : grounds)
     {
         // if (ground)
         {
             engine.rendererSystem.erase(ground->meshIt);
-            // engine.physicsSystem.erase(ground->colliderIt);
+            engine.physicsSystem.erase(ground->colliderIt);
         }
     }
 
@@ -33,8 +33,8 @@ EntityGroup::~EntityGroup()
         // if (enemy)
         {
             engine.rendererSystem.erase(enemy->meshIt);
-            // engine.physicsSystem.erase(enemy->colliderIt);
-            // engine.physicsSystem.erase(enemy->physicCompIt);
+            engine.physicsSystem.erase(enemy->colliderIt);
+            engine.physicsSystem.erase(enemy->physicCompIt);
         }
     }
 

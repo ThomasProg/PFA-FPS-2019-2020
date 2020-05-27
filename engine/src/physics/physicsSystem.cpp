@@ -40,7 +40,7 @@ Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(
         Physics::PhysicsSystem::PhysicCompIt newIt = freePhysicCompsIndices.back(); 
         physicComponents[newIt.arrayIndex] = physicComp;
         // Always constant, compared to erasing another element.
-        physicComponents.pop_back(); 
+        freePhysicCompsIndices.pop_back(); 
         return newIt;
     }
 }
