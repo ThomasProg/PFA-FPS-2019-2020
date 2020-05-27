@@ -87,7 +87,7 @@ void World::makeNewLevel()
     // ===== Set up Entities ===== //
 
     entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}});
-    entityGroup.addGround({{120, -30, 70}, {0.f,0,0}, {110,1,10}});
+    entityGroup.addGround({{110, -30, 70}, {0.f,0,0}, {100,1,10}});
     entityGroup.addGround({{220, -30, 110}, {0.f,0,0}, {10,1,50}});
     // Boss plateform
     entityGroup.addGround({{220, -30, 160+20}, {0.f,0,0}, {20,1,20}});
