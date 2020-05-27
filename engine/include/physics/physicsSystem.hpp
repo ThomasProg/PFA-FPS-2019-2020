@@ -41,9 +41,20 @@ namespace Physics
     
     class PhysicsSystem
     {
-    private:
+    public: // forward declarations
+        template<typename T>
+        class iterator;
+
+        template <typename T>
+        using ColliderIt = iterator<Physics::CollisionComponent<T>>;
+        using PhysicCompIt = iterator<Physics::PhysicComponent>;
+
+    private: // private variables
         std::vector<Physics::CollisionComponentInterface<Box>*> boxes;
+        std::vector<ColliderIt<Box>> freeBoxesIndices;
+
         std::vector<Physics::PhysicComponentInterface*> physicComponents;
+        std::vector<PhysicCompIt> freePhysicCompsIndices;
 
         static constexpr float gravityAcc = 9.81f; 
         static constexpr float linearDamping  = 0.98f;
@@ -84,11 +95,6 @@ namespace Physics
             friend PhysicsSystem;
         };
 
-        template <typename T>
-        using ColliderIt = iterator<Physics::CollisionComponent<T>>;
-        using PhysicCompIt = iterator<Physics::PhysicComponent>;
-
-
     public:
         PhysicsSystem() = default;
 
@@ -96,16 +102,27 @@ namespace Physics
         ColliderIt<T> addCollider(Physics::CollisionComponentInterface<T>* collider);
         PhysicCompIt addPhysicComponent(Physics::PhysicComponentInterface* physicComp);
 
+        // Removes the reference to the mesh corresponding to the iterator.
+        // 
+        // Inputs : The corresponding iterator.
+        //
+        // WARNING : 
+        // - The iterator should be valid.
+        //   A valid iterator is an iterator returned by addCollider() or addPhysicComponent(), 
+        //   which has not been erased beforehand.
+        //
+        // Speed : 
+        // Average Case : O(1)
+        // Worst Case : O(n), n being freeMeshIndices.size()
+        void erase(PhysicCompIt& it);
+        void erase(ColliderIt<Box>& it);
+
         void simulatePhysics(Core::Engine& engine);
         void simulateGravity(PhysicComponent& physicComp, const Core::Engine& engine);
 
         // Core::Maths::Vec3 collisionPhysicalResponse(Physics::PhysicComponent& physicCompIt, 
         //                                             const Core::Maths::Vec3& startLoc, 
         //                                             SegmentHit& hit);
-
-        // void simulatePhysics(Physics::PhysicComponentInterface* physicComp, 
-        //                      const PhysicsAdditionalData& data,
-        //                      const Core::Maths::Vec3& leftVelocity);
 
         void simulatePhysicsForPhysicComp(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine);
         void simulatePhysicsForASphere(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine);
@@ -126,20 +143,6 @@ namespace Physics
                                             const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                             SegmentHit& hit,
                                             Physics::CollisionComponentInterface<Box>*& collidedMeshInterface);
-
-
-        // bool staticBoxesFirstCollision(Physics::PhysicComponent& physicComp, const Core::Maths::Vec3& startLoc, 
-        //                                SegmentHit& hit, const PhysicsAdditionalData& data, 
-        //                                Physics::CollisionComponentInterface<Box>*& collidedEntityID,
-        //                                const Core::Maths::Vec3& velocity);
-
-        // void staticBoxesOverlapCollision(Physics::PhysicComponentInterface* physicComp, 
-        //                                  const Core::Maths::Vec3& startLoc, 
-        //                                  const Core::Maths::Vec3& endLoc, 
-        //                                  const PhysicsAdditionalData& data);
-
-        // bool isSegmentColliding(Renderer::Camera& camera, const Core::Maths::Vec3& forward);
-
 
         bool raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Box>*& touchedEntity) const;
 

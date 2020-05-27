@@ -4,7 +4,6 @@
 #include "collisionComponent.hpp"
 #include "physicComponentInterface.hpp"
 #include "collisionComponentInterface.hpp"
-#include "basicEntity.hpp"
 #include "collisions.hpp"
 #include "engine.hpp"
 #include "camera.hpp"
@@ -12,14 +11,58 @@
 template<>
 Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Physics::CollisionComponentInterface<Box>* collider)
 {
-    boxes.emplace_back(collider);
-    return Physics::PhysicsSystem::ColliderIt<Box>{((unsigned int) boxes.size()) - 1u};
+    assert(collider != nullptr);
+    if (freeBoxesIndices.empty())
+    {
+        boxes.emplace_back(collider);
+        return Physics::PhysicsSystem::ColliderIt<Box>{((unsigned int) boxes.size()) - 1u};
+    }
+    else 
+    {
+        Physics::PhysicsSystem::ColliderIt<Box> newIt = freeBoxesIndices.back(); 
+        boxes[newIt.arrayIndex] = collider;
+        // Always constant, compared to erasing the first element.
+        freeBoxesIndices.pop_back(); 
+        return newIt;
+    }
 }
 
 Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
 {
-    physicComponents.emplace_back(physicComp);
-    return Physics::PhysicsSystem::PhysicCompIt{((unsigned int) physicComponents.size()) - 1u};
+    assert(physicComp != nullptr);
+    if (freePhysicCompsIndices.empty())
+    {
+        physicComponents.emplace_back(physicComp);
+        return Physics::PhysicsSystem::PhysicCompIt{((unsigned int) physicComponents.size()) - 1u};
+    }
+    else 
+    {
+        Physics::PhysicsSystem::PhysicCompIt newIt = freePhysicCompsIndices.back(); 
+        physicComponents[newIt.arrayIndex] = physicComp;
+        // Always constant, compared to erasing another element.
+        physicComponents.pop_back(); 
+        return newIt;
+    }
+}
+
+void Physics::PhysicsSystem::erase(PhysicCompIt& it)
+{
+    // We check if the index is valid (inside the container).
+    // It it valid, that means there is a last element, 
+    // that we can get with back(), and that we can remove with pop_back().
+    assert(it.arrayIndex < physicComponents.size());
+    physicComponents[it.arrayIndex] = nullptr;
+    freePhysicCompsIndices.emplace_back(it);
+}
+
+void Physics::PhysicsSystem::erase(ColliderIt<Box>& it)
+{
+    // We check if the index is valid (inside the container).
+    // It it valid, that means there is a last element, 
+    // that we can get with back(), and that we can remove with pop_back().
+    assert(it.arrayIndex < boxes.size());
+    boxes[it.arrayIndex] = nullptr;
+    freeBoxesIndices.emplace_back(it);
 }
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
