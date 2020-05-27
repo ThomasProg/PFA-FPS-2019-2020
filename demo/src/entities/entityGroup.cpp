@@ -16,23 +16,25 @@ EntityGroup::EntityGroup(Core::Engine& engine)
 EntityGroup::~EntityGroup()
 {
     engine.rendererSystem.erase(player->meshIt);
+    // engine.physicsSystem.erase(player->colliderIt);
+    // engine.physicsSystem.erase(player->physicCompIt);
 
     for (std::unique_ptr<Entity::Ground>& ground : grounds)
     {
-        if (ground)
+        // if (ground)
         {
             engine.rendererSystem.erase(ground->meshIt);
-            engine.physicsSystem.erase(ground->colliderIt);
+            // engine.physicsSystem.erase(ground->colliderIt);
         }
     }
 
     for (std::unique_ptr<Entity::Enemy>& enemy : enemies)
     {
-        if (enemy)
+        // if (enemy)
         {
             engine.rendererSystem.erase(enemy->meshIt);
-            engine.physicsSystem.erase(enemy->colliderIt);
-            engine.physicsSystem.erase(enemy->physicCompIt);
+            // engine.physicsSystem.erase(enemy->colliderIt);
+            // engine.physicsSystem.erase(enemy->physicCompIt);
         }
     }
 
@@ -43,8 +45,6 @@ EntityGroup::~EntityGroup()
 
 
     player = nullptr;
-    enemies.clear();
-    grounds.clear();
 }
 
 void EntityGroup::setKeys(bool isAzerty)

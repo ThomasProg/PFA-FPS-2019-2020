@@ -175,7 +175,7 @@ World::~World()
 {
     // game.engine.rendererSystem.reset(); 
     // TODO : remove Physic Comps from physicsSystem
-    // game.engine.physicsSystem.reset(); 
+    game.engine.physicsSystem.reset(); 
 }
 
 void World::inputs()

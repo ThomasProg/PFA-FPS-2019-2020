@@ -98,6 +98,8 @@ void Physics::PhysicsSystem::reset()
 {
     boxes.clear();
     physicComponents.clear();
+    freeBoxesIndices.clear();
+    freePhysicCompsIndices.clear();
 }
 
 
