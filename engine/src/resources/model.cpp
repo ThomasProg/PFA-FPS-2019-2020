@@ -140,11 +140,10 @@ void Resources::Model::loadOBJ(const char* pathToFile)
             }
         }
     }
-    std::cout << tempVertex.size() << std::endl;
+
     for(unsigned int j = 0; j < vertexIndices.size(); j++)
     {
         unsigned int indexVertex = vertexIndices[j];
-        // std::cout << indexVertex << std::endl;
         positions.push_back(tempVertex[indexVertex - 1]);
     }
 

@@ -86,14 +86,17 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    entityGroup.addGround({{5.f, -30, 0}, {0.f,0,0}, {10,1,20}});
-    // entityGroup.addGround({{10.f, -20, 0}, {0.f,0,0}, {1,20,2}});
-    entityGroup.addGround({{50.f, -33, 0}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addGround({{5.f, -35, -20}, {0.f,0,0}, {20,1,40}});
+    entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}});
+    entityGroup.addGround({{120, -30, 70}, {0.f,0,0}, {110,1,10}});
+    entityGroup.addGround({{220, -30, 110}, {0.f,0,0}, {10,1,50}});
+    // Boss plateform
+    entityGroup.addGround({{220, -30, 160+20}, {0.f,0,0}, {20,1,20}});
 
-    entityGroup.addGround({{2.f, -28, 50}, {0.f,0,0}, {1,1,2}});
+    entityGroup.addEnemy({{0.f, 0, 20}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{5.f, -4, 5}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, 0, 60}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
 
     // === Add Player === //
     entityGroup.addPlayer({{10,10,20.0 + 0.0}});
@@ -307,10 +310,10 @@ void World::updateCameraProjection()
 void World::updatePhysics()
 {
     // === DEMO === //
-    Entity::Ground* it = entityGroup.grounds.front();
-    it->transform.transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
-    it->transform.UpdateLocalTransformMatrix();
-    it->transform.transformMatrixNode->setDirtySelfAndChildren();
+    // Entity::Ground* it = entityGroup.grounds.front();
+    // it->transform.transform.location.z = std::cos(game.engine.lastTime / 2) * 50;
+    // it->transform.UpdateLocalTransformMatrix();
+    // it->transform.transformMatrixNode->setDirtySelfAndChildren();
 
     //entityGroup.player->onPlayerDeath = [this](){ gameOver(); };
     /////////////
