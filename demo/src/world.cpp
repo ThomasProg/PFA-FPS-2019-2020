@@ -99,7 +99,7 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
 
     // === Add Player === //
-    entityGroup.addPlayer({{10,10,20.0 + 0.0}});
+    entityGroup.addPlayer({{0,0,10.0 + 0.0}});
 
     // for (uint i = 0; i < 100; i++)
     // {
