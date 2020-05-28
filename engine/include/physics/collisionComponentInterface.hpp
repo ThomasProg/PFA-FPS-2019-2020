@@ -17,7 +17,7 @@ namespace Physics
         CollisionComponentInterface() = delete;
         CollisionComponentInterface(Physics::GTransform* transform);
 
-        virtual void colliderOnCollisionEnter (const SegmentHit&)
+        virtual void colliderOnCollisionEnter (const Physics::Shapes::SegmentHit&)
         {
             
         }

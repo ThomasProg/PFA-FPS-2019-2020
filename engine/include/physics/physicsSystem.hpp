@@ -11,8 +11,6 @@
 
 #include "segmentHit.hpp"
 
-class Segment3D;
-
 namespace Core
 {
     class Engine;
@@ -32,6 +30,7 @@ namespace Physics
 {
     namespace Shapes
     {
+        class Segment3D;
         class Sphere;
     }
 
@@ -76,7 +75,7 @@ namespace Physics
 
         struct CollisionsCallbacksSentData
         {
-            const SegmentHit& hit;
+            const Physics::Shapes::SegmentHit& hit;
             const Physics::PhysicComponentInterface* movingEntityID; // PhysicComponent
             const Physics::CollisionComponentInterface<Physics::Shapes::Box>* encounteredEntityID; // CollisionComponent
         };
@@ -145,10 +144,10 @@ namespace Physics
         bool sphereCollisionWithBoxes(const Physics::Shapes::Sphere& sphere, 
                                             const Core::Maths::Vec3& velocity,
                                             const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                                            SegmentHit& hit,
+                                            Physics::Shapes::SegmentHit& hit,
                                             Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface);
 
-        bool raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const;
+        bool raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const;
 
         void reset();
     };

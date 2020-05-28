@@ -12,31 +12,31 @@
 class Collisions
 {
 public:
-    static bool planeSegmentCollision(const Plane& plane, const Segment3D& segment, SegmentHit& hit);
+    static bool planeSegmentCollision(const Physics::Shapes::Plane& plane, const Physics::Shapes::Segment3D& segment, Physics::Shapes::SegmentHit& hit);
 
-    static bool rectangleSegmentCollision(const Rectangle& rect, const Segment3D& segment, SegmentHit& hit);
+    static bool rectangleSegmentCollision(const Physics::Shapes::Rectangle& rect, const Physics::Shapes::Segment3D& segment, Physics::Shapes::SegmentHit& hit);
 
-    static bool centeredSphereSegmentCollision(const CenteredSphere& sphere, const Segment3D& segment, SegmentHit& hit);
+    static bool centeredSphereSegmentCollision(const Physics::Shapes::CenteredSphere& sphere, const Physics::Shapes::Segment3D& segment, Physics::Shapes::SegmentHit& hit);
 
-    static bool sphereSegmentCollision(const Physics::Shapes::Sphere& sphere, const Segment3D& segment, SegmentHit& hit);
+    static bool sphereSegmentCollision(const Physics::Shapes::Sphere& sphere, const Physics::Shapes::Segment3D& segment, Physics::Shapes::SegmentHit& hit);
 
-    static bool infiniteCylinderSegmentCollision(const Cylinder& cylinder, const Segment3D& segment, SegmentHit& hit);
+    static bool infiniteCylinderSegmentCollision(const Physics::Shapes::Cylinder& cylinder, const Physics::Shapes::Segment3D& segment, Physics::Shapes::SegmentHit& hit);
 
     // Detects the collision between a segment and a cylinder empty inside, 
     // which would have two holes with the shape of a circle.
-    static bool emptyCylinderSegmentCollision(const Cylinder& cylinder, const Segment3D& seg, SegmentHit& hit);
+    static bool emptyCylinderSegmentCollision(const Physics::Shapes::Cylinder& cylinder, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
-    static bool cylinderSegmentCollision(const Cylinder& cylinder, const Segment3D& seg, SegmentHit& hit);
+    static bool cylinderSegmentCollision(const Physics::Shapes::Cylinder& cylinder, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
-    static float squaredDistPointSegment(const Core::Maths::Vec3& point, const Segment3D& seg);
+    static float squaredDistPointSegment(const Core::Maths::Vec3& point, const Physics::Shapes::Segment3D& seg);
 
-    static bool capsuleSegmentCollision(const Cylinder& capsule, const Segment3D& seg, SegmentHit& hit);
+    static bool capsuleSegmentCollision(const Physics::Shapes::Cylinder& capsule, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
-    static bool centeredAABBSegmentCollision(const Physics::Shapes::CenteredAABB& aabb, const Segment3D& seg, SegmentHit& hit);
+    static bool centeredAABBSegmentCollision(const Physics::Shapes::CenteredAABB& aabb, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
-    static bool aabbSegmentCollision(const Physics::Shapes::AABB& aabb, const Segment3D& seg, SegmentHit& hit);
+    static bool aabbSegmentCollision(const Physics::Shapes::AABB& aabb, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
-    static bool boxSegmentCollision(const Physics::Shapes::Box& box, const Segment3D& seg, SegmentHit& hit);
+    static bool boxSegmentCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
     static bool centeredAABBSphereCollision(const Physics::Shapes::CenteredAABB& centeredAABB, const Physics::Shapes::Sphere& sphere);
 
@@ -48,9 +48,9 @@ public:
 
     static bool boxBoxCollision(const Physics::Shapes::Box& box1, const Physics::Shapes::Box& box2);
 
-    static bool centeredAABBMovingSphereCollision(Physics::Shapes::CenteredAABB aabb, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit);
+    static bool centeredAABBMovingSphereCollision(Physics::Shapes::CenteredAABB aabb, const Physics::Shapes::Sphere& sphere, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
-    static bool boxMovingShereCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit);
+    static bool boxMovingShereCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Sphere& sphere, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit);
 
 
 

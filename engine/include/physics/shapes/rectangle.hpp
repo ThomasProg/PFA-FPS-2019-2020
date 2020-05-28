@@ -3,11 +3,14 @@
 
 #include "vec3.hpp"
 
-struct Rectangle
+namespace Physics::Shapes
 {
-    Core::Maths::Vec3 point;
-    Core::Maths::Vec3 seg1, seg2;
-    Core::Maths::Vec3 normal;
-};
+    struct Rectangle
+    {
+        Core::Maths::Vec3 point;
+        Core::Maths::Vec3 seg1, seg2;
+        Core::Maths::Vec3 normal;
+    };
+}
 
 #endif

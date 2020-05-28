@@ -72,7 +72,7 @@ void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicCom
     physicComp.velocity.y -= (gravityAcc *  physicComp.mass) * engine.deltaTime;
 }
 
-bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const
+bool Physics::PhysicsSystem::raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const
 {
     hit.t = 2.f;
 
@@ -81,7 +81,7 @@ bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Phys
         if (boxCollider == nullptr)
             continue;
 
-        SegmentHit tempHit;
+        Physics::Shapes::SegmentHit tempHit;
         if (Collisions::boxSegmentCollision(boxCollider->collider.worldCollider, seg, tempHit))
         {
             if (tempHit.t < hit.t)
@@ -183,11 +183,11 @@ void Physics::PhysicsSystem::simulatePhysicsForASphere(Physics::PhysicComponentI
 bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Physics::Shapes::Sphere& sphere, 
                                                       const Core::Maths::Vec3& velocity,
                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
-                                                      SegmentHit& hit,
+                                                      Physics::Shapes::SegmentHit& hit,
                                                       Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface)
 {
     bool hasCollided = false;
-    SegmentHit segmentHit;
+    Physics::Shapes::SegmentHit segmentHit;
 
     // TODO : Remove and replace args
     Physics::Shapes::AABB aabbFromSphere;
@@ -201,7 +201,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Physics::Shapes::Sph
     Physics::Shapes::AABB totalAabb = aabbFromSphere + aabbFromSphere2;
     //////////////////////////////////  
 
-    Segment3D seg{sphere.center, sphere.center + velocity};
+    Physics::Shapes::Segment3D seg{sphere.center, sphere.center + velocity};
 
     for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
@@ -231,11 +231,11 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Physics::Shapes::S
                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data,
                                                       Physics::PhysicComponentInterface* physicComp)
 {
-    Segment3D seg{sphere.center, lastLoc};
+    Physics::Shapes::Segment3D seg{sphere.center, lastLoc};
     if (seg.squaredLength() < 0.0001)
         return;
 
-    SegmentHit hit;
+    Physics::Shapes::SegmentHit hit;
     
     // // TODO : opti with reserve
     // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
@@ -273,7 +273,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         return sphere.center;
     }
 
-    SegmentHit hit;
+    Physics::Shapes::SegmentHit hit;
     hit.t = 2.f;
     // Entity::EntityID collidedEntity; // box
     Physics::CollisionComponentInterface<Physics::Shapes::Box>* collidedMeshInterface; // box

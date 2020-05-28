@@ -8,22 +8,25 @@
 
 #include <limits.h>
 
-struct Segment 
+namespace Physics::Shapes
 {
-    Core::Maths::Vec2 p1, p2;
-};
+    struct Segment 
+    {
+        Core::Maths::Vec2 p1, p2;
+    };
 
-struct Triangle
-{
-    Core::Maths::Vec2 p1, p2, p3;
-};
+    struct Triangle
+    {
+        Core::Maths::Vec2 p1, p2, p3;
+    };
 
-struct Prism
-{
-    Triangle triangle;
+    struct Prism
+    {
+        Triangle triangle;
 
-    Core::Maths::Vec2 zRange;
-};
+        Core::Maths::Vec2 zRange;
+    };
+}
 
 #include "segment3D.hpp"
 #include "rectangle.hpp"

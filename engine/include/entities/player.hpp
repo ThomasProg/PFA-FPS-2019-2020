@@ -116,14 +116,14 @@ namespace Entity
         void setResources(const DemoResourceManager&);
 
         bool isShooting(const Core::Engine& engine) const;
-        Segment3D getShootRay() const;
+        Physics::Shapes::Segment3D getShootRay() const;
         void shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime);
 
         void dealDamages(float damages);
 
         void reloadAmmo();
 
-        void physicCompOnCollisionEnter        (const SegmentHit&) override 
+        void physicCompOnCollisionEnter        (const Physics::Shapes::SegmentHit&) override 
         {
             // std::cout << "Enter collision" << std::endl;
         }

@@ -129,9 +129,9 @@ bool Entity::Player::isShooting(const Core::Engine& engine) const
     return engine.isMouseButtonDown(inputKeys.fire);
 }
 
-Segment3D Entity::Player::getShootRay() const
+Physics::Shapes::Segment3D Entity::Player::getShootRay() const
 {
-    Segment3D seg;
+    Physics::Shapes::Segment3D seg;
 
     seg.p1 = {0.f, 0, 0};
     seg.p2 = {0.f, 0, -shootRayLength};
@@ -150,8 +150,8 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
             nbBullet--;
             lastShootTime = playTime;
 
-            Segment3D directionHit = getShootRay();
-            SegmentHit hit;
+            Physics::Shapes::Segment3D directionHit = getShootRay();
+            Physics::Shapes::SegmentHit hit;
             Physics::CollisionComponentInterface<Physics::Shapes::Box>* touchEntity = nullptr;
 
             if(physicsSystem.raycast(directionHit, hit, touchEntity))
