@@ -289,7 +289,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
 
         Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
         float dot = Core::Maths::Vec3::dotProduct(velocityAfterContact, hit.normal);
-        Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * 0.00001f;
+        Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * epsilon;
 
         {
             Core::Maths::Vec3 otherFinalLoc = sphere.center + usedVelocity - dot * hit.normal;
@@ -304,7 +304,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
             physicComp->physicComp.velocity *= linearDamping;
         }
 
-        usedVelocity *= 0.9f;
+        usedVelocity *= linearDamping;
 
         // // Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
         // // float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
