@@ -45,6 +45,24 @@ namespace Physics::Shapes
                     center - right - up - forward };
         }
 
+        std::array<Core::Maths::Vec3, nbPoints> getDiagonalVectors() const
+        {
+            Core::Maths::Vec3 right   = transform.getXAxis() * aabb.size.x;
+            Core::Maths::Vec3 up      = transform.getYAxis() * aabb.size.y;
+            Core::Maths::Vec3 forward = transform.getZAxis() * aabb.size.z;
+
+            Core::Maths::Vec3 center = transform.getTranslationVector();
+
+            return { right + up + forward,
+                    right + up - forward,
+                    right - up + forward,
+                    right - up - forward,
+                    - right + up + forward,
+                    - right + up - forward,
+                    - right - up + forward,
+                    - right - up - forward };
+        }
+
         static inline Range2D projectOnAxis(const Core::Maths::Vec3& axis, const std::array<Core::Maths::Vec3, nbPoints>& points)
         {
             Range2D projection;

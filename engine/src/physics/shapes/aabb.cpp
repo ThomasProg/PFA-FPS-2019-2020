@@ -11,12 +11,15 @@ void Physics::Shapes::AABB::setFrom(const Sphere& sphere)
 
 void Physics::Shapes::AABB::setFrom(const Box& box)
 {
+    centeredAABB.size = {0.f,0,0};
     location = box.transform.getTranslationVector();
-    for (unsigned int axis = 0; axis < Core::Maths::Vec3::getAxisNumber(); ++axis)
+    std::array<Core::Maths::Vec3, Box::nbPoints> diagonals = box.getDiagonalVectors();
+    for (Core::Maths::Vec3& diagonal : diagonals)
     {
-        centeredAABB.size[axis] = std::max(std::abs(box.transform[axis][0]), 
-                                  std::max(std::abs(box.transform[axis][1]), 
-                                  std::abs(box.transform[axis][2])));
+        for (unsigned int axis = 0; axis < Core::Maths::Vec3::getAxisNumber(); ++axis)
+        {
+            centeredAABB.size[axis] = std::max(centeredAABB.size[axis], std::abs(diagonal[axis]));
+        }
     }
 }
 
