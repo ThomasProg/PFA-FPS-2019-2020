@@ -173,8 +173,9 @@ void World::load()
 
 World::~World()
 {
+    // game.engine.rendererSystem.reset(); 
     // TODO : remove Physic Comps from physicsSystem
-    game.engine.physicsSystem.reset(); 
+    // game.engine.physicsSystem.reset(); 
 }
 
 void World::inputs()
@@ -352,12 +353,12 @@ void World::update()
         playTime += game.engine.deltaTime;
 
         // Update entities
-        for (Entity::Enemy* enemy : entityGroup.enemies)
+        for (std::unique_ptr<Entity::Enemy>& enemy : entityGroup.enemies)
         {
             if (entityGroup.player->transform.transformMatrixNode.isValid())
             {
                 enemy->chaseTarget = entityGroup.player->transform.transformMatrixNode->worldData.getTranslationVector();
-                enemy->update(game.engine);
+                enemy->update(game.engine, playTime);
             }
         }
 
@@ -376,22 +377,22 @@ void World::update()
                 if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
                 {
                     //test hit enemy
-                    std::vector<Entity::Enemy*>::iterator it = entityGroup.enemies.begin();
-                    while (it != entityGroup.enemies.end() && (*it) != touchEntity)
+                    std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
+                    while (it != entityGroup.enemies.end() && (*it).get() != touchEntity)
                     {
                         it++;
                     }
                     if (it != entityGroup.enemies.end())
                     {
                         //hit: add a box during 2s
-                        (*it)->takeDamage(5);
+                        (*it)->takeDamage(5, playTime);
                         entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
                     }
                     else 
                     {
                         //test hit ground/wall
-                        std::vector<Entity::Ground*>::iterator it = entityGroup.grounds.begin();
-                        while (it != entityGroup.grounds.end() && (*it) != touchEntity)
+                        std::vector<std::unique_ptr<Entity::Ground>>::iterator it = entityGroup.grounds.begin();
+                        while (it != entityGroup.grounds.end() && (*it).get() != touchEntity)
                         {
                             it++;
                         }
@@ -432,6 +433,8 @@ void World::update()
 
         // if (isEditorMode)
         //     updateEditorFunctions();
+
+        entityGroup.colletGarbage();
     }
 }
 

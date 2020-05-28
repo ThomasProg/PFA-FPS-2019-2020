@@ -40,6 +40,8 @@ public:
 
     static bool centeredAABBSphereCollision(const CenteredAABB& centeredAABB, const Sphere& sphere);
 
+    static bool sphereSphereCollision(const Sphere& sphere1, const Sphere& sphere2);
+
     static bool boxSphereCollision(const Box& box, const Sphere& sphere);
 
     static bool aabbAabbCollision(const AABB& aabb1, const AABB& aabb2);

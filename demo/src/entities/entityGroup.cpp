@@ -16,25 +16,25 @@ EntityGroup::EntityGroup(Core::Engine& engine)
 EntityGroup::~EntityGroup()
 {
     engine.rendererSystem.erase(player->meshIt);
+    engine.physicsSystem.erase(player->colliderIt);
+    engine.physicsSystem.erase(player->physicCompIt);
 
-    if (player != nullptr)
-        delete player;
-
-    for (Entity::Enemy* enemy : enemies)
+    for (std::unique_ptr<Entity::Ground>& ground : grounds)
     {
-        if (enemy != nullptr)
+        // if (ground)
         {
-            engine.rendererSystem.erase(enemy->meshIt);
-            delete enemy;
+            engine.rendererSystem.erase(ground->meshIt);
+            engine.physicsSystem.erase(ground->colliderIt);
         }
     }
 
-    for (Entity::Ground* ground : grounds)
+    for (std::unique_ptr<Entity::Enemy>& enemy : enemies)
     {
-        if (ground != nullptr)
+        // if (enemy)
         {
-            engine.rendererSystem.erase(ground->meshIt);
-            delete ground;
+            engine.rendererSystem.erase(enemy->meshIt);
+            engine.physicsSystem.erase(enemy->colliderIt);
+            engine.physicsSystem.erase(enemy->physicCompIt);
         }
     }
 
@@ -45,8 +45,6 @@ EntityGroup::~EntityGroup()
 
 
     player = nullptr;
-    enemies.clear();
-    grounds.clear();
 }
 
 void EntityGroup::setKeys(bool isAzerty)
@@ -88,5 +86,31 @@ void EntityGroup::setKeys(bool isAzerty)
         //     GLFW_KEY_D,
         //     GLFW_KEY_A,
         // };
+    }
+}
+
+void EntityGroup::removeEnemyFromSytems(Entity::Enemy* enemy)
+{
+    engine.rendererSystem.erase(enemy->meshIt);
+    engine.physicsSystem.erase(enemy->colliderIt);
+    engine.physicsSystem.erase(enemy->physicCompIt);
+}
+
+
+void EntityGroup::removeEnemy(unsigned int index)
+{
+    enemies[index] = std::move(enemies.back());
+    enemies.pop_back();
+}
+
+void EntityGroup::colletGarbage()
+{
+    for (uint i = 0; i < enemies.size(); i++)
+    {
+        if (enemies[i]->state.enemyState == Entity::EnemyState::E_DEAD)
+        {
+            removeEnemyFromSytems(enemies[i].get());
+            removeEnemy(i);
+        }
     }
 }

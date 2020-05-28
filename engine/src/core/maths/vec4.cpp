@@ -122,6 +122,11 @@ Vec4 Vec4::operator-(const Vec4& v) const
     return Vec4(x - v.x, y - v.y, z - v.z, w - v.w);
 }
 
+Vec4 Core::Maths::Vec4::operator+(const Vec4& rhs) const
+{
+    return Core::Maths::Vec4{rhs.x + x, rhs.y + y, rhs.z + z, rhs.w + w};
+}
+
 Vec4 operator*(const Vec4& vec, float f)
 {
     return Vec4(vec.x * f, vec.y * f, vec.z * f, vec.w * f);
@@ -138,3 +143,7 @@ std::ostream& Core::Maths::operator<<(std::ostream& stream, const Vec4& vector)
     return stream;
 }
 
+Vec4 Core::Maths::operator*(const Vec4& lhs, float rhs)
+{
+    return Core::Maths::Vec4{lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs};
+}

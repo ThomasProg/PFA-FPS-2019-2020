@@ -610,6 +610,12 @@ bool Collisions::centeredAABBSphereCollision(const CenteredAABB& centeredAABB, c
     return (nearestPoint - sphere.center).vectorSquareLength() < sphere.radius * sphere.radius;
 }
 
+bool Collisions::sphereSphereCollision(const Sphere& sphere1, const Sphere& sphere2)
+{
+    const float doubleRadius = (sphere1.radius + sphere2.radius);
+    return (sphere1.center - sphere2.center).vectorSquareLength() < doubleRadius * doubleRadius;
+}
+
 bool Collisions::boxSphereCollision(const Box& box, const Sphere& sphere)
 {
     Core::Maths::Matrix4x4 mInv = box.transform;

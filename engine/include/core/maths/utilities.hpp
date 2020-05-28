@@ -8,4 +8,10 @@ constexpr const T& clamp(const T& v, const T& low, const T& high)
     return (v < low) ? low : (high < v) ? high : v;
 }
 
+template<class T, class U>
+constexpr const T& lerp(const T& start, const T& end, const U& alpha)
+{
+    return start + (end - start) * alpha;
+}
+
 #endif

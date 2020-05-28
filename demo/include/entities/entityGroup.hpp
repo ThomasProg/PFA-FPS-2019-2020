@@ -8,6 +8,7 @@
 #include "renderedEntity.hpp"
 #include "ground.hpp"
 
+#include <memory>
 #include <vector>
 
 namespace Core
@@ -28,9 +29,9 @@ public:
 
     // Save::SaveSystem saveSystem;
 
-    Entity::Player* player = nullptr;
-    std::vector<Entity::Ground*> grounds;
-    std::vector<Entity::Enemy*> enemies;
+    std::unique_ptr<Entity::Player> player = nullptr;
+    std::vector<std::unique_ptr<Entity::Ground>> grounds;
+    std::vector<std::unique_ptr<Entity::Enemy>> enemies;
 
     std::vector<std::unique_ptr<Entity::RenderedEntity>> bullets;
 
@@ -55,11 +56,15 @@ public:
 
     template<class... ARGS>
     Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... enemyArgs);
+    void removeEnemy(unsigned int index);
+    void removeEnemyFromSytems(Entity::Enemy* enemy);
 
     template<class... ARGS>
     std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
 
     void setKeys(bool isAzerty);
+
+    void colletGarbage();
 };
 
 #include "entityGroup.inl"

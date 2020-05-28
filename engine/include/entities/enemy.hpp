@@ -48,11 +48,11 @@ namespace Entity
         float angle = 0.f;
         float speed = 2.f; 
 
-        bool  isDead = false;
         float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
         int life = 10;
+        float lastHitTime = -1.f;
 
     public:
         EnemyState state;
@@ -61,8 +61,6 @@ namespace Entity
         Core::Maths::Vec3 position;
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
-
-        inline virtual void raycastCollide();
         
         Enemy() 
             : Physics::CollisionComponentInterface<Box>(&transform),
@@ -74,16 +72,8 @@ namespace Entity
         }
 
         ~Enemy() = default;
-
-        // inline void setup2(const Core::Maths::Vec3& patrolTarget, const Core::Maths::Vec3& chaseTarget);
-
-        // inline void setup(Renderer::RendererSystem& renderer, 
-        //             const Resources::Model* model, 
-        //             const Resources::Shader* shader,
-        //             const Resources::Texture* texture,
-        //             Physics::TransformGraph& transformParent);
         
-        void update(const Core::Engine& engine);
+        void update(const Core::Engine& engine, float playTime);
         void move(const Core::Engine& engine);
         void patrol(const Core::Engine& engine);
         bool isPlayerInRange() const;
@@ -91,13 +81,13 @@ namespace Entity
 
         void setResources(const DemoResourceManager&);
 
-        void takeDamage(int damage);
+        void takeDamage(int damage, float playTime);
 
         void kill();
         // ~Enemy() {};
 
-        void save(Save::Saver& saver)       override;
-        void loadData(Save::Loader& loader) override;
+        void save(Save::Saver& saver)       override {}
+        void loadData(Save::Loader& loader) override {}
 
 
         // virtual void onCollisionEnter        (const SegmentHit& hit) override;

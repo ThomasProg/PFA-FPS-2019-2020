@@ -4,7 +4,6 @@
 #include "collisionComponent.hpp"
 #include "physicComponentInterface.hpp"
 #include "collisionComponentInterface.hpp"
-#include "basicEntity.hpp"
 #include "collisions.hpp"
 #include "engine.hpp"
 #include "camera.hpp"
@@ -12,14 +11,58 @@
 template<>
 Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Physics::CollisionComponentInterface<Box>* collider)
 {
-    boxes.emplace_back(collider);
-    return Physics::PhysicsSystem::ColliderIt<Box>{((unsigned int) boxes.size()) - 1u};
+    assert(collider != nullptr);
+    if (freeBoxesIndices.empty())
+    {
+        boxes.emplace_back(collider);
+        return Physics::PhysicsSystem::ColliderIt<Box>{((unsigned int) boxes.size()) - 1u};
+    }
+    else 
+    {
+        Physics::PhysicsSystem::ColliderIt<Box> newIt = freeBoxesIndices.back(); 
+        boxes[newIt.arrayIndex] = collider;
+        // Always constant, compared to erasing the first element.
+        freeBoxesIndices.pop_back(); 
+        return newIt;
+    }
 }
 
 Physics::PhysicsSystem::PhysicCompIt Physics::PhysicsSystem::addPhysicComponent(Physics::PhysicComponentInterface* physicComp)
 {
-    physicComponents.emplace_back(physicComp);
-    return Physics::PhysicsSystem::PhysicCompIt{((unsigned int) physicComponents.size()) - 1u};
+    assert(physicComp != nullptr);
+    if (freePhysicCompsIndices.empty())
+    {
+        physicComponents.emplace_back(physicComp);
+        return Physics::PhysicsSystem::PhysicCompIt{((unsigned int) physicComponents.size()) - 1u};
+    }
+    else 
+    {
+        Physics::PhysicsSystem::PhysicCompIt newIt = freePhysicCompsIndices.back(); 
+        physicComponents[newIt.arrayIndex] = physicComp;
+        // Always constant, compared to erasing another element.
+        freePhysicCompsIndices.pop_back(); 
+        return newIt;
+    }
+}
+
+void Physics::PhysicsSystem::erase(PhysicCompIt& it)
+{
+    // We check if the index is valid (inside the container).
+    // It it valid, that means there is a last element, 
+    // that we can get with back(), and that we can remove with pop_back().
+    assert(it.arrayIndex < physicComponents.size());
+    physicComponents[it.arrayIndex] = nullptr;
+    freePhysicCompsIndices.emplace_back(it);
+}
+
+void Physics::PhysicsSystem::erase(ColliderIt<Box>& it)
+{
+    // We check if the index is valid (inside the container).
+    // It it valid, that means there is a last element, 
+    // that we can get with back(), and that we can remove with pop_back().
+    assert(it.arrayIndex < boxes.size());
+    boxes[it.arrayIndex] = nullptr;
+    freeBoxesIndices.emplace_back(it);
 }
 
 void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicComp, const Core::Engine& engine)
@@ -34,6 +77,8 @@ bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Phys
 
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
+        if (boxCollider == nullptr)
+            continue;
 
         SegmentHit tempHit;
         if (Collisions::boxSegmentCollision(boxCollider->collider.worldCollider, seg, tempHit))
@@ -53,6 +98,8 @@ void Physics::PhysicsSystem::reset()
 {
     boxes.clear();
     physicComponents.clear();
+    freeBoxesIndices.clear();
+    freePhysicCompsIndices.clear();
 }
 
 
@@ -61,13 +108,16 @@ void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
     // Update boxes transform
     for (Physics::CollisionComponentInterface<Box>* box : boxes)
     {
+        if (box == nullptr)
+            continue;
+
         box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->worldData;
         box->collider.aabb.setFrom(box->collider.worldCollider);
     }
 
     for (Physics::PhysicComponentInterface* physicComp : physicComponents)
     {
-        if (!physicComp->physicComp.isEnabled)
+        if (physicComp == nullptr || !physicComp->physicComp.isEnabled)
             continue;
         
         physicComp->physicComp.collider.aabb.setFrom(physicComp->physicComp.collider.worldCollider);
@@ -154,7 +204,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
 
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
-        if (!boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
+        if (boxCollider == nullptr || !boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
             continue;
 
         if (!Collisions::aabbAabbCollision(boxCollider->collider.aabb, totalAabb))
@@ -193,7 +243,7 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
     // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
     for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
     {
-        if (!boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
+        if (boxCollider == nullptr || !boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
             continue;
 
         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, hit))

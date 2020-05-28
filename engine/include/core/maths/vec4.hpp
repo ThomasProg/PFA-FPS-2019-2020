@@ -19,6 +19,7 @@ namespace Core::Maths
 
         Vec4& operator=(const Vec4&) noexcept = default;
 
+        Vec4 operator+(const Vec4&) const;
         Vec4 operator*(const Matrix4x4&) const = delete; //line convention
         Vec4 operator-(const Vec4&) const;
         float& operator[](unsigned int index);
@@ -32,7 +33,6 @@ namespace Core::Maths
         static float DotProduct(const Vec4&, const Vec4&);
     };
 
-    Vec4 operator+(const Vec4&, const Vec4&);
     Vec4 operator*(const Vec4&, float);
     std::ostream& operator<<(std::ostream& stream, const Vec4& vector);
 }

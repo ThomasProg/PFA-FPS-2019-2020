@@ -10,10 +10,7 @@ Renderer::Light& EntityGroup::addLight(ARGS&&... lightArgs)
 template<class... ARGS>
 Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs)
 {
-    if (player != nullptr)
-        delete player;
-
-    player = new Entity::Player(std::forward<ARGS>(playerArgs)...);
+    player = std::make_unique<Entity::Player>(std::forward<ARGS>(playerArgs)...);
     if (player == nullptr)
         return nullptr;
 
@@ -30,21 +27,22 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
     player->camera.transform.transform.location.y = 2.f;
 
     if (controller == nullptr)
-        controller = player;
+        controller = player.get();
     if  (camera == nullptr)
         camera = &player->camera;
 
-    return player;
+    return player.get();
 }
 
 template<class... ARGS>
 Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS&&... groundArgs)
 {
-    Entity::Ground* ground = new Entity::Ground(std::forward<ARGS>(groundArgs)...);
-    if (ground == nullptr)
-        return nullptr;
+    // Entity::Ground* ground = new Entity::Ground(std::forward<ARGS>(groundArgs)...);
+    // if (ground == nullptr)
+    //     return nullptr;
 
-    grounds.emplace_back(ground);
+    grounds.emplace_back(std::make_unique<Entity::Ground>(std::forward<ARGS>(groundArgs)...));
+    Entity::Ground* ground = grounds.back().get();
 
     ground->setResources(engine.resourceManager);
     ground->setTransformParent(root);            
@@ -58,11 +56,12 @@ Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS
 template<class... ARGS>
 Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&... enemyArgs)
 { 
-    Entity::Enemy* enemy = new Entity::Enemy();
-    if (enemy == nullptr)
-        return nullptr;
+    // Entity::Enemy* enemy = new Entity::Enemy();
+    // if (enemy == nullptr)
+    //     return nullptr;
 
-    enemies.emplace_back(enemy, std::forward<ARGS>(enemyArgs)...);
+    enemies.emplace_back(std::make_unique<Entity::Enemy>(std::forward<ARGS>(enemyArgs)...));
+    Entity::Enemy* enemy = enemies.back().get();
 
     enemy->setResources(engine.resourceManager);
     enemy->setTransformParent(root);            
