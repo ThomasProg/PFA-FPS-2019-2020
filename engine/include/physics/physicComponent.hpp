@@ -10,7 +10,7 @@ namespace Physics
     struct PhysicComponent
     {
         Core::Maths::Vec3 velocity = Core::Maths::Vec3{0.f, 0, 0};
-        Physics::CollisionComponent<Sphere> collider;
+        Physics::CollisionComponent<Physics::Shapes::Sphere> collider;
         float mass = 1.f;
 
         // Used to test collisions with other colliders.

@@ -5,7 +5,10 @@
 #include "aabb.hpp"
 #include <map>
 
-struct Box;
+namespace Physics::Shapes
+{
+    struct Box;
+}
 
 namespace Physics
 {
@@ -21,7 +24,7 @@ namespace Physics
 
         COLLIDER worldCollider;  
         GTransform* transform = nullptr;
-        AABB aabb;
+        Physics::Shapes::AABB aabb;
 
         // Defines this object's layer.
         // Default layer is 1
@@ -32,7 +35,7 @@ namespace Physics
 
         // First value of pair is an Entity, 
         // Second value is wether the entity is colliding with this one or not.
-        std::map<Physics::CollisionComponentInterface<Box>*, bool> collidingEntities;
+        std::map<Physics::CollisionComponentInterface<Physics::Shapes::Box>*, bool> collidingEntities;
 
     // Flags
         bool isColliding = false;

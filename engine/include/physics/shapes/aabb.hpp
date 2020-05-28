@@ -3,28 +3,31 @@
 
 #include "centeredAABB.hpp"
 
-struct Box;
-
-struct Sphere;
-
-struct AABB
+namespace Physics::Shapes
 {
-    CenteredAABB centeredAABB;
-    Core::Maths::Vec3 location;
+    struct Box;
 
-    AABB() = default;
-    AABB(const Box& box);
+    struct Sphere;
 
-    void setFrom(const Sphere&);
-    void setFrom(const Box&);
+    struct AABB
+    {
+        CenteredAABB centeredAABB;
+        Core::Maths::Vec3 location;
 
-    AABB operator+(const AABB&) const;
-};
+        AABB() = default;
+        AABB(const Box& box);
 
-inline std::ostream& operator<<(std::ostream& stream, const AABB& aabb)
-{
-    stream << "location : " << aabb.location << "\tsize  : " << aabb.centeredAABB.size << std::endl;
-    return stream;
+        void setFrom(const Sphere&);
+        void setFrom(const Physics::Shapes::Box&);
+
+        AABB operator+(const AABB&) const;
+    };
+
+    inline std::ostream& operator<<(std::ostream& stream, const AABB& aabb)
+    {
+        stream << "location : " << aabb.location << "\tsize  : " << aabb.centeredAABB.size << std::endl;
+        return stream;
+    }
 }
 
 #endif

@@ -37,7 +37,7 @@ namespace Entity
     };
 
     class Enemy final : public Physics::TransformInterface,
-                  public Physics::CollisionComponentInterface<Box>, 
+                  public Physics::CollisionComponentInterface<Physics::Shapes::Box>, 
                   public Physics::PhysicComponentInterface, 
                   public Renderer::RenderableInterface,
                   public Save::SaveInterface
@@ -72,7 +72,7 @@ namespace Entity
         Entity::Player* target = nullptr;
         
         Enemy() 
-            : Physics::CollisionComponentInterface<Box>(&transform),
+            : Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
               Physics::PhysicComponentInterface(&transform),
               Renderer::RenderableInterface(&transform)
         {

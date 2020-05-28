@@ -18,7 +18,7 @@ public:
 
     static bool centeredSphereSegmentCollision(const CenteredSphere& sphere, const Segment3D& segment, SegmentHit& hit);
 
-    static bool sphereSegmentCollision(const Sphere& sphere, const Segment3D& segment, SegmentHit& hit);
+    static bool sphereSegmentCollision(const Physics::Shapes::Sphere& sphere, const Segment3D& segment, SegmentHit& hit);
 
     static bool infiniteCylinderSegmentCollision(const Cylinder& cylinder, const Segment3D& segment, SegmentHit& hit);
 
@@ -32,25 +32,25 @@ public:
 
     static bool capsuleSegmentCollision(const Cylinder& capsule, const Segment3D& seg, SegmentHit& hit);
 
-    static bool centeredAABBSegmentCollision(const CenteredAABB& aabb, const Segment3D& seg, SegmentHit& hit);
+    static bool centeredAABBSegmentCollision(const Physics::Shapes::CenteredAABB& aabb, const Segment3D& seg, SegmentHit& hit);
 
-    static bool aabbSegmentCollision(const AABB& aabb, const Segment3D& seg, SegmentHit& hit);
+    static bool aabbSegmentCollision(const Physics::Shapes::AABB& aabb, const Segment3D& seg, SegmentHit& hit);
 
-    static bool boxSegmentCollision(const Box& box, const Segment3D& seg, SegmentHit& hit);
+    static bool boxSegmentCollision(const Physics::Shapes::Box& box, const Segment3D& seg, SegmentHit& hit);
 
-    static bool centeredAABBSphereCollision(const CenteredAABB& centeredAABB, const Sphere& sphere);
+    static bool centeredAABBSphereCollision(const Physics::Shapes::CenteredAABB& centeredAABB, const Physics::Shapes::Sphere& sphere);
 
-    static bool sphereSphereCollision(const Sphere& sphere1, const Sphere& sphere2);
+    static bool sphereSphereCollision(const Physics::Shapes::Sphere& sphere1, const Physics::Shapes::Sphere& sphere2);
 
-    static bool boxSphereCollision(const Box& box, const Sphere& sphere);
+    static bool boxSphereCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Sphere& sphere);
 
-    static bool aabbAabbCollision(const AABB& aabb1, const AABB& aabb2);
+    static bool aabbAabbCollision(const Physics::Shapes::AABB& aabb1, const Physics::Shapes::AABB& aabb2);
 
-    static bool boxBoxCollision(const Box& box1, const Box& box2);
+    static bool boxBoxCollision(const Physics::Shapes::Box& box1, const Physics::Shapes::Box& box2);
 
-    static bool centeredAABBMovingSphereCollision(CenteredAABB aabb, const Sphere& sphere, const Segment3D& seg, SegmentHit& hit);
+    static bool centeredAABBMovingSphereCollision(Physics::Shapes::CenteredAABB aabb, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit);
 
-    static bool boxMovingShereCollision(const Box& box, const Sphere& sphere, const Segment3D& seg, SegmentHit& hit);
+    static bool boxMovingShereCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit);
 
 
 

@@ -3,13 +3,13 @@
 #include "sphere.hpp"
 #include "box.hpp"
 
-void AABB::setFrom(const Sphere& sphere)
+void Physics::Shapes::AABB::setFrom(const Sphere& sphere)
 {
     centeredAABB.size = {sphere.radius, sphere.radius, sphere.radius};
     location = sphere.center;
 }
 
-void AABB::setFrom(const Box& box)
+void Physics::Shapes::AABB::setFrom(const Box& box)
 {
     location = box.transform.getTranslationVector();
     for (unsigned int axis = 0; axis < Core::Maths::Vec3::getAxisNumber(); ++axis)
@@ -18,7 +18,7 @@ void AABB::setFrom(const Box& box)
     }
 }
 
-AABB AABB::operator+(const AABB& rhs) const
+Physics::Shapes::AABB Physics::Shapes::AABB::operator+(const Physics::Shapes::AABB& rhs) const
 {
     AABB newAabb;
     

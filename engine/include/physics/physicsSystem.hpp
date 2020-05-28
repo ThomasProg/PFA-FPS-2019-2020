@@ -11,7 +11,6 @@
 
 #include "segmentHit.hpp"
 
-class Sphere;
 class Segment3D;
 
 namespace Core
@@ -31,6 +30,11 @@ namespace Entity
 
 namespace Physics
 {
+    namespace Shapes
+    {
+        class Sphere;
+    }
+
     template<typename SHAPE>
     class CollisionComponentInterface;
     template<typename SHAPE>
@@ -50,8 +54,8 @@ namespace Physics
         using PhysicCompIt = iterator<Physics::PhysicComponent>;
 
     private: // private variables
-        std::vector<Physics::CollisionComponentInterface<Box>*> boxes;
-        std::vector<ColliderIt<Box>> freeBoxesIndices;
+        std::vector<Physics::CollisionComponentInterface<Physics::Shapes::Box>*> boxes;
+        std::vector<ColliderIt<Physics::Shapes::Box>> freeBoxesIndices;
 
         std::vector<Physics::PhysicComponentInterface*> physicComponents;
         std::vector<PhysicCompIt> freePhysicCompsIndices;
@@ -67,14 +71,14 @@ namespace Physics
 
         struct PhysicsAdditionalData
         {
-            std::unordered_set<Physics::CollisionComponentInterface<Box>*> ignoredEntities;
+            std::unordered_set<Physics::CollisionComponentInterface<Physics::Shapes::Box>*> ignoredEntities;
         };
 
         struct CollisionsCallbacksSentData
         {
             const SegmentHit& hit;
             const Physics::PhysicComponentInterface* movingEntityID; // PhysicComponent
-            const Physics::CollisionComponentInterface<Box>* encounteredEntityID; // CollisionComponent
+            const Physics::CollisionComponentInterface<Physics::Shapes::Box>* encounteredEntityID; // CollisionComponent
         };
 
         template<typename T>
@@ -98,7 +102,7 @@ namespace Physics
     public:
         PhysicsSystem() = default;
 
-        template<typename T = Box>
+        template<typename T = Physics::Shapes::Box>
         ColliderIt<T> addCollider(Physics::CollisionComponentInterface<T>* collider);
         PhysicCompIt addPhysicComponent(Physics::PhysicComponentInterface* physicComp);
 
@@ -115,7 +119,7 @@ namespace Physics
         // Average Case : O(1)
         // Worst Case : O(n), n being freeMeshIndices.size()
         void erase(PhysicCompIt& it);
-        void erase(ColliderIt<Box>& it);
+        void erase(ColliderIt<Physics::Shapes::Box>& it);
 
         void simulatePhysics(Core::Engine& engine);
         void simulateGravity(PhysicComponent& physicComp, const Core::Engine& engine);
@@ -133,18 +137,18 @@ namespace Physics
                                               const Core::Engine& engine,
                                               Core::Maths::Vec3& usedVelocity);
 
-        void sphereFindOverlappingBoxes(const Sphere& sphere, 
+        void sphereFindOverlappingBoxes(const Physics::Shapes::Sphere& sphere, 
                                         const Core::Maths::Vec3& velocity,
                                         const Physics::PhysicsSystem::PhysicsAdditionalData& data,
                                         Physics::PhysicComponentInterface* physicCompID);
 
-        bool sphereCollisionWithBoxes(const Sphere& sphere, 
+        bool sphereCollisionWithBoxes(const Physics::Shapes::Sphere& sphere, 
                                             const Core::Maths::Vec3& velocity,
                                             const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                             SegmentHit& hit,
-                                            Physics::CollisionComponentInterface<Box>*& collidedMeshInterface);
+                                            Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface);
 
-        bool raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Box>*& touchedEntity) const;
+        bool raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const;
 
         void reset();
     };

@@ -24,6 +24,7 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
         {
             chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
 
+            // look at target
             const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->worldData.getTranslationVector();
             if (delta.x != 0.f)
             {              

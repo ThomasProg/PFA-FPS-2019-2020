@@ -13,12 +13,12 @@ namespace Entity
 {
     class Ground final : public Physics::TransformInterface,
                          public Renderer::RenderableInterface,
-                         public Physics::CollisionComponentInterface<Box>
+                         public Physics::CollisionComponentInterface<Physics::Shapes::Box>
     {
     public:
         Ground() 
             : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Box>(&transform)
+              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform)
         {
 
         }

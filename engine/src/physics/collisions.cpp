@@ -98,7 +98,7 @@ bool Collisions::centeredSphereSegmentCollision(const CenteredSphere& sphere, co
     return true; 
 }
 
-bool Collisions::sphereSegmentCollision(const Sphere& sphere, const Segment3D& segment, SegmentHit& hit)
+bool Collisions::sphereSegmentCollision(const Physics::Shapes::Sphere& sphere, const Segment3D& segment, SegmentHit& hit)
 {
     // The collision point should respect :
     // - the segment equation : OM = OA + t* AB
@@ -413,7 +413,7 @@ bool Collisions::capsuleSegmentCollision(const Cylinder& capsule, const Segment3
     // or if p2 is in the side of cylinder.location:
     if (dotp1 <= 0 || dotp2 <= 0)
     {
-        Sphere sphere2 {capsule.location, capsule.radius};
+        Physics::Shapes::Sphere sphere2 {capsule.location, capsule.radius};
         bool isSphereCollision2 = sphereSegmentCollision(sphere2, seg, hit);
 
         // Is colliding with circle
@@ -427,7 +427,7 @@ bool Collisions::capsuleSegmentCollision(const Cylinder& capsule, const Segment3
     if (dotp1FromOtherSide < 0 || dotp2FromOtherSide < 0)
     {
         SegmentHit tempHit;
-        Sphere sphere1 {capsule.dirInWorldLoc, capsule.radius};
+        Physics::Shapes::Sphere sphere1 {capsule.dirInWorldLoc, capsule.radius};
         bool isSphereCollision1 = sphereSegmentCollision(sphere1, seg, tempHit);
 
         // Is colliding with circle
@@ -473,7 +473,7 @@ bool Collisions::capsuleSegmentCollision(const Cylinder& capsule, const Segment3
     return hasCollided;
 }
 
-bool Collisions::centeredAABBSegmentCollision(const CenteredAABB& aabb, const Segment3D& seg, SegmentHit& hit)
+bool Collisions::centeredAABBSegmentCollision(const Physics::Shapes::CenteredAABB& aabb, const Segment3D& seg, SegmentHit& hit)
 {
     // If both points are on the same side of the cube,
     // then we are sure they are not colliding.
@@ -568,7 +568,7 @@ bool Collisions::centeredAABBSegmentCollision(const CenteredAABB& aabb, const Se
 }
 
 
-bool Collisions::aabbSegmentCollision(const AABB& aabb, const Segment3D& seg, SegmentHit& hit)
+bool Collisions::aabbSegmentCollision(const Physics::Shapes::AABB& aabb, const Segment3D& seg, SegmentHit& hit)
 {
     if (centeredAABBSegmentCollision(aabb.centeredAABB, 
                                     Segment3D{seg.p1 - aabb.location, seg.p2 - aabb.location}, 
@@ -581,7 +581,7 @@ bool Collisions::aabbSegmentCollision(const AABB& aabb, const Segment3D& seg, Se
         return false;
 }
 
-bool Collisions::boxSegmentCollision(const Box& box, const Segment3D& seg, SegmentHit& hit)
+bool Collisions::boxSegmentCollision(const Physics::Shapes::Box& box, const Segment3D& seg, SegmentHit& hit)
 {
     Core::Maths::Matrix4x4 mInv = box.transform.getInverse();
     Segment3D transSeg = Segment3D{mInv * Core::Maths::Vec4{seg.p1, 1}, 
@@ -598,7 +598,7 @@ bool Collisions::boxSegmentCollision(const Box& box, const Segment3D& seg, Segme
         return false;
 }
 
-bool Collisions::centeredAABBSphereCollision(const CenteredAABB& centeredAABB, const Sphere& sphere)
+bool Collisions::centeredAABBSphereCollision(const Physics::Shapes::CenteredAABB& centeredAABB, const Physics::Shapes::Sphere& sphere)
 {
     Core::Maths::Vec3 nearestPoint 
     {
@@ -610,13 +610,13 @@ bool Collisions::centeredAABBSphereCollision(const CenteredAABB& centeredAABB, c
     return (nearestPoint - sphere.center).vectorSquareLength() < sphere.radius * sphere.radius;
 }
 
-bool Collisions::sphereSphereCollision(const Sphere& sphere1, const Sphere& sphere2)
+bool Collisions::sphereSphereCollision(const Physics::Shapes::Sphere& sphere1, const Physics::Shapes::Sphere& sphere2)
 {
     const float doubleRadius = (sphere1.radius + sphere2.radius);
     return (sphere1.center - sphere2.center).vectorSquareLength() < doubleRadius * doubleRadius;
 }
 
-bool Collisions::boxSphereCollision(const Box& box, const Sphere& sphere)
+bool Collisions::boxSphereCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Sphere& sphere)
 {
     Core::Maths::Matrix4x4 mInv = box.transform;
     mInv.normalizeScale();
@@ -626,7 +626,7 @@ bool Collisions::boxSphereCollision(const Box& box, const Sphere& sphere)
     return centeredAABBSphereCollision(box.transform.getScale(), {newSphereCenter, sphere.radius});
 }
 
-bool Collisions::aabbAabbCollision(const AABB& aabb1, const AABB& aabb2)
+bool Collisions::aabbAabbCollision(const Physics::Shapes::AABB& aabb1, const Physics::Shapes::AABB& aabb2)
 {
     // Compares the range for each dimension ;
     return aabb1.location.x - aabb1.centeredAABB.size.x < aabb2.location.x + aabb2.centeredAABB.size.x 
@@ -639,7 +639,7 @@ bool Collisions::aabbAabbCollision(const AABB& aabb1, const AABB& aabb2)
         && aabb1.location.z + aabb1.centeredAABB.size.z > aabb2.location.z - aabb2.centeredAABB.size.z;
 }
 
-bool Collisions::boxBoxCollision(const Box& box1, const Box& box2)
+bool Collisions::boxBoxCollision(const Physics::Shapes::Box& box1, const Physics::Shapes::Box& box2)
 {  
     if (aabbAabbCollision(box1, box2))
     {
@@ -665,13 +665,13 @@ bool Collisions::boxBoxCollision(const Box& box1, const Box& box2)
         };
 
         // Compute before loop to prevent too much computation
-        const std::array<Core::Maths::Vec3, Box::nbPoints> box1Points = box1.getPoints();
-        const std::array<Core::Maths::Vec3, Box::nbPoints> box2Points = box2.getPoints();
+        const std::array<Core::Maths::Vec3, Physics::Shapes::Box::nbPoints> box1Points = box1.getPoints();
+        const std::array<Core::Maths::Vec3, Physics::Shapes::Box::nbPoints> box2Points = box2.getPoints();
 
         for (const Core::Maths::Vec3& axis : axisArray)
         {   
-            Range2D projection1 = Box::projectOnAxis(axis, box1Points); 
-            Range2D projection2 = Box::projectOnAxis(axis, box2Points); 
+            Range2D projection1 = Physics::Shapes::Box::projectOnAxis(axis, box1Points); 
+            Range2D projection2 = Physics::Shapes::Box::projectOnAxis(axis, box2Points); 
 
             if (!Range2D::isIntersecting(projection1, projection2))
             {
@@ -685,7 +685,7 @@ bool Collisions::boxBoxCollision(const Box& box1, const Box& box2)
         return false;
 }
 
-bool Collisions::centeredAABBMovingSphereCollision(CenteredAABB aabb, const Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
+bool Collisions::centeredAABBMovingSphereCollision(Physics::Shapes::CenteredAABB aabb, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
 {
     constexpr float epsiLocal = 0.01f;
     if (   areLessThan(  seg.p1.x, seg.p2.x, - aabb.size.x - sphere.radius - epsiLocal)
@@ -708,10 +708,10 @@ bool Collisions::centeredAABBMovingSphereCollision(CenteredAABB aabb, const Sphe
         // the function will test the collision between a segment 
         // and the nearest sphere corresponding to a box "vertex". 
         // At the end, the distance between testedPoint and the sphere is minimal compared to other possible spheres.
-        static bool tryCollisionsForNearestSphere(const Core::Maths::Vec3& testedPoint, CenteredAABB aabb, const Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
+        static bool tryCollisionsForNearestSphere(const Core::Maths::Vec3& testedPoint, Physics::Shapes::CenteredAABB aabb, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
         {
             // Prevents other computations if the segment goes on a sphere
-            Sphere s;
+            Physics::Shapes::Sphere s;
             s.radius = sphere.radius;
             // We know that testHit.collisionPoint[i] > aabb.size[i] or testHit.collisionPoint[i] < - aabb.size[i], so :
             for (unsigned int i = 0; i < Core::Maths::Vec3::getAxisNumber(); i++)
@@ -724,7 +724,7 @@ bool Collisions::centeredAABBMovingSphereCollision(CenteredAABB aabb, const Sphe
         // the function will test the collision between a segment 
         // and the nearest cylinder corresponding to a box "edge". 
         // At the end, the distance between testedPoint and the cylinder is minimal compared to other possible cylinders.
-        static bool tryCollisionsForNearestCylinder(const Core::Maths::Vec3& testedPoint, CenteredAABB aabb, const Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
+        static bool tryCollisionsForNearestCylinder(const Core::Maths::Vec3& testedPoint, Physics::Shapes::CenteredAABB aabb, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
         {
             Cylinder cyl;
             cyl.radius = sphere.radius;
@@ -836,9 +836,9 @@ bool Collisions::centeredAABBMovingSphereCollision(CenteredAABB aabb, const Sphe
     return false;
 }
 
-bool Collisions::boxMovingShereCollision(const Box& box, const Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
+bool Collisions::boxMovingShereCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Sphere& sphere, const Segment3D& seg, SegmentHit& hit)
 {
-    Sphere s;
+    Physics::Shapes::Sphere s;
     // s.center = // We don't have to set the center, 
     // because we won't use it later (we'll use seg.p1 instead)
     s.radius = sphere.radius;

@@ -9,17 +9,18 @@
 #include "camera.hpp"
 
 template<>
-Physics::PhysicsSystem::ColliderIt<Box> Physics::PhysicsSystem::addCollider<Box>(Physics::CollisionComponentInterface<Box>* collider)
+Physics::PhysicsSystem::ColliderIt<Physics::Shapes::Box> 
+    Physics::PhysicsSystem::addCollider<Physics::Shapes::Box>(Physics::CollisionComponentInterface<Physics::Shapes::Box>* collider)
 {
     assert(collider != nullptr);
     if (freeBoxesIndices.empty())
     {
         boxes.emplace_back(collider);
-        return Physics::PhysicsSystem::ColliderIt<Box>{((unsigned int) boxes.size()) - 1u};
+        return Physics::PhysicsSystem::ColliderIt<Physics::Shapes::Box>{((unsigned int) boxes.size()) - 1u};
     }
     else 
     {
-        Physics::PhysicsSystem::ColliderIt<Box> newIt = freeBoxesIndices.back(); 
+        Physics::PhysicsSystem::ColliderIt<Physics::Shapes::Box> newIt = freeBoxesIndices.back(); 
         boxes[newIt.arrayIndex] = collider;
         // Always constant, compared to erasing the first element.
         freeBoxesIndices.pop_back(); 
@@ -55,7 +56,7 @@ void Physics::PhysicsSystem::erase(PhysicCompIt& it)
     freePhysicCompsIndices.emplace_back(it);
 }
 
-void Physics::PhysicsSystem::erase(ColliderIt<Box>& it)
+void Physics::PhysicsSystem::erase(ColliderIt<Physics::Shapes::Box>& it)
 {
     // We check if the index is valid (inside the container).
     // It it valid, that means there is a last element, 
@@ -71,11 +72,11 @@ void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicCom
     physicComp.velocity.y -= (gravityAcc *  physicComp.mass) * engine.deltaTime;
 }
 
-bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Box>*& touchedEntity) const
+bool Physics::PhysicsSystem::raycast(const Segment3D& seg, SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const
 {
     hit.t = 2.f;
 
-    for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
+    for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
         if (boxCollider == nullptr)
             continue;
@@ -106,7 +107,7 @@ void Physics::PhysicsSystem::reset()
 void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
 {
     // Update boxes transform
-    for (Physics::CollisionComponentInterface<Box>* box : boxes)
+    for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* box : boxes)
     {
         if (box == nullptr)
             continue;
@@ -130,7 +131,7 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
     assert(physicComp != nullptr);
 
     // Resets colliding entities
-    std::map<CollisionComponentInterface<Box>*, bool>::iterator it = physicComp->physicComp.collider.collidingEntities.begin();
+    std::map<CollisionComponentInterface<Physics::Shapes::Box>*, bool>::iterator it = physicComp->physicComp.collider.collidingEntities.begin();
     while (it != physicComp->physicComp.collider.collidingEntities.end())
     {
         it->second = false;
@@ -140,7 +141,7 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
     simulatePhysicsForASphere(physicComp, engine);
 
     // Sets colliding entities
-    std::map<CollisionComponentInterface<Box>*, bool>::iterator itColliding = physicComp->physicComp.collider.collidingEntities.begin();
+    std::map<CollisionComponentInterface<Physics::Shapes::Box>*, bool>::iterator itColliding = physicComp->physicComp.collider.collidingEntities.begin();
     while (itColliding != physicComp->physicComp.collider.collidingEntities.end())
     {
         if (!itColliding->second)
@@ -179,30 +180,30 @@ void Physics::PhysicsSystem::simulatePhysicsForASphere(Physics::PhysicComponentI
                                                                                     engine, usedVelo);
 }
 
-bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere, 
+bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Physics::Shapes::Sphere& sphere, 
                                                       const Core::Maths::Vec3& velocity,
                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                                       SegmentHit& hit,
-                                                      Physics::CollisionComponentInterface<Box>*& collidedMeshInterface)
+                                                      Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface)
 {
     bool hasCollided = false;
     SegmentHit segmentHit;
 
     // TODO : Remove and replace args
-    AABB aabbFromSphere;
+    Physics::Shapes::AABB aabbFromSphere;
     aabbFromSphere.setFrom(sphere);  
 
-    Sphere s2 = sphere;
+    Physics::Shapes::Sphere s2 = sphere;
     s2.center += velocity;
-    AABB aabbFromSphere2;
+    Physics::Shapes::AABB aabbFromSphere2;
     aabbFromSphere2.setFrom(s2);  
 
-    AABB totalAabb = aabbFromSphere + aabbFromSphere2;
+    Physics::Shapes::AABB totalAabb = aabbFromSphere + aabbFromSphere2;
     //////////////////////////////////  
 
     Segment3D seg{sphere.center, sphere.center + velocity};
 
-    for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
+    for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
         if (boxCollider == nullptr || !boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
             continue;
@@ -225,7 +226,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Sphere& sphere,
     return hasCollided;
 }
 
-void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere, 
+void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Physics::Shapes::Sphere& sphere, 
                                                       const Core::Maths::Vec3& lastLoc,
                                                       const Physics::PhysicsSystem::PhysicsAdditionalData& data,
                                                       Physics::PhysicComponentInterface* physicComp)
@@ -240,8 +241,8 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Sphere& sphere,
     // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
     // collisionsCallbacksSentDataList.reserve(nextNbOverlapHint); 
 
-    // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Box>>& boxCollider : boxes)
-    for (Physics::CollisionComponentInterface<Box>* boxCollider : boxes)
+    // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Physics::Shapes::Box>>& boxCollider : boxes)
+    for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
         if (boxCollider == nullptr || !boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
             continue;
@@ -264,8 +265,8 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
                                const Core::Engine& engine,
                                Core::Maths::Vec3& usedVelocity)
 {
-    Sphere& sphere = physicComp->physicComp.collider.worldCollider;
-    std::map<Physics::CollisionComponentInterface<Box>*, bool>& collidingEntities = physicComp->physicComp.collider.collidingEntities;
+    Physics::Shapes::Sphere& sphere = physicComp->physicComp.collider.worldCollider;
+    std::map<Physics::CollisionComponentInterface<Physics::Shapes::Box>*, bool>& collidingEntities = physicComp->physicComp.collider.collidingEntities;
 
     if (usedVelocity.vectorSquareLength() < 0.00001f)
     {
@@ -275,11 +276,11 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
     SegmentHit hit;
     hit.t = 2.f;
     // Entity::EntityID collidedEntity; // box
-    Physics::CollisionComponentInterface<Box>* collidedMeshInterface; // box
+    Physics::CollisionComponentInterface<Physics::Shapes::Box>* collidedMeshInterface; // box
 
     if (sphereCollisionWithBoxes(sphere, usedVelocity, data, hit, collidedMeshInterface))
     {
-        std::pair<std::map<CollisionComponentInterface<Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
+        std::pair<std::map<CollisionComponentInterface<Physics::Shapes::Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
         if (!it.second)
         {
             physicComp->physicCompOnCollisionEnter(hit);

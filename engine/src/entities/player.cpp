@@ -152,7 +152,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
 
             Segment3D directionHit = getShootRay();
             SegmentHit hit;
-            Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
+            Physics::CollisionComponentInterface<Physics::Shapes::Box>* touchEntity = nullptr;
 
             if(physicsSystem.raycast(directionHit, hit, touchEntity))
             {

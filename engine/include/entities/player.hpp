@@ -46,7 +46,7 @@ namespace Entity
     // Example Class for Player
     class Player final : public Physics::TransformInterface,
                          public Renderer::RenderableInterface,
-                         public Physics::CollisionComponentInterface<Box>,
+                         public Physics::CollisionComponentInterface<Physics::Shapes::Box>,
                          public Physics::PhysicComponentInterface,
                          public Controller::ControllerInterface
     {
@@ -103,7 +103,7 @@ namespace Entity
         
         Player() 
             : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Box>(&transform),
+              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
               Physics::PhysicComponentInterface(&transform)
         {
             collider.isOverlap = true;

@@ -38,7 +38,7 @@ struct Prism
 
 // inl
 
-inline AABB::AABB(const Box& box) : centeredAABB(box.aabb), location(box.transform.getTranslationVector())
+inline Physics::Shapes::AABB::AABB(const Box& box) : centeredAABB(box.aabb), location(box.transform.getTranslationVector())
 {
 
 }
