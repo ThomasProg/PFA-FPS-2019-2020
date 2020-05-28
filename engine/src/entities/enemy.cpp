@@ -25,8 +25,8 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
             chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
         }
 
-        tryToAttack(playTime);
         move(engine);
+        tryToAttack(playTime);
     }
 }
 
