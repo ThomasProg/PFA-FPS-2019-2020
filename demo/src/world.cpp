@@ -367,39 +367,43 @@ void World::update()
 
         if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT))
         {
-            if (entityGroup.player != nullptr && playTime - entityGroup.player->lastShootTime >= entityGroup.player->shootCooldown)
+            if (entityGroup.player->nbBullet > 0)
             {
-                entityGroup.player->lastShootTime = playTime;
-
-                Segment3D directionHit = entityGroup.player->shoot();
-                SegmentHit hit;
-                Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
-
-                if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
+                if (entityGroup.player != nullptr && playTime - entityGroup.player->lastShootTime >= entityGroup.player->shootCooldown)
                 {
-                    //test hit enemy
-                    std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
-                    while (it != entityGroup.enemies.end() && (*it).get() != touchEntity)
+                    entityGroup.player->nbBullet--;
+                    entityGroup.player->lastShootTime = playTime;
+
+                    Segment3D directionHit = entityGroup.player->shoot();
+                    SegmentHit hit;
+                    Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
+
+                    if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
                     {
-                        it++;
-                    }
-                    if (it != entityGroup.enemies.end())
-                    {
-                        //hit: add a box during 2s
-                        (*it)->takeDamage(5, playTime);
-                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
-                    }
-                    else 
-                    {
-                        //test hit ground/wall
-                        std::vector<std::unique_ptr<Entity::Ground>>::iterator it = entityGroup.grounds.begin();
-                        while (it != entityGroup.grounds.end() && (*it).get() != touchEntity)
+                        //test hit enemy
+                        std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
+                        while (it != entityGroup.enemies.end() && (*it).get() != touchEntity)
                         {
                             it++;
                         }
-                        if (it != entityGroup.grounds.end())
+                        if (it != entityGroup.enemies.end())
                         {
-                            entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                            //hit: add a box during 2s
+                            (*it)->takeDamage(5, playTime);
+                            entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
+                        }
+                        else 
+                        {
+                            //test hit ground/wall
+                            std::vector<std::unique_ptr<Entity::Ground>>::iterator it = entityGroup.grounds.begin();
+                            while (it != entityGroup.grounds.end() && (*it).get() != touchEntity)
+                            {
+                                it++;
+                            }
+                            if (it != entityGroup.grounds.end())
+                            {
+                                entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                            }
                         }
                     }
                 }
