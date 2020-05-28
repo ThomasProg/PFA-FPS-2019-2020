@@ -1,7 +1,7 @@
 #ifndef _RANGE_2D_HPP_
 #define _RANGE_2D_HPP_
 
-#include <limits.h>
+#include <limits>
 
 namespace Physics::Shapes
 {
@@ -10,7 +10,7 @@ namespace Physics::Shapes
         float min, max;
 
         Range2D()
-            : min(INT_MAX), max(INT_MIN)
+            : min(std::numeric_limits<float>::max()), max(std::numeric_limits<float>::min())
         {
 
         }
