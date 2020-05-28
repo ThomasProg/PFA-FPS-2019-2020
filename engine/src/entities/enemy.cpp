@@ -7,8 +7,9 @@
 #include "saver.hpp"
 #include "utilities.hpp"
 
-void Entity::Enemy::update(const Core::Engine& engine)
+void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 {   
+
     if (state.enemyState == EnemyState::E_DEAD)
     {
         timeLeftTillRespawn -= engine.deltaTime;
@@ -24,6 +25,13 @@ void Entity::Enemy::update(const Core::Engine& engine)
     }
     else 
     {
+        if ((playTime - lastHitTime) < 1)
+        {
+            mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastHitTime);
+        }
+        else 
+            mesh.color = {1,1,1,1};
+
         move(engine);
     }
 }
@@ -190,8 +198,10 @@ void Entity::Enemy::kill()
 //     }
 // }
 
-void Entity::Enemy::takeDamage(int damage)
+void Entity::Enemy::takeDamage(int damage, float playTime)
 {
+    lastHitTime = playTime;
+    mesh.color = {1,0,0,1};
     life = clamp(life - damage, 0, life);
     if(life == 0)
         kill();

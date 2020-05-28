@@ -358,7 +358,7 @@ void World::update()
             if (entityGroup.player->transform.transformMatrixNode.isValid())
             {
                 enemy->chaseTarget = entityGroup.player->transform.transformMatrixNode->worldData.getTranslationVector();
-                enemy->update(game.engine);
+                enemy->update(game.engine, playTime);
             }
         }
 
@@ -385,7 +385,7 @@ void World::update()
                     if (it != entityGroup.enemies.end())
                     {
                         //hit: add a box during 2s
-                        (*it)->takeDamage(5);
+                        (*it)->takeDamage(5, playTime);
                         entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
                     }
                     else 

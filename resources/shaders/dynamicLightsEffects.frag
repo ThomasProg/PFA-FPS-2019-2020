@@ -2,11 +2,13 @@
 
 #define NB_MAX_LIGHTS 300
 
-out vec4 color;
+out vec4 out_color;
 in vec2 f_uvs;
 in vec3 f_normals;
 
 in vec3 f_location;
+
+uniform vec4 color;
 
 struct Light
 {
@@ -149,5 +151,5 @@ void main()
       }
     }
 
-    color = texture(f_texture, f_uvs) * intensity.bgra;
+    out_color = color * texture(f_texture, f_uvs) * intensity.bgra;
 }

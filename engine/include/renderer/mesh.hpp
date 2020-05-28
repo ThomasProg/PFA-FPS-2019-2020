@@ -31,7 +31,7 @@ namespace Renderer
 
         bool isDrawn = true;
 
-        Core::Maths::Vec4 color = {1,0,0,1};
+        Core::Maths::Vec4 color = {1,1,1,1};
 
     public:
 

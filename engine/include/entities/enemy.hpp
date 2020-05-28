@@ -52,6 +52,7 @@ namespace Entity
         static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
         int life = 10;
+        float lastHitTime = -1.f;
 
     public:
         EnemyState state;
@@ -72,7 +73,7 @@ namespace Entity
 
         ~Enemy() = default;
         
-        void update(const Core::Engine& engine);
+        void update(const Core::Engine& engine, float playTime);
         void move(const Core::Engine& engine);
         void patrol(const Core::Engine& engine);
         bool isPlayerInRange() const;
@@ -80,7 +81,7 @@ namespace Entity
 
         void setResources(const DemoResourceManager&);
 
-        void takeDamage(int damage);
+        void takeDamage(int damage, float playTime);
 
         void kill();
         // ~Enemy() {};
