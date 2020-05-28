@@ -14,6 +14,8 @@
 
 #include <array>
 
+class EntityGroup;
+
 namespace Core
 {
     class Engine;
@@ -52,6 +54,7 @@ namespace Entity
         static constexpr float movementSpeed  = 10.f * 1.f;
         static constexpr float jumpSpeed      = 10.0f;
         static constexpr float jumpCoyoteTime = 0.1f;
+        static constexpr float shootRayLength = 100.f;
 
 
     public:
@@ -112,8 +115,10 @@ namespace Entity
         void tryToJump(const Core::Engine& engine);
         void setResources(const DemoResourceManager&);
 
-        bool isShooting(const Core::Engine& engine);
-        Segment3D shoot() const;
+        bool isShooting(const Core::Engine& engine) const;
+        Segment3D getShootRay() const;
+        void shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime);
+
         void dealDamages(float damages);
 
         void reloadAmmo();

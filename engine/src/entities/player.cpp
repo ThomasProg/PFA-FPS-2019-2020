@@ -5,6 +5,11 @@
 #include "segment3D.hpp"
 #include "engine.hpp"
 
+#include "enemy.hpp"
+#include "ground.hpp"
+#include "physicsSystem.hpp"
+#include "entityGroup.hpp"
+
 #define _IS_MOUSE_ENABLED_ 1
 
 bool Entity::PlayerState::isOnGround() const noexcept
@@ -119,23 +124,67 @@ void Entity::Player::tryToJump(const Core::Engine& engine)
     }
 }
 
-bool Entity::Player::isShooting(const Core::Engine& engine)
+bool Entity::Player::isShooting(const Core::Engine& engine) const
 {
     return engine.isMouseButtonDown(inputKeys.fire);
 }
 
-Segment3D Entity::Player::shoot() const
+Segment3D Entity::Player::getShootRay() const
 {
     Segment3D seg;
 
     seg.p1 = {0.f, 0, 0};
-    seg.p2 = {0.f, 0, -100};
+    seg.p2 = {0.f, 0, -shootRayLength};
     seg.p1 = camera.transform.transformMatrixNode->worldData * seg.p1;
     seg.p2 = camera.transform.transformMatrixNode->worldData * seg.p2;
 
     return seg;
 }
 
+void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime)
+{
+    if (nbBullet > 0)
+    {
+        if (playTime - lastShootTime >= shootCooldown)
+        {
+            nbBullet--;
+            lastShootTime = playTime;
+
+            Segment3D directionHit = getShootRay();
+            SegmentHit hit;
+            Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
+
+            if(physicsSystem.raycast(directionHit, hit, touchEntity))
+            {
+                //test hit enemy
+                std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
+                while (it != entityGroup.enemies.end() && (*it).get() != touchEntity)
+                {
+                    it++;
+                }
+                if (it != entityGroup.enemies.end())
+                {
+                    //hit: add a box during 2s
+                    (*it)->takeDamage(5, playTime);
+                    entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
+                }
+                else 
+                {
+                    //test hit ground/wall
+                    std::vector<std::unique_ptr<Entity::Ground>>::iterator it = entityGroup.grounds.begin();
+                    while (it != entityGroup.grounds.end() && (*it).get() != touchEntity)
+                    {
+                        it++;
+                    }
+                    if (it != entityGroup.grounds.end())
+                    {
+                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                    }
+                }
+            }
+        }
+    }
+}
 
 void Entity::Player::dealDamages(float damages)
 {
