@@ -355,20 +355,11 @@ void World::update()
         // Update entities
         for (std::unique_ptr<Entity::Enemy>& enemy : entityGroup.enemies)
         {
+            enemy->target = entityGroup.player.get();
+
             if (entityGroup.player->transform.transformMatrixNode.isValid())
             {
-                enemy->chaseTarget = entityGroup.player->transform.transformMatrixNode->worldData.getTranslationVector();
                 enemy->update(game.engine, playTime);
-
-                // attack player
-                if (playTime > enemy->lastAttackTime + enemy->attackCooldown)
-                {
-                    if (enemy->isTargetInAttackRange())
-                    {
-                        enemy->lastAttackTime = playTime;
-                        entityGroup.player->dealDamages(1.f);
-                    }
-                }
             }
         }
 

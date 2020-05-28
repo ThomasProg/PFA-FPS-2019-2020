@@ -18,6 +18,8 @@ namespace Core
 
 namespace Entity 
 {
+    struct Player;
+
     struct EnemyState
     {
         enum E_State
@@ -66,6 +68,8 @@ namespace Entity
         Core::Maths::Vec3 position;
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
+
+        Entity::Player* target = nullptr;
         
         Enemy() 
             : Physics::CollisionComponentInterface<Box>(&transform),
@@ -88,6 +92,10 @@ namespace Entity
         void setResources(const DemoResourceManager&);
 
         void takeDamage(int damage, float playTime);
+        void tryToAttack(float playTime);
+        void tryToRespawn();
+
+        void lerpColorBackToNormal(float playTime);
 
         void kill();
         // ~Enemy() {};

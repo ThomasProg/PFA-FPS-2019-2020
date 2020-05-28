@@ -3,36 +3,29 @@
 
 #include "engine.hpp"
 
+#include "player.hpp"
+
 #include "loader.hpp"
 #include "saver.hpp"
 #include "utilities.hpp"
 
 void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 {   
-
     if (state.enemyState == EnemyState::E_DEAD)
     {
         timeLeftTillRespawn -= engine.deltaTime;
-        if (timeLeftTillRespawn <= 0.f)
-        {
-            state.enemyState = EnemyState::E_IDLE; 
-            timeLeftTillRespawn = 0.f;
-
-            collider.isEnabled = true;
-            physicComp.isEnabled = true;
-            mesh.isDrawn = true;
-        }
+        tryToRespawn();
     }
     else 
     {
-        // Lerp color when hit
-        if ((playTime - lastReceivedHitTime) < 1)
-        {
-            mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastReceivedHitTime);
-        }
-        else 
-            mesh.color = {1,1,1,1};
+        lerpColorBackToNormal(playTime);
 
+        if (target != nullptr)
+        {
+            chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
+        }
+
+        tryToAttack(playTime);
         move(engine);
     }
 }
@@ -215,4 +208,41 @@ void Entity::Enemy::takeDamage(int damage, float playTime)
     life = clamp(life - damage, 0, life);
     if(life == 0)
         kill();
+}
+
+void Entity::Enemy::tryToAttack(float playTime)
+{
+    // attack player
+    if (playTime > lastAttackTime + attackCooldown && target != nullptr)
+    {
+        if (isTargetInAttackRange())
+        {
+            lastAttackTime = playTime;
+            target->dealDamages(1.f);
+        }
+    }
+}
+
+void Entity::Enemy::tryToRespawn()
+{
+    if (timeLeftTillRespawn <= 0.f)
+    {
+        state.enemyState = EnemyState::E_PATROLLING; 
+        timeLeftTillRespawn = 0.f;
+
+        collider.isEnabled = true;
+        physicComp.isEnabled = true;
+        mesh.isDrawn = true;
+    }
+}
+
+void Entity::Enemy::lerpColorBackToNormal(float playTime)
+{
+    // Lerp color when hit
+    if ((playTime - lastReceivedHitTime) < 1)
+    {
+        mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastReceivedHitTime);
+    }
+    else 
+        mesh.color = {1,1,1,1};
 }
