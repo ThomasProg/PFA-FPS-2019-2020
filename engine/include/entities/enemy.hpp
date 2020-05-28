@@ -52,12 +52,17 @@ namespace Entity
         static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
         int life = 10;
-        float lastHitTime = -1.f;
+        float lastReceivedHitTime = -1.f;
+
+    public:
+        float attackCooldown = 1.f;
+        float lastAttackTime = -attackCooldown;
 
     public:
         EnemyState state;
         float detectionRadius = 10.0f;
-        float patrolRadius = 5.f;
+        float attackRadius    = 2.f;
+        float patrolRadius    = 5.f;
         Core::Maths::Vec3 position;
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
@@ -76,7 +81,8 @@ namespace Entity
         void update(const Core::Engine& engine, float playTime);
         void move(const Core::Engine& engine);
         void patrol(const Core::Engine& engine);
-        bool isPlayerInRange() const;
+        bool isTargetInChaseRange() const;
+        bool isTargetInAttackRange() const;
         void chase(const Core::Engine& engine);
 
         void setResources(const DemoResourceManager&);

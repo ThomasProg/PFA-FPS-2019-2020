@@ -132,10 +132,10 @@ namespace Entity
             if (data.encounteredEntityID == this)
                 return;
 
-            if (data.hit.normal.y < 0.5)
-            {
-                dealDamages(1.f);
-            }
+            // if (data.hit.normal.y < 0.5)
+            // {
+            //     dealDamages(1.f);
+            // }
         }
 
         void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
@@ -143,10 +143,10 @@ namespace Entity
             if (data.movingEntityID == this)
                 return;
 
-            if (data.hit.normal.y > - 0.5)
-            {
-                dealDamages(1.f);
-            }
+            // if (data.hit.normal.y > - 0.5)
+            // {
+            //     dealDamages(1.f);
+            // }
         }
     };
 }

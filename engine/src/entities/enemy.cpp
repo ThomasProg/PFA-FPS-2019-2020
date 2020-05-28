@@ -25,9 +25,10 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
     }
     else 
     {
-        if ((playTime - lastHitTime) < 1)
+        // Lerp color when hit
+        if ((playTime - lastReceivedHitTime) < 1)
         {
-            mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastHitTime);
+            mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastReceivedHitTime);
         }
         else 
             mesh.color = {1,1,1,1};
@@ -48,7 +49,7 @@ void Entity::Enemy::move(const Core::Engine& engine)
 {
     if(state.enemyState != EnemyState::E_FALLING)
     {
-        if(isPlayerInRange())
+        if(isTargetInChaseRange())
             chase(engine);
         else
         {
@@ -131,13 +132,22 @@ void Entity::Enemy::chase(const Core::Engine& engine)
     transform.transformMatrixNode->cleanUpdate();
 }
 
-bool Entity::Enemy::isPlayerInRange() const
+bool Entity::Enemy::isTargetInChaseRange() const
 {
     if (!transform.transformMatrixNode.isValid())
         return false;
 
     return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= detectionRadius * detectionRadius;
+}
+
+bool Entity::Enemy::isTargetInAttackRange() const
+{
+    if (!transform.transformMatrixNode.isValid())
+        return false;
+
+    return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+        <= attackRadius * attackRadius;
 }
 
 void Entity::Enemy::kill()
@@ -200,7 +210,7 @@ void Entity::Enemy::kill()
 
 void Entity::Enemy::takeDamage(int damage, float playTime)
 {
-    lastHitTime = playTime;
+    lastReceivedHitTime = playTime;
     mesh.color = {1,0,0,1};
     life = clamp(life - damage, 0, life);
     if(life == 0)

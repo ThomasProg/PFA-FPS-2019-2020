@@ -359,6 +359,16 @@ void World::update()
             {
                 enemy->chaseTarget = entityGroup.player->transform.transformMatrixNode->worldData.getTranslationVector();
                 enemy->update(game.engine, playTime);
+
+                // attack player
+                if (playTime > enemy->lastAttackTime + enemy->attackCooldown)
+                {
+                    if (enemy->isTargetInAttackRange())
+                    {
+                        enemy->lastAttackTime = playTime;
+                        entityGroup.player->dealDamages(1.f);
+                    }
+                }
             }
         }
 
