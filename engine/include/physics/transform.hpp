@@ -8,6 +8,7 @@ namespace Physics
 {
     struct Transform
     {
+        // rotation in radians
         Core::Maths::Vec3 location, rotation, scale {1, 1, 1};
 
         inline Core::Maths::Vec3 getForwardVector();

@@ -23,6 +23,15 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
         if (target != nullptr)
         {
             chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
+
+            const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+            if (delta.x != 0.f)
+            {              
+                transform.transform.rotation.y = std::atan2(delta.x, delta.z);
+
+                transform.UpdateLocalTransformMatrix();
+                transform.transformMatrixNode->setDirtySelfAndChildren();
+            }
         }
 
         move(engine);
