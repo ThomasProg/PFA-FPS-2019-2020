@@ -410,6 +410,11 @@ void World::update()
             }
         }
 
+        if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_RIGHT))
+        {
+            entityGroup.player->reloadAmmo();
+        }
+
         if (entityGroup.enemies.size() == 0)
         {
             gameWin();

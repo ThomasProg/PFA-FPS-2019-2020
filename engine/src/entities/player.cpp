@@ -148,7 +148,10 @@ void Entity::Player::dealDamages(float damages)
     }
 }
 
-
+void Entity::Player::reloadAmmo()
+{
+    nbBullet = maxNbBullet;
+}
 
 // void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
 // {

@@ -57,8 +57,8 @@ namespace Entity
     public:
         float lifePoints    = 10.f;
         float maxLifePoints = 10.f;
-        unsigned int nbBullet = 60;
-        unsigned int maxNbBullet = 60;
+        unsigned int maxNbBullet = 10;
+        unsigned int nbBullet = maxNbBullet;
 
         float shootCooldown = 0.3f;
         float lastShootTime = - shootCooldown;
@@ -115,6 +115,8 @@ namespace Entity
         bool isShooting(const Core::Engine& engine);
         Segment3D shoot() const;
         void dealDamages(float damages);
+
+        void reloadAmmo();
 
         void physicCompOnCollisionEnter        (const SegmentHit&) override 
         {
