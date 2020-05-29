@@ -21,6 +21,7 @@ enum class E_Model : DemoResourceManager::ContainerCapacityType
     E_BOX,
     E_DOG,
     E_GUN,
+    E_TREE,
 };
 
 enum class E_Texture : DemoResourceManager::ContainerCapacityType
