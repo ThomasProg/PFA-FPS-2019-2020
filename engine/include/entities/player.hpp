@@ -12,6 +12,8 @@
 #include "tpsCamera.hpp"
 #include "fpsCamera.hpp"
 
+#include "audioSource.hpp"
+
 #include <array>
 
 class EntityGroup;
@@ -76,6 +78,9 @@ namespace Entity
 
         //// UI ///////
         bool gOver {false};
+
+        //// Audio ////
+        Resources::AudioSource audio;
 
         // ====== Input Keys ====== //
     public:

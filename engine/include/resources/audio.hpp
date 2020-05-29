@@ -15,6 +15,7 @@ namespace Resources
         Audio() = default;
         Audio(const char* pathToFile);
         Audio(const AudioData& audioData);
+        Audio(Audio&& rhs);
 
         void sendCPUAudioToGPU(const AudioData& cpuAudioData);
 

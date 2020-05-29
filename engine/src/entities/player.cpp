@@ -23,6 +23,8 @@ void Entity::Player::setResources(const DemoResourceManager& resourceManager)
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
     mesh.texture = &resourceManager.get(E_Texture::E_GUN);
     mesh.linkShaderWithModel();
+
+    audio.setAudio(resourceManager.get(E_Audio::E_SHOOT));
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
@@ -147,6 +149,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
     {
         if (playTime - lastShootTime >= shootCooldown)
         {
+            audio.play();
             nbBullet--;
             lastShootTime = playTime;
 

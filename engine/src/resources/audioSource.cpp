@@ -9,12 +9,11 @@
 
 Resources::AudioSource::AudioSource()
 {
-    alGenSources(1, &source);  
+
 }
 
 Resources::AudioSource::AudioSource(const Resources::Audio& audio)
-{
-    alGenSources(1, &source);  
+{ 
     setAudio(audio);
 }
 
@@ -26,13 +25,16 @@ Resources::AudioSource::~AudioSource()
 
 void Resources::AudioSource::setAudio(const Resources::Audio& audio)
 {
+    if (source == 0)
+        alGenSources(1, &source);  
+        
     alSourcei(source, AL_BUFFER, audio.audioDataID);
 }
 
 void Resources::AudioSource::play()
 {
-    assert(source != 0);
-    alSourcePlay(source);
+    if (source != 0)
+        alSourcePlay(source);
 }
 
 void Resources::AudioSource::stop()

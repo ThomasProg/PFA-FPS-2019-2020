@@ -16,6 +16,13 @@ Resources::Audio::Audio(const Resources::AudioData& audioData)
     sendCPUAudioToGPU(audioData);
 }
 
+Resources::Audio::Audio(Audio&& rhs)
+    : audioDataID(rhs.audioDataID)
+{
+    rhs.audioDataID = 0;
+}
+
+
 void Resources::Audio::sendCPUAudioToGPU(const Resources::AudioData& cpuAudioData)
 {
     if (audioDataID != 0)

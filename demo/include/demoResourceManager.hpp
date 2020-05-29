@@ -41,7 +41,7 @@ enum class E_Shader : ContainerType
 
 enum class E_Audio : ContainerType
 {
-    E_PLAYER_FOOTSTEPS,
+    E_SHOOT,
 };
 
 #endif
