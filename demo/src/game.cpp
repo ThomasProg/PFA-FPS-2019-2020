@@ -30,6 +30,12 @@ void Game::loadResources()
     }
     {
         Resources::Model model;
+        model.loadOBJ("resources/obj/singleTree.obj");
+        model.setupModel();
+        engine.resourceManager.add(std::move(model), E_Model::E_TREE);
+    }
+    {
+        Resources::Model model;
         model.loadOBJ("resources/obj/dog.obj");
         for (Core::Maths::Vec3& pos : model.positions)
         {
@@ -69,12 +75,6 @@ void Game::loadResources()
         model.setupModel();
         engine.resourceManager.add(std::move(model), E_Model::E_GUN);
         engine.resourceManager.add(Resources::Texture{"resources/obj/M14warna.png"}, E_Texture::E_GUN);
-    }
-    {
-        Resources::Model model;
-        model.loadOBJ("resources/obj/singleTree.obj");
-        model.setupModel();
-        engine.resourceManager.add(std::move(model), E_Model::E_TREE);
     }
 
     engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
