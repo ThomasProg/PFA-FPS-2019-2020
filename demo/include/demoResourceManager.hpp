@@ -1,21 +1,22 @@
 #ifndef _DEMO_RESOURCE_MANAGER_HPP_
 #define _DEMO_RESOURCE_MANAGER_HPP_
 
-#include "enumedResourceManager.hpp"
+#include "resourceManager.hpp"
 
 // User custom container type :
-using DemoResourceManagerContainerType = unsigned int;
+using ContainerType = unsigned int;
 
 // Forward Declarations :
-enum class E_Model   : DemoResourceManagerContainerType;
-enum class E_Texture : DemoResourceManagerContainerType;
-enum class E_Shader  : DemoResourceManagerContainerType;
+enum class E_Model   : ContainerType;
+enum class E_Texture : ContainerType;
+enum class E_Shader  : ContainerType;
+enum class E_Audio   : ContainerType;
 
 // User custom typename
-using DemoResourceManager = EnumedResourceManager<E_Model, E_Texture, E_Shader, DemoResourceManagerContainerType>;
+using DemoResourceManager = Resources::ResourceManager<E_Model, E_Texture, E_Shader, E_Audio>;
 
 // User custom Enums :
-enum class E_Model : DemoResourceManager::ContainerCapacityType
+enum class E_Model : ContainerType
 {
     E_SPHERE = 0,
     E_BOX,
@@ -24,18 +25,23 @@ enum class E_Model : DemoResourceManager::ContainerCapacityType
     E_TREE,
 };
 
-enum class E_Texture : DemoResourceManager::ContainerCapacityType
+enum class E_Texture : ContainerType
 {
     E_DOG_TEXTURE = 0,
     E_GROUND,
     E_GUN,
 };
 
-enum class E_Shader : DemoResourceManager::ContainerCapacityType
+enum class E_Shader : ContainerType
 {
     E_FLAT = 0,
     E_TEXTURED,
     E_LIGHTED
+};
+
+enum class E_Audio : ContainerType
+{
+    E_PLAYER_FOOTSTEPS,
 };
 
 #endif
