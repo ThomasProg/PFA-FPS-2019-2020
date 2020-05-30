@@ -112,7 +112,7 @@ namespace Entity
               Physics::PhysicComponentInterface(&transform)
         {
             collider.isOverlap = true;
-            physicComp.collider.worldCollider.radius = 1.f;
+            physicComp.collider.worldCollider.radius = 2.f;
         }
 
         void inputs(const Core::Engine& engine) override;

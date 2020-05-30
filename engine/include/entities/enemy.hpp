@@ -44,11 +44,10 @@ namespace Entity
     {
     private:
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.5f;
-        // static constexpr float maxSpeed = 0.07f;
-        static constexpr float maxSpeed = 5.f;
+        static constexpr float maxSpeed = 7.5f;
 
         float angle = 0.f;
-        float speed = 2.f; 
+        float speed = 3.f; 
 
         float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 4.f;
@@ -62,7 +61,7 @@ namespace Entity
 
     public:
         EnemyState state;
-        float detectionRadius = 10.0f;
+        float detectionRadius = 20.0f;
         float attackRadius    = 2.f;
         float patrolRadius    = 5.f;
         Core::Maths::Vec3 position;

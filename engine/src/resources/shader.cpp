@@ -160,7 +160,7 @@ void Resources::Shader::linkLight(unsigned int lightID, const Renderer::LightDat
 {
     GLuint lightsID = glGetUniformBlockIndex(programID, "lightsBlock");
     if (lightsID == GL_INVALID_INDEX)   
-        std::cout << "\"lightsBlock\" variable doesn't exist or was removed!" << std::endl;
+        std::cout << "\"lightsBlock\" variable doesn't exist or was removed!\n";
         // Core::Debug::Log::addMessage(_LOG_ERROR_("\"lightsBlock\" variable doesn't exist or was removed!"), true);
     else 
     {

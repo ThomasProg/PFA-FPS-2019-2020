@@ -135,7 +135,7 @@ Physics::Shapes::Segment3D Entity::Player::getShootRay() const
 {
     Physics::Shapes::Segment3D seg;
 
-    seg.p1 = {0.f, 0, 0};
+    seg.p1 = {0.f, 0, -3};
     seg.p2 = {0.f, 0, -shootRayLength};
     seg.p1 = camera.transform.transformMatrixNode->worldData * seg.p1;
     seg.p2 = camera.transform.transformMatrixNode->worldData * seg.p2;

@@ -50,7 +50,7 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
     if (nbCurLights != -1)
         glUniform1i(nbCurLights, lightManager.lights.size());
     else 
-        std::cout << "Could not set uniform value : " "nbCUrrentLights" << std::endl;
+        std::cout << "Could not set uniform value : " "nbCUrrentLights\n";
         // Core::Debug::Log::addMessage(_LOG_ERROR_("Could not set uniform value : " "nbCurrentLights"));
 
     // ===== ===== ===== //

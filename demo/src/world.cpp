@@ -86,38 +86,53 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}});
-    entityGroup.addGround({{110, -30, 70}, {0.f,0,0}, {100,1,10}});
-    entityGroup.addGround({{220, -30, 110}, {0.f,0,0}, {10,1,50}});
+     Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
+     Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
+     Core::Maths::Vec4 stoneColor = {0.1f, 0.1f, 0.1f,1.f};
+
+    entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}}, grassColor);
+
+    entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
+    entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);
+
+    entityGroup.addGround({{74, -32, 70}, {0.f,0,0.2}, {10,1,10}}, grassColor);
+    
     // Boss plateform
-    entityGroup.addGround({{220, -30, 160+20}, {0.f,0,0}, {20,1,20}});
+    entityGroup.addGround({{100, -30, 70}, {0.f,0,0}, {20,1,20}}, grassColor);
 
-    entityGroup.addEnemy({{0.f, 0, 20}, {0.f,0,0}, {1,1,1}});
+    // Path block
+    {
+        entityGroup.addGround({{0, -30 + 0.1, 40}, {0.f,0,0}, {3.f,1,33.f}}, pathColor);
 
-    entityGroup.addEnemy({{0.f, 0, 60}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addGround({{19, -32 + 0.1, 70}, {0.f,0,-0.2}, {10.f,1,3.f}}, pathColor);
+        entityGroup.addGround({{45, -34 + 0.1, 70}, {0.f,0,0.f}, {20.f,1,3.f}}, pathColor);
+
+        entityGroup.addGround({{74, -32 + 0.1, 70}, {0.f,0,0.2}, {10.f,1,3.f}}, pathColor);
+        
+        // Boss plateform
+        entityGroup.addGround({{100, -30 + 0.1, 70}, {0.f,0,0}, {12.5,1,12.5}}, pathColor);
+    }
+
+    entityGroup.addEnemy({{0.f, 0, 35}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addEnemy({{0.f, 0, 50}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{-2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{60.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{62.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{64.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{62.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{62.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{60.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{50.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{52.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{54.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{180.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-
-    entityGroup.addEnemy({{220.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{220.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{220.f, 0, 68}, {0.f,0,0}, {1,1,1}});
-
-    entityGroup.addEnemy({{220.f, 0, 120}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{222.f, 0, 120}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{218.f, 0, 120}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{220.f, 0, 122}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{222.f, 0, 122}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{218.f, 0, 122}, {0.f,0,0}, {1,1,1}});
-
+    for (uint j = 0; j < 5; j++)
+    {
+        for (uint i = 0; i < 5; i++)
+        {
+            entityGroup.addEnemy({{100.f + float(i), 0, 70 + float(j)}, {0.f,0,0}, {1,1,1}});
+        }
+    }
 
     // === Add Player === //
     entityGroup.addPlayer({{0,0,10.0 + 0.0}});

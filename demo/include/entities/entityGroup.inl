@@ -24,7 +24,7 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
     player->camera.attachTo(player->transform);
     player->setTransform(transform);
 
-    player->camera.transform.transform.location.y = 2.f;
+    player->camera.transform.transform.location.y = 1.f;
 
     if (controller == nullptr)
         controller = player.get();

@@ -47,7 +47,7 @@ void Game::loadResources()
             // pos.y /= 1.3f;
 
             pos.z *= -1;
-            pos.y -= 0.2;
+            pos.y -= 1;
         }
 
         for (Core::Maths::Vec3& normal : model.normals)
