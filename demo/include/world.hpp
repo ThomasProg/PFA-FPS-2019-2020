@@ -77,7 +77,7 @@ private:
     /////////// UI ////////////////
     bool isPauseMenuOpen {false};
     bool inGame {true};
-    bool gOver {false};
+    bool gWin {false};
     int imageWidth = 0;
     int imageHeight = 0;
     GLuint imageText = 0;
