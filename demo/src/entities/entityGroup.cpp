@@ -103,7 +103,7 @@ void EntityGroup::removeEnemy(unsigned int index)
     enemies.pop_back();
 }
 
-void EntityGroup::colletGarbage()
+void EntityGroup::collectGarbage()
 {
     for (uint i = 0; i < enemies.size(); i++)
     {

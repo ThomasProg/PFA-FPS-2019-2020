@@ -64,7 +64,7 @@ public:
 
     void setKeys(bool isAzerty);
 
-    void colletGarbage();
+    void collectGarbage();
 };
 
 #include "entityGroup.inl"

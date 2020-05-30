@@ -404,7 +404,7 @@ void World::update()
         // if (isEditorMode)
         //     updateEditorFunctions();
 
-        entityGroup.colletGarbage();
+        entityGroup.collectGarbage();
     }
 }
 
