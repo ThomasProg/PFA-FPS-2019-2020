@@ -88,9 +88,14 @@ void World::makeNewLevel()
 
      Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
      Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
-     Core::Maths::Vec4 stoneColor = {0.1f, 0.1f, 0.1f,1.f};
+     Core::Maths::Vec4 stoneColor = {0.2f, 0.2f, 0.2f,1.f};
 
     entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}}, grassColor);
+    entityGroup.addGround({{20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
+    entityGroup.addGround({{-20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
+    entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addTree({{-8, -30, 20}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
 
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
     entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);

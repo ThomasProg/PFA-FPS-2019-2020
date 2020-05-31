@@ -29,10 +29,11 @@ void Game::loadResources()
         engine.resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
     }
     {
-        Resources::Model model;
-        model.loadOBJ("resources/obj/singleTree.obj");
-        model.setupModel();
-        engine.resourceManager.add(std::move(model), E_Model::E_TREE);
+        engine.resourceManager.add(Resources::Model{"resources/obj/singleTree.obj"}, E_Model::E_TREE);
+        engine.resourceManager.add(Resources::Model{"resources/obj/treeWithoutLeaves.obj"}, E_Model::E_TREE_NO_LEAVES);
+        engine.resourceManager.add(Resources::Model{"resources/obj/rock1.obj"}, E_Model::E_ROCK1);
+        engine.resourceManager.add(Resources::Model{"resources/obj/rock2.obj"}, E_Model::E_ROCK2);
+        engine.resourceManager.add(Resources::Model{"resources/obj/grass.obj"}, E_Model::E_GRASS);
     }
     {
         Resources::Model model;

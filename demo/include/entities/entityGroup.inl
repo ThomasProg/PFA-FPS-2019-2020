@@ -37,10 +37,6 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
 template<class... ARGS>
 Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS&&... groundArgs)
 {
-    // Entity::Ground* ground = new Entity::Ground(std::forward<ARGS>(groundArgs)...);
-    // if (ground == nullptr)
-    //     return nullptr;
-
     grounds.emplace_back(std::make_unique<Entity::Ground>(std::forward<ARGS>(groundArgs)...));
     Entity::Ground* ground = grounds.back().get();
 
@@ -54,12 +50,49 @@ Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS
 }
 
 template<class... ARGS>
+Entity::Decoration* EntityGroup::addDecoration(const Physics::Transform& transform, 
+                                               E_Model model, 
+                                               const Core::Maths::Vec4& color, 
+                                               ARGS&&... decoArgs)
+{
+    decorations.emplace_back(std::make_unique<Entity::Decoration>(std::forward<ARGS>(decoArgs)...));
+    Entity::Decoration* deco = decorations.back().get();
+
+    deco->setResources(engine.resourceManager, model);
+    deco->mesh.color = color;
+    deco->setTransformParent(root);            
+    deco->setTransform(transform);
+
+    deco->addRendering(engine.rendererSystem);
+    deco->addCollisions(engine.physicsSystem);
+    return deco;
+}
+
+template<class... ARGS>
+Entity::Decoration* EntityGroup::addTree(const Physics::Transform& transform, ARGS&&... decoArgs)
+{
+    Entity::Decoration* tree = addDecoration(transform, 
+                                             E_Model::E_TREE, 
+                                             Core::Maths::Vec4{0.1f, 0.450f, 0.1f,1}, 
+                                             std::forward<ARGS>(decoArgs)...);
+
+    return tree;
+}
+
+template<class... ARGS>
+Entity::Decoration* EntityGroup::addRock(const Physics::Transform& transform, ARGS&&... decoArgs)
+{
+    Entity::Decoration* rock = addDecoration(transform, 
+                                             E_Model::E_ROCK2, 
+                                             Core::Maths::Vec4{0.4f, 0.4f, 0.4f,1}, 
+                                             std::forward<ARGS>(decoArgs)...);
+
+    return rock;
+}
+
+template<class... ARGS>
 Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&... enemyArgs)
 { 
-    // Entity::Enemy* enemy = new Entity::Enemy();
-    // if (enemy == nullptr)
-    //     return nullptr;
-
     enemies.emplace_back(std::make_unique<Entity::Enemy>(std::forward<ARGS>(enemyArgs)...));
     Entity::Enemy* enemy = enemies.back().get();
 

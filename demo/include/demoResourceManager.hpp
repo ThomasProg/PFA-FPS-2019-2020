@@ -23,6 +23,10 @@ enum class E_Model : ContainerType
     E_DOG,
     E_GUN,
     E_TREE,
+    E_TREE_NO_LEAVES,
+    E_ROCK1,
+    E_ROCK2,
+    E_GRASS,
 };
 
 enum class E_Texture : ContainerType

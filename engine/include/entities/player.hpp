@@ -54,7 +54,7 @@ namespace Entity
     {
     private:
         static constexpr float movementSpeed  = 10.f * 1.f;
-        static constexpr float jumpSpeed      = 10.0f;
+        static constexpr float jumpSpeed      = 7.0f;
         static constexpr float jumpCoyoteTime = 0.1f;
         static constexpr float shootRayLength = 100.f;
 
@@ -112,7 +112,7 @@ namespace Entity
               Physics::PhysicComponentInterface(&transform)
         {
             collider.isOverlap = true;
-            physicComp.collider.worldCollider.radius = 2.f;
+            physicComp.collider.worldCollider.radius = 1.f;
         }
 
         void inputs(const Core::Engine& engine) override;
