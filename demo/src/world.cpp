@@ -102,7 +102,11 @@ void World::makeNewLevel()
     entityGroup.addGround({{20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
     entityGroup.addGround({{-20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addTree({{-8, -30, 20}, {0.f,0,0}, {1,1,1}});
+    for (uint i = 0; i < 10; i++)
+    {
+        entityGroup.addTree({{6+sin(float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addTree({{-6-sin(10+float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
+    }
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
 
     entityGroup.addFirefly({{10, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});

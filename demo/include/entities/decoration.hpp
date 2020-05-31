@@ -1,7 +1,9 @@
 #ifndef _DECORATION_HPP_
 #define _DECORATION_HPP_
 
-#include "staticObject.hpp"
+#include "collisionComponentInterface.hpp"
+#include "renderableInterface.hpp"
+#include "transformInterface.hpp"
 
 #include  "demoResourceManager.hpp"
 
