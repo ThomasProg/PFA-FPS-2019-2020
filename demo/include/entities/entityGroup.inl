@@ -65,7 +65,6 @@ Entity::Decoration* EntityGroup::addDecoration(const Physics::Transform& transfo
     deco->setTransform(transform);
 
     deco->addRendering(engine.rendererSystem);
-    deco->addCollisions(engine.physicsSystem);
     return deco;
 }
 

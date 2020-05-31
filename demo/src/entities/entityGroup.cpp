@@ -25,7 +25,6 @@ EntityGroup::~EntityGroup()
     {
         {
             engine.rendererSystem.erase(deco->meshIt);
-            engine.physicsSystem.erase(deco->colliderIt);
         }
     }
 

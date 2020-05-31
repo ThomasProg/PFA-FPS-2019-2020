@@ -105,7 +105,7 @@ void World::makeNewLevel()
     entityGroup.addTree({{-8, -30, 20}, {0.f,0,0}, {1,1,1}});
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addFirefly({{9, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
+    entityGroup.addFirefly({{10, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
     {
         Renderer::Light& l = entityGroup.addLight();
         l.lightData.location = {9, -26, 20, 1};
@@ -118,7 +118,7 @@ void World::makeNewLevel()
     entityGroup.addGround({{74, -32, 70}, {0.f,0,0.2}, {10,1,10}}, grassColor);
     
     // Boss plateform
-    entityGroup.addGround({{100, -30, 70}, {0.f,0,0}, {20,1,20}}, grassColor);
+    entityGroup.addGround({{103, -30.2, 70}, {0.f,0,0}, {20,1,20}}, grassColor);
 
     // Path block
     {
@@ -130,7 +130,7 @@ void World::makeNewLevel()
         entityGroup.addGround({{74, -32 + 0.1, 70}, {0.f,0,0.2}, {10.f,1,3.f}}, pathColor);
         
         // Boss plateform
-        entityGroup.addGround({{100, -30 + 0.1, 70}, {0.f,0,0}, {12.5,1,12.5}}, pathColor);
+        entityGroup.addGround({{103, -30.2 + 0.1, 70}, {0.f,0,0}, {12.5,1,12.5}}, pathColor);
     }
 
     entityGroup.addEnemy({{0.f, 0, 35}, {0.f,0,0}, {1,1,1}});

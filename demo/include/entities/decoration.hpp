@@ -7,17 +7,18 @@
 
 namespace Entity
 {
-    class Decoration final : public StaticObject
+    class Decoration final : public Physics::TransformInterface,
+                             public Renderer::RenderableInterface
     {
     public:
         Decoration() 
-            : StaticObject()
+            : Renderer::RenderableInterface(&transform)
         {
             mesh.color = Core::Maths::Vec4{0.1f, 0.450f, 0.1f,1};
         }
 
         Decoration(const Core::Maths::Vec4& color) 
-            : StaticObject()
+            : Renderer::RenderableInterface(&transform)
         {
             mesh.color = color;
         }
