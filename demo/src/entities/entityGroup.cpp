@@ -21,6 +21,14 @@ EntityGroup::~EntityGroup()
         }
     }
 
+    for (std::unique_ptr<Entity::Decoration>& deco : decorations)
+    {
+        {
+            engine.rendererSystem.erase(deco->meshIt);
+            engine.physicsSystem.erase(deco->colliderIt);
+        }
+    }
+
     for (std::unique_ptr<Entity::Enemy>& enemy : enemies)
     {
         // if (enemy)
