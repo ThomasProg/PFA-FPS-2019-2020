@@ -59,6 +59,7 @@ public:
     template<class... ARGS>
     Entity::Decoration* addDecoration(const Physics::Transform& transform, 
                                       E_Model model, 
+                                      E_Shader shader,
                                       const Core::Maths::Vec4& color, 
                                       ARGS&&... groundArgs);
 
@@ -67,6 +68,9 @@ public:
 
     template<class... ARGS>
     Entity::Decoration* addRock(const Physics::Transform& transform, ARGS&&... decoArgs);
+
+    template<class... ARGS>
+    Entity::Decoration* addFirefly(const Physics::Transform& transform, ARGS&&... decoArgs);
 
     template<class... ARGS>
     Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... enemyArgs);

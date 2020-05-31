@@ -52,13 +52,14 @@ Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS
 template<class... ARGS>
 Entity::Decoration* EntityGroup::addDecoration(const Physics::Transform& transform, 
                                                E_Model model, 
+                                               E_Shader shader,
                                                const Core::Maths::Vec4& color, 
                                                ARGS&&... decoArgs)
 {
     decorations.emplace_back(std::make_unique<Entity::Decoration>(std::forward<ARGS>(decoArgs)...));
     Entity::Decoration* deco = decorations.back().get();
 
-    deco->setResources(engine.resourceManager, model);
+    deco->setResources(engine.resourceManager, model, shader);
     deco->mesh.color = color;
     deco->setTransformParent(root);            
     deco->setTransform(transform);
@@ -73,6 +74,7 @@ Entity::Decoration* EntityGroup::addTree(const Physics::Transform& transform, AR
 {
     Entity::Decoration* tree = addDecoration(transform, 
                                              E_Model::E_TREE, 
+                                             E_Shader::E_LIGHTED_FLATCOLOR,
                                              Core::Maths::Vec4{0.1f, 0.450f, 0.1f,1}, 
                                              std::forward<ARGS>(decoArgs)...);
 
@@ -84,7 +86,20 @@ Entity::Decoration* EntityGroup::addRock(const Physics::Transform& transform, AR
 {
     Entity::Decoration* rock = addDecoration(transform, 
                                              E_Model::E_ROCK2, 
+                                             E_Shader::E_LIGHTED_FLATCOLOR,
                                              Core::Maths::Vec4{0.4f, 0.4f, 0.4f,1}, 
+                                             std::forward<ARGS>(decoArgs)...);
+
+    return rock;
+}
+
+template<class... ARGS>
+Entity::Decoration* EntityGroup::addFirefly(const Physics::Transform& transform, ARGS&&... decoArgs)
+{
+    Entity::Decoration* rock = addDecoration(transform, 
+                                             E_Model::E_ROCK2, 
+                                             E_Shader::E_FLAT,
+                                             Core::Maths::Vec4{0.952f, 1.f, 0.38f,1}, 
                                              std::forward<ARGS>(decoArgs)...);
 
     return rock;

@@ -40,7 +40,8 @@ enum class E_Shader : ContainerType
 {
     E_FLAT = 0,
     E_TEXTURED,
-    E_LIGHTED
+    E_LIGHTED,
+    E_LIGHTED_FLATCOLOR,
 };
 
 enum class E_Audio : ContainerType

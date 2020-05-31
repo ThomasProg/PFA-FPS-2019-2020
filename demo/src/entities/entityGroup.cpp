@@ -3,14 +3,7 @@
 EntityGroup::EntityGroup(Core::Engine& engine)
     : engine(engine)
 {
-    lightManager.lights.emplace_back();
-    lightManager.lights.emplace_back();
-    {
-        Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
-        l.location = {20.f, -27.f, 12, 0.0}; 
-        l.lightType = 3;
-        l.ambient = {0.7, 0.7,0.7,0};
-    }
+
 }
 
 EntityGroup::~EntityGroup()

@@ -86,6 +86,14 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
+    entityGroup.addLight();
+    {
+        Renderer::Light& l = entityGroup.addLight();
+        l.lightData.location = {20.f, -27.f, 12, 0.0}; 
+        l.lightData.lightType = 3;
+        l.lightData.ambient = {0.7, 0.7,0.7,0};
+    }
+
      Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
      Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
      Core::Maths::Vec4 stoneColor = {0.2f, 0.2f, 0.2f,1.f};
@@ -96,6 +104,13 @@ void World::makeNewLevel()
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
     entityGroup.addTree({{-8, -30, 20}, {0.f,0,0}, {1,1,1}});
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addFirefly({{9, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
+    {
+        Renderer::Light& l = entityGroup.addLight();
+        l.lightData.location = {9, -26, 20, 1};
+    }
+
 
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
     entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);

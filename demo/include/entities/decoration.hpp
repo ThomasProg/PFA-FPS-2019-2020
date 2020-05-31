@@ -22,7 +22,7 @@ namespace Entity
             mesh.color = color;
         }
 
-        void setResources(const DemoResourceManager&, E_Model model = E_Model::E_TREE, E_Shader shader = E_Shader::E_FLAT);
+        void setResources(const DemoResourceManager&, E_Model model = E_Model::E_TREE, E_Shader shader = E_Shader::E_LIGHTED_FLATCOLOR);
     };
 }
 
