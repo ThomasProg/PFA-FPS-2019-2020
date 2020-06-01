@@ -161,6 +161,132 @@ void Matrix4x4::normalizeScale()
     matrix[10] = axis3.z;
 }
 
+Matrix4x4 Matrix4x4::getInverse() const
+{
+    Matrix4x4 mInv;
+
+    mInv.matrix[0] = matrix[5]  * matrix[10] * matrix[15] - 
+                     matrix[5]  * matrix[11] * matrix[14] - 
+                     matrix[9]  * matrix[6]  * matrix[15] + 
+                     matrix[9]  * matrix[7]  * matrix[14] +
+                     matrix[13] * matrix[6]  * matrix[11] - 
+                     matrix[13] * matrix[7]  * matrix[10];
+
+    mInv.matrix[4] = -matrix[4]  * matrix[10] * matrix[15] + 
+                      matrix[4]  * matrix[11] * matrix[14] + 
+                      matrix[8]  * matrix[6]  * matrix[15] - 
+                      matrix[8]  * matrix[7]  * matrix[14] - 
+                      matrix[12] * matrix[6]  * matrix[11] + 
+                      matrix[12] * matrix[7]  * matrix[10];
+
+    mInv.matrix[8] = matrix[4]  * matrix[9] * matrix[15] - 
+                     matrix[4]  * matrix[11] * matrix[13] - 
+                     matrix[8]  * matrix[5] * matrix[15] + 
+                     matrix[8]  * matrix[7] * matrix[13] + 
+                     matrix[12] * matrix[5] * matrix[11] - 
+                     matrix[12] * matrix[7] * matrix[9];
+
+    mInv.matrix[12] = -matrix[4]  * matrix[9] * matrix[14] + 
+                       matrix[4]  * matrix[10] * matrix[13] +
+                       matrix[8]  * matrix[5] * matrix[14] - 
+                       matrix[8]  * matrix[6] * matrix[13] - 
+                       matrix[12] * matrix[5] * matrix[10] + 
+                       matrix[12] * matrix[6] * matrix[9];
+
+    mInv.matrix[1] = -matrix[1]  * matrix[10] * matrix[15] + 
+                      matrix[1]  * matrix[11] * matrix[14] + 
+                      matrix[9]  * matrix[2] * matrix[15] - 
+                      matrix[9]  * matrix[3] * matrix[14] - 
+                      matrix[13] * matrix[2] * matrix[11] + 
+                      matrix[13] * matrix[3] * matrix[10];
+
+    mInv.matrix[5] = matrix[0]  * matrix[10] * matrix[15] - 
+                     matrix[0]  * matrix[11] * matrix[14] - 
+                     matrix[8]  * matrix[2] * matrix[15] + 
+                     matrix[8]  * matrix[3] * matrix[14] + 
+                     matrix[12] * matrix[2] * matrix[11] - 
+                     matrix[12] * matrix[3] * matrix[10];
+
+    mInv.matrix[9] = -matrix[0]  * matrix[9] * matrix[15] + 
+                      matrix[0]  * matrix[11] * matrix[13] + 
+                      matrix[8]  * matrix[1] * matrix[15] - 
+                      matrix[8]  * matrix[3] * matrix[13] - 
+                      matrix[12] * matrix[1] * matrix[11] + 
+                      matrix[12] * matrix[3] * matrix[9];
+
+    mInv.matrix[13] = matrix[0]  * matrix[9] * matrix[14] - 
+                      matrix[0]  * matrix[10] * matrix[13] - 
+                      matrix[8]  * matrix[1] * matrix[14] + 
+                      matrix[8]  * matrix[2] * matrix[13] + 
+                      matrix[12] * matrix[1] * matrix[10] - 
+                      matrix[12] * matrix[2] * matrix[9];
+
+    mInv.matrix[2] = matrix[1]  * matrix[6] * matrix[15] - 
+                     matrix[1]  * matrix[7] * matrix[14] - 
+                     matrix[5]  * matrix[2] * matrix[15] + 
+                     matrix[5]  * matrix[3] * matrix[14] + 
+                     matrix[13] * matrix[2] * matrix[7] - 
+                     matrix[13] * matrix[3] * matrix[6];
+
+    mInv.matrix[6] = -matrix[0]  * matrix[6] * matrix[15] + 
+                      matrix[0]  * matrix[7] * matrix[14] + 
+                      matrix[4]  * matrix[2] * matrix[15] - 
+                      matrix[4]  * matrix[3] * matrix[14] - 
+                      matrix[12] * matrix[2] * matrix[7] + 
+                      matrix[12] * matrix[3] * matrix[6];
+
+    mInv.matrix[10] = matrix[0]  * matrix[5] * matrix[15] - 
+                      matrix[0]  * matrix[7] * matrix[13] - 
+                      matrix[4]  * matrix[1] * matrix[15] + 
+                      matrix[4]  * matrix[3] * matrix[13] + 
+                      matrix[12] * matrix[1] * matrix[7] - 
+                      matrix[12] * matrix[3] * matrix[5];
+
+    mInv.matrix[14] = -matrix[0]  * matrix[5] * matrix[14] + 
+                       matrix[0]  * matrix[6] * matrix[13] + 
+                       matrix[4]  * matrix[1] * matrix[14] - 
+                       matrix[4]  * matrix[2] * matrix[13] - 
+                       matrix[12] * matrix[1] * matrix[6] + 
+                       matrix[12] * matrix[2] * matrix[5];
+
+    mInv.matrix[3] = -matrix[1] * matrix[6] * matrix[11] + 
+                      matrix[1] * matrix[7] * matrix[10] + 
+                      matrix[5] * matrix[2] * matrix[11] - 
+                      matrix[5] * matrix[3] * matrix[10] - 
+                      matrix[9] * matrix[2] * matrix[7] + 
+                      matrix[9] * matrix[3] * matrix[6];
+
+    mInv.matrix[7] = matrix[0] * matrix[6] * matrix[11] - 
+                     matrix[0] * matrix[7] * matrix[10] - 
+                     matrix[4] * matrix[2] * matrix[11] + 
+                     matrix[4] * matrix[3] * matrix[10] + 
+                     matrix[8] * matrix[2] * matrix[7] - 
+                     matrix[8] * matrix[3] * matrix[6];
+
+    mInv.matrix[11] = -matrix[0] * matrix[5] * matrix[11] + 
+                       matrix[0] * matrix[7] * matrix[9] + 
+                       matrix[4] * matrix[1] * matrix[11] - 
+                       matrix[4] * matrix[3] * matrix[9] - 
+                       matrix[8] * matrix[1] * matrix[7] + 
+                       matrix[8] * matrix[3] * matrix[5];
+
+    mInv.matrix[15] = matrix[0] * matrix[5] * matrix[10] - 
+                      matrix[0] * matrix[6] * matrix[9] - 
+                      matrix[4] * matrix[1] * matrix[10] + 
+                      matrix[4] * matrix[2] * matrix[9] + 
+                      matrix[8] * matrix[1] * matrix[6] - 
+                      matrix[8] * matrix[2] * matrix[5];
+
+    float det = matrix[0] * mInv.matrix[0] + matrix[1] * mInv.matrix[4] + matrix[2] * mInv.matrix[8] + matrix[3] * mInv.matrix[12];
+
+    det = 1.0 / det;
+
+    for (uint i = 0; i < 16; i++)
+        mInv.matrix[i] = mInv.matrix[i] * det;
+
+    return mInv;
+}
+
 Matrix4x4 Matrix4x4::CreateScaleMatrix(Vec3 scale)
 {
     Matrix4x4 matrix;

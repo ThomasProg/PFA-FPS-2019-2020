@@ -38,6 +38,7 @@ namespace Core::Maths
         Vec3 getTranslationVector() const;
 
         void normalizeScale();
+        Matrix4x4 getInverse() const;
 
         static Matrix4x4 getProjectionMatrixOnZAxis(const float d);
         static Matrix4x4 CreatePerspectiveProjectionMatrix(int width, int height,float near,float far,float fov);
