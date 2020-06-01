@@ -80,29 +80,6 @@ Matrix4x4& Matrix4x4::operator=(Matrix4x4&& rhs)
     return *this;
 }
 
-Matrix4x4 Matrix4x4::operator*(const Matrix4x4& matrix) const
-{
-    assert(this->matrix != nullptr && matrix.matrix != nullptr);
-
-    Matrix4x4 resultMatrix;
-
-    for (unsigned int i = 0; i < this->nbLines; i++)
-    {
-        for (unsigned int j = 0; j < this->nbColumns; j++)
-        {
-            float result = 0.f;
-            for (unsigned int k = 0; k < this->nbColumns; k++)
-            {
-                result += this->matrix[i * nbColumns + k] 
-                        * matrix.matrix[j + k * nbColumns];    
-            }
-
-            resultMatrix.matrix[j + i * nbColumns] = result;
-        }
-    }
-    return resultMatrix;
-}
-
 Vec4 Matrix4x4::operator*(const Vec4& vect) const
 {
     Vec4 resultVect(0,0,0,0);

@@ -28,7 +28,7 @@ namespace Core::Maths
         Matrix4x4& operator=(const Matrix4x4& rhs);
         Matrix4x4& operator=(Matrix4x4&& rhs);
         Vec4 operator*(const Vec4&) const;
-        Matrix4x4 operator*(const Matrix4x4&) const;
+        inline Matrix4x4 operator*(const Matrix4x4&) const;
 
         Vec3 getXAxis() const;
         Vec3 getYAxis() const;
@@ -62,5 +62,6 @@ namespace Core::Maths
     std::ostream& operator<<(std::ostream& stream, const Matrix4x4& vector);
 }
 
+#include "matrix4x4.inl"
 
 #endif

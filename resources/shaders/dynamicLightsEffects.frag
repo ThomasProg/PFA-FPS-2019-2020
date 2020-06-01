@@ -1,6 +1,6 @@
 #version 330 core
 
-#define NB_MAX_LIGHTS 300
+#define NB_MAX_LIGHTS 10
 
 out vec4 out_color;
 in vec2 f_uvs;

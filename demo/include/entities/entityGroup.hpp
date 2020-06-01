@@ -26,7 +26,7 @@ public:
     Core::Engine& engine;
     Physics::TransformGraph root;
 
-    Renderer::LightManager lightManager {30};
+    Renderer::LightManager lightManager {10};
 
     // Save::SaveSystem saveSystem;
 

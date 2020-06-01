@@ -102,6 +102,7 @@ void World::makeNewLevel()
     entityGroup.addGround({{0, -30, -10}, {0.f,0,0}, {10,5,10}}, stoneColor);
     entityGroup.addGround({{20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
     entityGroup.addGround({{-20, -30, 40}, {0.f,0,0}, {10,5,60}}, stoneColor);
+    
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
     for (uint i = 0; i < 10; i++)
     {

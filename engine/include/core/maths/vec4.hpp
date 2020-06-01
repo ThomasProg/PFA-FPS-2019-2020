@@ -11,7 +11,15 @@ namespace Core::Maths
     struct Vec4
     {
     public:
-        float x, y, z, w;
+        union 
+        {
+            struct 
+            {
+                float x, y, z, w;
+            };
+
+            float components[4];
+        };
 
         Vec4(const Vec4& vec);
         Vec4(float x, float y, float z, float w);
