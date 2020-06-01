@@ -99,8 +99,9 @@ void World::makeNewLevel()
      Core::Maths::Vec4 stoneColor = {0.2f, 0.2f, 0.2f,1.f};
 
     entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}}, grassColor);
+    entityGroup.addGround({{0, -30, -10}, {0.f,0,0}, {10,5,10}}, stoneColor);
     entityGroup.addGround({{20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
-    entityGroup.addGround({{-20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
+    entityGroup.addGround({{-20, -30, 40}, {0.f,0,0}, {10,5,60}}, stoneColor);
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
     for (uint i = 0; i < 10; i++)
     {
@@ -118,11 +119,17 @@ void World::makeNewLevel()
 
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
     entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);
-
     entityGroup.addGround({{74, -32, 70}, {0.f,0,0.2}, {10,1,10}}, grassColor);
+
+    entityGroup.addGround({{25, -30, 90}, {0.f,0,0}, {60,5,10}}, stoneColor);
+    entityGroup.addGround({{50, -30, 50}, {0.f,0,0}, {35,5,10}}, stoneColor);
     
     // Boss plateform
     entityGroup.addGround({{103, -30.2, 70}, {0.f,0,0}, {20,1,20}}, grassColor);
+
+    entityGroup.addGround({{127, -30, 70}, {0.f,0,0}, {5,5,20}}, stoneColor);
+    entityGroup.addGround({{103, -30, 45}, {0.f,0,0}, {20,5,5}}, stoneColor);
+    entityGroup.addGround({{103, -30, 95}, {0.f,0,0}, {20,5,5}}, stoneColor);
 
     // Path block
     {
