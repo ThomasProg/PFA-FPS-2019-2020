@@ -3,7 +3,8 @@ MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 CXXFLAGS=-O0 -g -Wall -MMD -Wno-unused-function
 CXXFLAGS+=-Idemo/include -Idemo/include/entities\
 		  -Iengine/include -Iengine/include/core -Iengine/include/core/maths\
-		  -Iengine/include/resources -Iengine/include/renderer -Iengine/include/physics -Iengine/include/physics/shapes\
+		  -Iengine/include/resources -Iengine/include/resources/subShaders -Iengine/include/renderer\
+		  -Iengine/include/physics -Iengine/include/physics/shapes\
 		  -Iengine/include/core/debug -Iengine/include/core/dataStructure -Iengine/include/primitives\
 		  -Iengine/include/entities -Iengine/include/controllers -Iengine/include/save -Iengine/include/imgui
 
@@ -19,6 +20,7 @@ SRC=$(wildcard demo/src/*.cpp)\
 	$(wildcard engine/src/core/maths/*.cpp)\
 	$(wildcard engine/src/core/debug/*.cpp)\
 	$(wildcard engine/src/resources/*.cpp)\
+	$(wildcard engine/src/resources/subShaders/*.cpp)\
 	$(wildcard engine/src/renderer/*.cpp)\
 	$(wildcard engine/src/physics/*.cpp)\
 	$(wildcard engine/src/physics/shapes/*.cpp)\

@@ -13,13 +13,17 @@
 namespace Renderer
 {
     struct LightData;
+
+    struct Mesh;
+    struct Camera;
+    class LightManager;
 }
 
 namespace Resources 
 {
     class Shader
     {
-    private:
+    protected:
         // OpenGL shader program Index on GPU
         GLuint programID = 0;
 
@@ -33,6 +37,10 @@ namespace Resources
         Shader& operator=(Shader&&);
 
         ~Shader();
+
+        virtual void loadUniformValuesLocation() {}
+        virtual void useUniformValues(const Renderer::Camera& cam, const Renderer::Mesh& mesh) const {}
+        virtual void useLightsUniformValues(const Renderer::LightManager&) const {}
 
         // Loads vertex from file.
         // Filename is the file's name.

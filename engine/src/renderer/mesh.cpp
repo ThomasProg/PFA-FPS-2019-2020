@@ -33,37 +33,30 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
     if(texture != nullptr)
         glBindTexture(GL_TEXTURE_2D, texture->textureData);
 
-    Core::Maths::Matrix4x4 mvp = (cam.viewProjectionMatrix * transform->transformMatrixNode->worldData);
-    mvp.transposeThis();
+    // Core::Maths::Matrix4x4 mvp = (cam.viewProjectionMatrix * transform->transformMatrixNode->worldData);
+    // mvp.transposeThis();
     
     // ===== Lights ===== //
 
-    unsigned int i = 0;
-    for (const Renderer::Light& light : lightManager.lights)
-    {
-        // light.lightData.location = Core::Maths::Vec4{cam.transform.transformMatrixNode->worldData.getTranslationVector(), 1};
-        shader->linkLight(i, light.lightData, lightManager.lightsUniformBuffer);
-        ++i;
-    }
-
-    GLint nbCurLights = shader->getUniformLocation("nbCurrentLights");
-    if (nbCurLights != -1)
-        glUniform1i(nbCurLights, lightManager.lights.size());
-    else 
-        std::cout << "Could not set uniform value : " "nbCUrrentLights\n";
+    // GLint nbCurLights = shader->getUniformLocation("nbCurrentLights");
+    // if (nbCurLights != -1)
+    //     glUniform1i(nbCurLights, lightManager.lights.size());
+    // else 
+    //     std::cout << "Could not set uniform value : " "nbCUrrentLights\n";
         // Core::Debug::Log::addMessage(_LOG_ERROR_("Could not set uniform value : " "nbCurrentLights"));
 
-    // ===== ===== ===== //
+    // // ===== ===== ===== //
+    shader->useUniformValues(cam, *this);
 
-    GLuint mvpID = shader->getUniformLocation("mvp");  
-    glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
+    // GLuint mvpID = shader->getUniformLocation("mvp");  
+    // glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
-    GLuint modelID = shader->getUniformLocation("model");  
-    glUniformMatrix4fv(modelID, 1, GL_FALSE, &transform->transformMatrixNode->worldData.transpose()[0][0]);
+    // GLuint modelID = shader->getUniformLocation("model");  
+    // glUniformMatrix4fv(modelID, 1, GL_FALSE, &transform->transformMatrixNode->worldData.transpose()[0][0]);
 
-    GLuint colorID = shader->getUniformLocation("color");
+    // GLuint colorID = shader->getUniformLocation("color");
 
-    glUniform4fv(colorID, 1, &color[0]);
+    // glUniform4fv(colorID, 1, &color[0]);
 
     // TODO : Put a variable member to know what mode we have to use
     // glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, &model->indices[0]);

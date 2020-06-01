@@ -7,6 +7,7 @@
 #include "audio.hpp"
 
 #include <unordered_map>
+#include <memory>
 
 namespace Resources
 {
@@ -24,7 +25,7 @@ namespace Resources
     protected:
         std::unordered_map<MODEL_ENUM, Model> models;
         std::unordered_map<TEXTURE_ENUM, Texture> textures;
-        std::unordered_map<SHADER_ENUM, Shader> shaders;
+        std::unordered_map<SHADER_ENUM, std::unique_ptr<Shader>> shaders;
         std::unordered_map<AUDIO_ENUM, Audio> audios;
 
     public:
@@ -37,7 +38,7 @@ namespace Resources
         // Only available per move
         inline void add(Model&& model,     MODEL_ENUM key);
         inline void add(Texture&& texture, TEXTURE_ENUM key);
-        inline void add(Shader&& shader,   SHADER_ENUM key);
+        inline void add(std::unique_ptr<Shader>&& shader,   SHADER_ENUM key);
         inline void add(Audio&& audio,     AUDIO_ENUM key);
 
         void clear()
