@@ -168,3 +168,17 @@ Core::Maths::Vec3 Core::Maths::operator/(float f, const Core::Maths::Vec3& rhs)
 {
     return Core::Maths::Vec3{f / rhs.x, f / rhs.y, f / rhs.z};
 }
+
+
+constexpr inline Core::Maths::Vec3 Core::Maths::Vec3::getAxis(unsigned int index) noexcept
+{
+    constexpr std::array<Vec3, 3> axes = 
+    {
+        Core::Maths::Vec3{ 1, 0, 0 },
+        Core::Maths::Vec3{ 0, 1, 0 },
+        Core::Maths::Vec3{ 0, 0, 1 }
+    };
+
+    assert(index < getAxisNumber());
+    return axes[index];
+}

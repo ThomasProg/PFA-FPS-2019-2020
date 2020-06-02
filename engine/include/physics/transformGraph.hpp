@@ -7,43 +7,43 @@
 
 namespace Physics
 {
-    class TransformGraphFunctor
-    {
-    public:
-        Core::Maths::Matrix4x4 operator()(const Core::Maths::Matrix4x4& world, const Core::Maths::Matrix4x4& local)
-        {
-            return world * local;
-        }
-    };
+    // class TransformGraphFunctor
+    // {
+    // public:
+    //     Core::Maths::Matrix4x4 operator()(const Core::Maths::Matrix4x4& world, const Core::Maths::Matrix4x4& local)
+    //     {
+    //         return world * local;
+    //     }
+    // };
 
-    struct GraphKey 
-    {
-        unsigned int entityIndex;
+    // struct GraphKey 
+    // {
+    //     unsigned int entityIndex;
 
-        GraphKey() : entityIndex(0) {}
-        GraphKey(unsigned int index) : entityIndex(index) {}
+    //     GraphKey() : entityIndex(0) {}
+    //     GraphKey(unsigned int index) : entityIndex(index) {}
 
-        bool operator==(const GraphKey& rhs) const
-        {
-            return entityIndex == rhs.entityIndex;
-        }     
+    //     bool operator==(const GraphKey& rhs) const
+    //     {
+    //         return entityIndex == rhs.entityIndex;
+    //     }     
 
-        bool operator<(const GraphKey& rhs) const
-        {
-            return entityIndex < rhs.entityIndex;
-        }  
+    //     bool operator<(const GraphKey& rhs) const
+    //     {
+    //         return entityIndex < rhs.entityIndex;
+    //     }  
 
-        GraphKey operator+(const unsigned int rhs)
-        {
-            return GraphKey{entityIndex + rhs};
-        }     
+    //     GraphKey operator+(const unsigned int rhs)
+    //     {
+    //         return GraphKey{entityIndex + rhs};
+    //     }     
 
-        GraphKey& operator++()
-        {
-            ++entityIndex;
-            return *this;
-        }           
-    };
+    //     GraphKey& operator++()
+    //     {
+    //         ++entityIndex;
+    //         return *this;
+    //     }           
+    // };
     
     // class DataSaverAndLoader
     // {
@@ -73,16 +73,16 @@ namespace Physics
     using TransformGraph = Core::DataStructure::Graph;//<Core::Maths::Matrix4x4, TransformGraphFunctor, DataSaverAndLoader, GraphKey>;
 }
 
-namespace std
-{
-    template <>
-    struct hash<Physics::GraphKey>
-    {
-        inline std::size_t operator()(const Physics::GraphKey& k) const
-        {
-            return k.entityIndex;
-        }
-    };
-}
+// namespace std
+// {
+//     template <>
+//     struct hash<Physics::GraphKey>
+//     {
+//         inline std::size_t operator()(const Physics::GraphKey& k) const
+//         {
+//             return k.entityIndex;
+//         }
+//     };
+// }
 
 #endif

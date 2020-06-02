@@ -31,6 +31,8 @@ namespace Core::Maths
         inline Matrix4x4 operator*(const Matrix4x4&) const;
         inline static void multiply(const Matrix4x4& lhs, const Matrix4x4& rhs, Matrix4x4& resultBuffer);
 
+        static constexpr inline void swap(Core::Maths::Matrix4x4& lhs, Core::Maths::Matrix4x4& rhs) noexcept;
+
         Vec3 getXAxis() const;
         Vec3 getYAxis() const;
         Vec3 getZAxis() const;

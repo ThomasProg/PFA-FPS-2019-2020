@@ -108,7 +108,7 @@ namespace Core::Maths
 
 		Core::Maths::Vec3& operator/=(const float rhs);
 
-		inline Vec3& operator*=(const float rhs)
+		constexpr inline Vec3& operator*=(const float rhs) noexcept
 		{
 			x *= rhs;
 			y *= rhs;
@@ -116,7 +116,7 @@ namespace Core::Maths
 			return *this;
 		}
 
-		inline Vec3& operator-=(const float rhs)
+		constexpr inline Vec3& operator-=(const float rhs) noexcept
 		{
 			x -= rhs;
 			y -= rhs;
@@ -124,7 +124,7 @@ namespace Core::Maths
 			return *this;
 		}
 
-		inline Vec3& operator+=(const float rhs)
+		constexpr inline Vec3& operator+=(const float rhs) noexcept
 		{
 			x += rhs;
 			y += rhs;
@@ -132,49 +132,27 @@ namespace Core::Maths
 			return *this;
 		}
 
-		inline float operator[](unsigned int index) const
+		inline float operator[](unsigned int index) const noexcept
 		{
-			assert(index < 3);
+			assert(index < getAxisNumber());
 			return components[index];
 		}
 
-		inline float& operator[](unsigned int index) 
+		inline float& operator[](unsigned int index) noexcept
 		{
-			assert(index < 3);
+			assert(index < getAxisNumber());
 			return components[index];
 		}
 
+		constexpr inline static Vec3 getAxis(unsigned int index) noexcept;
 
-		inline static Vec3 getAxis(unsigned int index)
-		{
-			assert(index < 3);
-
-			switch (index)
-			{
-			case 0:
-				return Vec3{1, 0, 0};
-			
-			case 1:
-				return Vec3{0, 1, 0};
-
-			case 2:
-				return Vec3{0, 0, 1};
-
-			default:
-				break;
-			}
-
-			// will never be executed
-			return Core::Maths::Vec3{0.f, 0, 0};
-		}
-
-		constexpr inline static unsigned int getAxisNumber()
+		constexpr inline static unsigned int getAxisNumber() noexcept
 		{
 			return 3;
 		}
 	};
-	Core::Maths::Vec3 operator*(const Core::Maths::Vec3&, float);
-	Core::Maths::Vec3 operator*(float, const Core::Maths::Vec3&);
+	inline Core::Maths::Vec3 operator*(const Core::Maths::Vec3&, float);
+	inline Core::Maths::Vec3 operator*(float, const Core::Maths::Vec3&);
 	
 	inline Core::Maths::Vec3 operator/(float, const Core::Maths::Vec3&);
 

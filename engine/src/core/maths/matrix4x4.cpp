@@ -67,7 +67,7 @@ Matrix4x4& Matrix4x4::operator=(const Matrix4x4& rhs)
 Matrix4x4& Matrix4x4::operator=(Matrix4x4&& rhs)
 {
     if (this->matrix != nullptr)
-        delete[] this->matrix;
+        delete[] this->matrix; 
 
     this->matrix = rhs.matrix; 
     rhs.matrix   = nullptr;

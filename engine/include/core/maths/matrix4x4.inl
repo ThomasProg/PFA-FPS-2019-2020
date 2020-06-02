@@ -46,3 +46,10 @@ inline void Core::Maths::Matrix4x4::multiply(const Core::Maths::Matrix4x4& lhs, 
         }
     }
 }
+
+constexpr inline void Core::Maths::Matrix4x4::swap(Core::Maths::Matrix4x4& lhs, Core::Maths::Matrix4x4& rhs) noexcept
+{
+    float* temp = lhs.matrix;
+    lhs.matrix = rhs.matrix;
+    rhs.matrix = temp;
+}
