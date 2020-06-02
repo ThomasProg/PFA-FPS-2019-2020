@@ -5,7 +5,7 @@ inline constexpr bool Resources::Shader::isValid() const noexcept
     return programID != 0;
 }
 
-inline GLuint Resources::Shader::getUniformLocation(const char* str) const
+inline GLint Resources::Shader::getUniformLocation(const char* str) const
 {
     return glGetUniformLocation(programID, str);
 }

@@ -76,7 +76,7 @@ namespace Resources
 
         inline void use() const;
 
-        inline GLuint getUniformLocation(const char* str) const;
+        inline GLint getUniformLocation(const char* str) const;
     };
 }
 
