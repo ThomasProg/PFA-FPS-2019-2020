@@ -10,6 +10,7 @@ namespace Resources
     private:
         GLint lightsBlockID;     // index of "lightsBlock"
         GLint nbCurrentLightsID; // index of "nbCurrentLights"
+        
         GLint mvpID;             // index of "mvp"
         GLint modelID;           // index of "model"
         GLint colorID;           // index of "color"

@@ -16,6 +16,8 @@ void Resources::PhongFlat::loadUniformValuesLocation()
     modelID = getUniformLocation("model");  
 
     colorID = getUniformLocation("color");
+
+    lightsBlockID = glGetUniformBlockIndex(programID, "lightsBlock");
 }
 
 void Resources::PhongFlat::useUniformValues(const Renderer::Camera& cam, const Renderer::Mesh& mesh) const
@@ -40,4 +42,19 @@ void Resources::PhongFlat::useUniformValues(const Renderer::Camera& cam, const R
 void Resources::PhongFlat::useLightsUniformValues(const Renderer::LightManager& lightManager) const 
 {
     glUniform1i(nbCurrentLightsID, lightManager.lights.size());
+
+    for (uint i = 0; i < lightManager.lights.size(); i++)
+    {
+        // if (lightsBlockID == GL_INVALID_INDEX)   
+        //     std::cout << "\"lightsBlock\" variable doesn't exist or was removed!\n";
+        //     // Core::Debug::Log::addMessage(_LOG_ERROR_("\"lightsBlock\" variable doesn't exist or was removed!"), true);
+        // else 
+        // {
+            glUniformBlockBinding(programID, lightsBlockID, 0);
+
+            glBindBuffer(GL_UNIFORM_BUFFER, lightManager.lightsUniformBuffer);
+            glBufferSubData(GL_UNIFORM_BUFFER, i * sizeof(Renderer::LightData), sizeof(Renderer::LightData), &lightManager.lights[i]);
+            glBindBufferBase(GL_UNIFORM_BUFFER, lightsBlockID, lightManager.lightsUniformBuffer);
+        // }
+    }
 }
