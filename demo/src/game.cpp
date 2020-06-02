@@ -9,6 +9,9 @@
 
 #include "primitives.hpp"
 
+#include "phongFlat.hpp"
+#include "flatShader.hpp"
+
 Game::Game()
 {
     loadResources();
@@ -79,10 +82,10 @@ void Game::loadResources()
     }
 
     {
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"}, E_Shader::E_LIGHTED_FLATCOLOR);
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}, E_Shader::E_LIGHTED);
+        engine.resourceManager.add(std::make_unique<Resources::FlatShader>(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}), E_Shader::E_FLAT);
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"}), E_Shader::E_LIGHTED_FLATCOLOR);
+        engine.resourceManager.add(std::make_unique<Resources::Shader>(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}), E_Shader::E_TEXTURED);
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}), E_Shader::E_LIGHTED);
     }
 
     {

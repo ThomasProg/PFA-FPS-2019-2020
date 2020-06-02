@@ -1,4 +1,5 @@
 #include "rendererSystem.hpp"
+#include "lightManager.hpp"
 
 #include "shader.hpp"
 
@@ -43,6 +44,15 @@ void Renderer::RendererSystem::draw(const Camera& camera, Renderer::LightManager
             {
                 mesh->shader->use();
                 lastShader = mesh->shader;
+                
+                lastShader->useLightsUniformValues(lightManager);
+
+                // for (uint i = 0; i < lightManager.lights.size(); i++)
+                // {
+                //     // light.lightData.location = Core::Maths::Vec4{cam.transform.transformMatrixNode->worldData.getTranslationVector(), 1};
+                //     lastShader->linkLight(i, lightManager.lights[i].lightData, lightManager.lightsUniformBuffer);
+                // }
+                // lastShader->linkLight2(lightManager);
             }
             
             mesh->draw(camera, lightManager);

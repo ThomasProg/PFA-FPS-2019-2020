@@ -11,8 +11,8 @@ template<typename MODEL_ENUM,typename TEXTURE_ENUM,typename SHADER_ENUM,typename
 inline const Resources::Shader& 
     Resources::ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AUDIO_ENUM>::get(SHADER_ENUM id) const
 {
-    assert(shaders.count(id) == 1);
-    return shaders.at(id);
+    assert(shaders.count(id) == 1 && shaders.at(id).get() != nullptr);
+    return *shaders.at(id).get();
 }
 
 template<typename MODEL_ENUM,typename TEXTURE_ENUM,typename SHADER_ENUM,typename AUDIO_ENUM>
@@ -45,7 +45,7 @@ inline void Resources::ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AU
 }
 
 template<typename MODEL_ENUM,typename TEXTURE_ENUM,typename SHADER_ENUM,typename AUDIO_ENUM>
-inline void Resources::ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AUDIO_ENUM>::add(Resources::Shader&& shader, SHADER_ENUM key)
+inline void Resources::ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AUDIO_ENUM>::add(std::unique_ptr<Shader>&& shader, SHADER_ENUM key)
 {
     shaders.emplace(std::make_pair(key, std::move(shader)));
 }
