@@ -53,10 +53,8 @@ Matrix4x4& Matrix4x4::operator=(const Matrix4x4& rhs)
     // LOGIC_ASSERT(this->nbColumns == rhs.nbColumns && this->nbLines == rhs.nbLines, 
     //             "Height and Width should already be the same if they are both Matrix4x4");
 
-    if (this->matrix != nullptr)
-        delete[] this->matrix;
-
-    this->matrix = new float[nbElements];
+    if (this->matrix == nullptr)
+        this->matrix = new float[nbElements];
 
     for (unsigned int i = 0; i < rhs.nbElements; ++i)
     {
@@ -82,12 +80,11 @@ Matrix4x4& Matrix4x4::operator=(Matrix4x4&& rhs)
 
 Vec4 Matrix4x4::operator*(const Vec4& vect) const
 {
-    Vec4 resultVect(0,0,0,0);
+    Vec4 resultVect{0,0,0,0};
     for (unsigned int i = 0; i < nbLines; i++)
     {
         for (unsigned int j = 0; j < nbColumns; j++)
             resultVect[i] += matrix[(i*nbColumns)+j]*vect[j];  
-        
     }
     return resultVect;
 }

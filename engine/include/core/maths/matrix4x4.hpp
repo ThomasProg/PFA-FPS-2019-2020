@@ -29,6 +29,7 @@ namespace Core::Maths
         Matrix4x4& operator=(Matrix4x4&& rhs);
         Vec4 operator*(const Vec4&) const;
         inline Matrix4x4 operator*(const Matrix4x4&) const;
+        inline static void multiply(const Matrix4x4& lhs, const Matrix4x4& rhs, Matrix4x4& resultBuffer);
 
         Vec3 getXAxis() const;
         Vec3 getYAxis() const;

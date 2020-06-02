@@ -84,7 +84,7 @@ namespace Core::DataStructure
             if (isDirty)
             {
                 if (parent != nullptr)
-                    worldData = parent->getWorldMatrix() * localData;
+                    Core::Maths::Matrix4x4::multiply(parent->getWorldMatrix(), localData, worldData);
                 else 
                     worldData = localData;
 
