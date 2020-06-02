@@ -24,7 +24,7 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
     player->camera.attachTo(player->transform);
     player->setTransform(transform);
 
-    player->camera.transform.transform.location.y = 2.f;
+    player->camera.transform.transform.location.y = 1.f;
 
     if (controller == nullptr)
         controller = player.get();
@@ -37,10 +37,6 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
 template<class... ARGS>
 Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS&&... groundArgs)
 {
-    // Entity::Ground* ground = new Entity::Ground(std::forward<ARGS>(groundArgs)...);
-    // if (ground == nullptr)
-    //     return nullptr;
-
     grounds.emplace_back(std::make_unique<Entity::Ground>(std::forward<ARGS>(groundArgs)...));
     Entity::Ground* ground = grounds.back().get();
 
@@ -54,12 +50,63 @@ Entity::Ground* EntityGroup::addGround(const Physics::Transform& transform, ARGS
 }
 
 template<class... ARGS>
+Entity::Decoration* EntityGroup::addDecoration(const Physics::Transform& transform, 
+                                               E_Model model, 
+                                               E_Shader shader,
+                                               const Core::Maths::Vec4& color, 
+                                               ARGS&&... decoArgs)
+{
+    decorations.emplace_back(std::make_unique<Entity::Decoration>(std::forward<ARGS>(decoArgs)...));
+    Entity::Decoration* deco = decorations.back().get();
+
+    deco->setResources(engine.resourceManager, model, shader);
+    deco->mesh.color = color;
+    deco->setTransformParent(root);            
+    deco->setTransform(transform);
+
+    deco->addRendering(engine.rendererSystem);
+    return deco;
+}
+
+template<class... ARGS>
+Entity::Decoration* EntityGroup::addTree(const Physics::Transform& transform, ARGS&&... decoArgs)
+{
+    Entity::Decoration* tree = addDecoration(transform, 
+                                             E_Model::E_TREE, 
+                                             E_Shader::E_LIGHTED_FLATCOLOR,
+                                             Core::Maths::Vec4{0.1f, 0.450f, 0.1f,1}, 
+                                             std::forward<ARGS>(decoArgs)...);
+
+    return tree;
+}
+
+template<class... ARGS>
+Entity::Decoration* EntityGroup::addRock(const Physics::Transform& transform, ARGS&&... decoArgs)
+{
+    Entity::Decoration* rock = addDecoration(transform, 
+                                             E_Model::E_ROCK2, 
+                                             E_Shader::E_LIGHTED_FLATCOLOR,
+                                             Core::Maths::Vec4{0.4f, 0.4f, 0.4f,1}, 
+                                             std::forward<ARGS>(decoArgs)...);
+
+    return rock;
+}
+
+template<class... ARGS>
+Entity::Decoration* EntityGroup::addFirefly(const Physics::Transform& transform, ARGS&&... decoArgs)
+{
+    Entity::Decoration* rock = addDecoration(transform, 
+                                             E_Model::E_ROCK2, 
+                                             E_Shader::E_FLAT,
+                                             Core::Maths::Vec4{0.952f, 1.f, 0.38f,1}, 
+                                             std::forward<ARGS>(decoArgs)...);
+
+    return rock;
+}
+
+template<class... ARGS>
 Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&... enemyArgs)
 { 
-    // Entity::Enemy* enemy = new Entity::Enemy();
-    // if (enemy == nullptr)
-    //     return nullptr;
-
     enemies.emplace_back(std::make_unique<Entity::Enemy>(std::forward<ARGS>(enemyArgs)...));
     Entity::Enemy* enemy = enemies.back().get();
 

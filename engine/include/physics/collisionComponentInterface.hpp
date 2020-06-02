@@ -17,7 +17,7 @@ namespace Physics
         CollisionComponentInterface() = delete;
         CollisionComponentInterface(Physics::GTransform* transform);
 
-        virtual void colliderOnCollisionEnter (const SegmentHit&)
+        virtual void colliderOnCollisionEnter (const Physics::Shapes::SegmentHit&)
         {
             
         }
@@ -32,7 +32,7 @@ namespace Physics
 
         void addCollisions(Physics::PhysicsSystem& physicsSystem)
         {
-            colliderIt = physicsSystem.addCollider<Box>(this);
+            colliderIt = physicsSystem.addCollider<Physics::Shapes::Box>(this);
         }
     };
 }

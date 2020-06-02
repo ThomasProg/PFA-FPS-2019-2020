@@ -29,6 +29,13 @@ void Game::loadResources()
         engine.resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
     }
     {
+        engine.resourceManager.add(Resources::Model{"resources/obj/singleTree.obj"}, E_Model::E_TREE);
+        engine.resourceManager.add(Resources::Model{"resources/obj/treeWithoutLeaves.obj"}, E_Model::E_TREE_NO_LEAVES);
+        engine.resourceManager.add(Resources::Model{"resources/obj/rock1.obj"}, E_Model::E_ROCK1);
+        engine.resourceManager.add(Resources::Model{"resources/obj/rock2.obj"}, E_Model::E_ROCK2);
+        engine.resourceManager.add(Resources::Model{"resources/obj/grass.obj"}, E_Model::E_GRASS);
+    }
+    {
         Resources::Model model;
         model.loadOBJ("resources/obj/dog.obj");
         for (Core::Maths::Vec3& pos : model.positions)
@@ -41,7 +48,7 @@ void Game::loadResources()
             // pos.y /= 1.3f;
 
             pos.z *= -1;
-            pos.y -= 0.2;
+            pos.y -= 1;
         }
 
         for (Core::Maths::Vec3& normal : model.normals)
@@ -70,9 +77,17 @@ void Game::loadResources()
         engine.resourceManager.add(std::move(model), E_Model::E_GUN);
         engine.resourceManager.add(Resources::Texture{"resources/obj/M14warna.png"}, E_Texture::E_GUN);
     }
-    engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
-    engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
-    engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}, E_Shader::E_LIGHTED);
+
+    {
+        engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
+        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"}, E_Shader::E_LIGHTED_FLATCOLOR);
+        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
+        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}, E_Shader::E_LIGHTED);
+    }
+
+    {
+        engine.resourceManager.add(Resources::Audio{"resources/audio/pew.wav"}, E_Audio::E_SHOOT);
+    }
 }
 
 void Game::loadMenu()

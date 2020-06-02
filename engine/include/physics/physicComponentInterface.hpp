@@ -20,7 +20,7 @@ namespace Physics
 
         }
     
-        virtual void physicCompOnCollisionEnter (const SegmentHit&) 
+        virtual void physicCompOnCollisionEnter (const Physics::Shapes::SegmentHit&) 
         {
 
         }

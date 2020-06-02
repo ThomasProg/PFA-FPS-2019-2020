@@ -70,46 +70,48 @@ float Vec4::DotProduct(const Vec4& lhs, const Vec4& rhs)
 
 float& Vec4::operator[](unsigned int index)
 {
-    // LOGIC_ASSERT(index < 4, "Invalid arguments : index is out of bounds (> 3).");
-    switch (index)
-    {
-    case 0:
-        return x;
-        break;
-    case 1:
-        return y;
-        break;
+    return components[index];
+    // // LOGIC_ASSERT(index < 4, "Invalid arguments : index is out of bounds (> 3).");
+    // switch (index)
+    // {
+    // case 0:
+    //     return x;
+    //     break;
+    // case 1:
+    //     return y;
+    //     break;
     
-    case 2:
-        return z;
-        break;
+    // case 2:
+    //     return z;
+    //     break;
 
-    default: //the only left index is 3
-        return w;
-        break;
-    }
+    // default: //the only left index is 3
+    //     return w;
+    //     break;
+    // }
 }
 
 float Vec4::operator[](unsigned int index) const
 {
+    return components[index];
     // LOGIC_ASSERT(index < 4, "Invalid arguments : index is out of bounds (> 3).");
-    switch (index)
-    {
-    case 0:
-        return x;
-        break;
-    case 1:
-        return y;
-        break;
+    // switch (index)
+    // {
+    // case 0:
+    //     return x;
+    //     break;
+    // case 1:
+    //     return y;
+    //     break;
     
-    case 2:
-        return z;
-        break;
+    // case 2:
+    //     return z;
+    //     break;
 
-    default: //the only left index is 3
-        return w;
-        break;
-    }
+    // default: //the only left index is 3
+    //     return w;
+    //     break;
+    // }
 }
 
 Vec4 operator+(const Vec4& a, const Vec4& b)

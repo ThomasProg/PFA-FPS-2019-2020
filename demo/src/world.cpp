@@ -86,38 +86,85 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}});
-    entityGroup.addGround({{110, -30, 70}, {0.f,0,0}, {100,1,10}});
-    entityGroup.addGround({{220, -30, 110}, {0.f,0,0}, {10,1,50}});
+    entityGroup.addLight();
+    {
+        Renderer::Light& l = entityGroup.addLight();
+        l.lightData.location = {20.f, -27.f, 12, 0.0}; 
+        l.lightData.lightType = 3;
+        l.lightData.ambient = {0.7, 0.7,0.7,0};
+    }
+
+     Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
+     Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
+     Core::Maths::Vec4 stoneColor = {0.2f, 0.2f, 0.2f,1.f};
+
+    entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}}, grassColor);
+    entityGroup.addGround({{0, -30, -10}, {0.f,0,0}, {10,5,10}}, stoneColor);
+    entityGroup.addGround({{20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
+    entityGroup.addGround({{-20, -30, 40}, {0.f,0,0}, {10,5,60}}, stoneColor);
+    
+    entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
+    for (uint i = 0; i < 10; i++)
+    {
+        entityGroup.addTree({{6+sin(float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addTree({{-6-sin(10+float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
+    }
+    entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addFirefly({{10, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
+    {
+        Renderer::Light& l = entityGroup.addLight();
+        l.lightData.location = {9, -26, 20, 1};
+    }
+
+
+    entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
+    entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);
+    entityGroup.addGround({{74, -32, 70}, {0.f,0,0.2}, {10,1,10}}, grassColor);
+
+    entityGroup.addGround({{25, -30, 90}, {0.f,0,0}, {60,5,10}}, stoneColor);
+    entityGroup.addGround({{50, -30, 50}, {0.f,0,0}, {35,5,10}}, stoneColor);
+    
     // Boss plateform
-    entityGroup.addGround({{220, -30, 160+20}, {0.f,0,0}, {20,1,20}});
+    entityGroup.addGround({{103, -30.2, 70}, {0.f,0,0}, {20,1,20}}, grassColor);
 
-    entityGroup.addEnemy({{0.f, 0, 20}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addGround({{127, -30, 70}, {0.f,0,0}, {5,5,20}}, stoneColor);
+    entityGroup.addGround({{103, -30, 45}, {0.f,0,0}, {20,5,5}}, stoneColor);
+    entityGroup.addGround({{103, -30, 95}, {0.f,0,0}, {20,5,5}}, stoneColor);
 
-    entityGroup.addEnemy({{0.f, 0, 60}, {0.f,0,0}, {1,1,1}});
+    // Path block
+    {
+        entityGroup.addGround({{0, -30 + 0.1, 40}, {0.f,0,0}, {3.f,1,33.f}}, pathColor);
+
+        entityGroup.addGround({{19, -32 + 0.1, 70}, {0.f,0,-0.2}, {10.f,1,3.f}}, pathColor);
+        entityGroup.addGround({{45, -34 + 0.1, 70}, {0.f,0,0.f}, {20.f,1,3.f}}, pathColor);
+
+        entityGroup.addGround({{74, -32 + 0.1, 70}, {0.f,0,0.2}, {10.f,1,3.f}}, pathColor);
+        
+        // Boss plateform
+        entityGroup.addGround({{103, -30.2 + 0.1, 70}, {0.f,0,0}, {12.5,1,12.5}}, pathColor);
+    }
+
+    entityGroup.addEnemy({{0.f, 0, 35}, {0.f,0,0}, {1,1,1}});
+
+    entityGroup.addEnemy({{0.f, 0, 50}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{-2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{60.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{62.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{64.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{62.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{62.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{60.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{50.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{52.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{54.f, 0, 70}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{180.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-
-    entityGroup.addEnemy({{220.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{220.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{220.f, 0, 68}, {0.f,0,0}, {1,1,1}});
-
-    entityGroup.addEnemy({{220.f, 0, 120}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{222.f, 0, 120}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{218.f, 0, 120}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{220.f, 0, 122}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{222.f, 0, 122}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{218.f, 0, 122}, {0.f,0,0}, {1,1,1}});
-
+    for (uint j = 0; j < 5; j++)
+    {
+        for (uint i = 0; i < 5; i++)
+        {
+            entityGroup.addEnemy({{100.f + float(i), 0, 70 + float(j)}, {0.f,0,0}, {1,1,1}});
+        }
+    }
 
     // === Add Player === //
     entityGroup.addPlayer({{0,0,10.0 + 0.0}});
@@ -355,9 +402,10 @@ void World::update()
         // Update entities
         for (std::unique_ptr<Entity::Enemy>& enemy : entityGroup.enemies)
         {
+            enemy->target = entityGroup.player.get();
+
             if (entityGroup.player->transform.transformMatrixNode.isValid())
             {
-                enemy->chaseTarget = entityGroup.player->transform.transformMatrixNode->worldData.getTranslationVector();
                 enemy->update(game.engine, playTime);
             }
         }
@@ -366,43 +414,12 @@ void World::update()
 
         if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT))
         {
-            if (entityGroup.player != nullptr && playTime - entityGroup.player->lastShootTime >= entityGroup.player->shootCooldown)
-            {
-                entityGroup.player->lastShootTime = playTime;
+            entityGroup.player->shoot(game.engine.physicsSystem, entityGroup, playTime);
+        }
 
-                Segment3D directionHit = entityGroup.player->shoot();
-                SegmentHit hit;
-                Physics::CollisionComponentInterface<Box>* touchEntity = nullptr;
-
-                if(game.engine.physicsSystem.raycast(directionHit, hit, touchEntity))
-                {
-                    //test hit enemy
-                    std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
-                    while (it != entityGroup.enemies.end() && (*it).get() != touchEntity)
-                    {
-                        it++;
-                    }
-                    if (it != entityGroup.enemies.end())
-                    {
-                        //hit: add a box during 2s
-                        (*it)->takeDamage(5, playTime);
-                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
-                    }
-                    else 
-                    {
-                        //test hit ground/wall
-                        std::vector<std::unique_ptr<Entity::Ground>>::iterator it = entityGroup.grounds.begin();
-                        while (it != entityGroup.grounds.end() && (*it).get() != touchEntity)
-                        {
-                            it++;
-                        }
-                        if (it != entityGroup.grounds.end())
-                        {
-                            entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
-                        }
-                    }
-                }
-            }
+        if(glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_RIGHT))
+        {
+            entityGroup.player->reloadAmmo();
         }
 
         if (entityGroup.enemies.size() == 0)
@@ -434,7 +451,7 @@ void World::update()
         // if (isEditorMode)
         //     updateEditorFunctions();
 
-        entityGroup.colletGarbage();
+        entityGroup.collectGarbage();
     }
 }
 

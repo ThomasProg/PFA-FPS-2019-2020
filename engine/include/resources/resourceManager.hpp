@@ -4,38 +4,48 @@
 #include "model.hpp"
 #include "texture.hpp"
 #include "shader.hpp"
+#include "audio.hpp"
+
 #include <unordered_map>
 
 namespace Resources
 {
-    template<typename CAPACITY_TYPE = unsigned int>
+    template<typename MODEL_ENUM,typename TEXTURE_ENUM,typename SHADER_ENUM,typename AUDIO_ENUM>
     class ResourceManager
     {
     public:
-        using ContainerCapacityType = CAPACITY_TYPE;
-        using Type = ResourceManager<CAPACITY_TYPE>;
+        using Type = ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AUDIO_ENUM>;
+
+        static_assert(std::is_enum<MODEL_ENUM>::value);
+        static_assert(std::is_enum<TEXTURE_ENUM>::value);
+        static_assert(std::is_enum<SHADER_ENUM>::value);
+        static_assert(std::is_enum<AUDIO_ENUM>::value);
 
     protected:
-        std::unordered_map<ContainerCapacityType, Model> models;
-        std::unordered_map<ContainerCapacityType, Texture> textures;
-        std::unordered_map<ContainerCapacityType, Shader> shaders;
+        std::unordered_map<MODEL_ENUM, Model> models;
+        std::unordered_map<TEXTURE_ENUM, Texture> textures;
+        std::unordered_map<SHADER_ENUM, Shader> shaders;
+        std::unordered_map<AUDIO_ENUM, Audio> audios;
 
     public:
         // Returns const elements
-        inline const Model&   getModel(ContainerCapacityType   id) const;
-        inline const Texture& getTexture(ContainerCapacityType id) const;
-        inline const Shader&  getShader(ContainerCapacityType  id) const;
+        inline const Model&   get(MODEL_ENUM   id) const;
+        inline const Texture& get(TEXTURE_ENUM id) const;
+        inline const Shader&  get(SHADER_ENUM  id) const;
+        inline const Audio&   get(AUDIO_ENUM   id)  const;
 
         // Only available per move
-        inline void add(Shader&& shader,   ContainerCapacityType key);
-        inline void add(Model&& model,     ContainerCapacityType key);
-        inline void add(Texture&& texture, ContainerCapacityType key);
+        inline void add(Model&& model,     MODEL_ENUM key);
+        inline void add(Texture&& texture, TEXTURE_ENUM key);
+        inline void add(Shader&& shader,   SHADER_ENUM key);
+        inline void add(Audio&& audio,     AUDIO_ENUM key);
 
         void clear()
         {
             models.clear();
             textures.clear();
             shaders.clear();    
+            audios.clear();
         }
     };
 }

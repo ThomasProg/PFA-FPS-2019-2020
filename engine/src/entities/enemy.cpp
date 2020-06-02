@@ -3,36 +3,40 @@
 
 #include "engine.hpp"
 
+#include "player.hpp"
+
 #include "loader.hpp"
 #include "saver.hpp"
 #include "utilities.hpp"
 
 void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 {   
-
     if (state.enemyState == EnemyState::E_DEAD)
     {
         timeLeftTillRespawn -= engine.deltaTime;
-        if (timeLeftTillRespawn <= 0.f)
-        {
-            state.enemyState = EnemyState::E_IDLE; 
-            timeLeftTillRespawn = 0.f;
-
-            collider.isEnabled = true;
-            physicComp.isEnabled = true;
-            mesh.isDrawn = true;
-        }
+        tryToRespawn();
     }
     else 
     {
-        if ((playTime - lastHitTime) < 1)
+        lerpColorBackToNormal(playTime);
+
+        if (target != nullptr)
         {
-            mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastHitTime);
+            chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
+
+            // look at target
+            const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+            if (delta.x != 0.f)
+            {              
+                transform.transform.rotation.y = std::atan2(delta.x, delta.z);
+
+                transform.UpdateLocalTransformMatrix();
+                transform.transformMatrixNode->setDirtySelfAndChildren();
+            }
         }
-        else 
-            mesh.color = {1,1,1,1};
 
         move(engine);
+        tryToAttack(playTime);
     }
 }
 
@@ -48,7 +52,7 @@ void Entity::Enemy::move(const Core::Engine& engine)
 {
     if(state.enemyState != EnemyState::E_FALLING)
     {
-        if(isPlayerInRange())
+        if(isTargetInChaseRange())
             chase(engine);
         else
         {
@@ -131,13 +135,22 @@ void Entity::Enemy::chase(const Core::Engine& engine)
     transform.transformMatrixNode->cleanUpdate();
 }
 
-bool Entity::Enemy::isPlayerInRange() const
+bool Entity::Enemy::isTargetInChaseRange() const
 {
     if (!transform.transformMatrixNode.isValid())
         return false;
 
     return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= detectionRadius * detectionRadius;
+}
+
+bool Entity::Enemy::isTargetInAttackRange() const
+{
+    if (!transform.transformMatrixNode.isValid())
+        return false;
+
+    return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+        <= attackRadius * attackRadius;
 }
 
 void Entity::Enemy::kill()
@@ -200,9 +213,46 @@ void Entity::Enemy::kill()
 
 void Entity::Enemy::takeDamage(int damage, float playTime)
 {
-    lastHitTime = playTime;
+    lastReceivedHitTime = playTime;
     mesh.color = {1,0,0,1};
     life = clamp(life - damage, 0, life);
     if(life == 0)
         kill();
+}
+
+void Entity::Enemy::tryToAttack(float playTime)
+{
+    // attack player
+    if (playTime > lastAttackTime + attackCooldown && target != nullptr)
+    {
+        if (isTargetInAttackRange())
+        {
+            lastAttackTime = playTime;
+            target->dealDamages(1.f);
+        }
+    }
+}
+
+void Entity::Enemy::tryToRespawn()
+{
+    if (timeLeftTillRespawn <= 0.f)
+    {
+        state.enemyState = EnemyState::E_PATROLLING; 
+        timeLeftTillRespawn = 0.f;
+
+        collider.isEnabled = true;
+        physicComp.isEnabled = true;
+        mesh.isDrawn = true;
+    }
+}
+
+void Entity::Enemy::lerpColorBackToNormal(float playTime)
+{
+    // Lerp color when hit
+    if ((playTime - lastReceivedHitTime) < 1)
+    {
+        mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastReceivedHitTime);
+    }
+    else 
+        mesh.color = {1,1,1,1};
 }

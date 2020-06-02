@@ -12,7 +12,11 @@
 #include "tpsCamera.hpp"
 #include "fpsCamera.hpp"
 
+#include "audioSource.hpp"
+
 #include <array>
+
+class EntityGroup;
 
 namespace Core
 {
@@ -44,21 +48,22 @@ namespace Entity
     // Example Class for Player
     class Player final : public Physics::TransformInterface,
                          public Renderer::RenderableInterface,
-                         public Physics::CollisionComponentInterface<Box>,
+                         public Physics::CollisionComponentInterface<Physics::Shapes::Box>,
                          public Physics::PhysicComponentInterface,
                          public Controller::ControllerInterface
     {
     private:
         static constexpr float movementSpeed  = 10.f * 1.f;
-        static constexpr float jumpSpeed      = 10.0f;
+        static constexpr float jumpSpeed      = 7.0f;
         static constexpr float jumpCoyoteTime = 0.1f;
+        static constexpr float shootRayLength = 100.f;
 
 
     public:
         float lifePoints    = 10.f;
         float maxLifePoints = 10.f;
-        unsigned int nbBullet = 60;
-        unsigned int maxNbBullet = 60;
+        unsigned int maxNbBullet = 10;
+        unsigned int nbBullet = maxNbBullet;
 
         float shootCooldown = 0.3f;
         float lastShootTime = - shootCooldown;
@@ -73,6 +78,9 @@ namespace Entity
 
         //// UI ///////
         bool gOver {false};
+
+        //// Audio ////
+        Resources::AudioSource audio;
 
         // ====== Input Keys ====== //
     public:
@@ -100,7 +108,7 @@ namespace Entity
         
         Player() 
             : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Box>(&transform),
+              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
               Physics::PhysicComponentInterface(&transform)
         {
             collider.isOverlap = true;
@@ -112,11 +120,15 @@ namespace Entity
         void tryToJump(const Core::Engine& engine);
         void setResources(const DemoResourceManager&);
 
-        bool isShooting(const Core::Engine& engine);
-        Segment3D shoot() const;
+        bool isShooting(const Core::Engine& engine) const;
+        Physics::Shapes::Segment3D getShootRay() const;
+        void shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime);
+
         void dealDamages(float damages);
 
-        void physicCompOnCollisionEnter        (const SegmentHit&) override 
+        void reloadAmmo();
+
+        void physicCompOnCollisionEnter        (const Physics::Shapes::SegmentHit&) override 
         {
             // std::cout << "Enter collision" << std::endl;
         }
@@ -132,10 +144,10 @@ namespace Entity
             if (data.encounteredEntityID == this)
                 return;
 
-            if (data.hit.normal.y < 0.5)
-            {
-                dealDamages(1.f);
-            }
+            // if (data.hit.normal.y < 0.5)
+            // {
+            //     dealDamages(1.f);
+            // }
         }
 
         void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
@@ -143,10 +155,10 @@ namespace Entity
             if (data.movingEntityID == this)
                 return;
 
-            if (data.hit.normal.y > - 0.5)
-            {
-                dealDamages(1.f);
-            }
+            // if (data.hit.normal.y > - 0.5)
+            // {
+            //     dealDamages(1.f);
+            // }
         }
     };
 }

@@ -3,14 +3,7 @@
 EntityGroup::EntityGroup(Core::Engine& engine)
     : engine(engine)
 {
-    lightManager.lights.emplace_back();
-    lightManager.lights.emplace_back();
-    {
-        Renderer::LightData& l = lightManager.lights[lightManager.lights.size() - 1].lightData;
-        l.location = {20.f, -27.f, 12, 0.0}; 
-        l.lightType = 3;
-        l.ambient = {0.7, 0.7,0.7,0};
-    }
+
 }
 
 EntityGroup::~EntityGroup()
@@ -25,6 +18,13 @@ EntityGroup::~EntityGroup()
         {
             engine.rendererSystem.erase(ground->meshIt);
             engine.physicsSystem.erase(ground->colliderIt);
+        }
+    }
+
+    for (std::unique_ptr<Entity::Decoration>& deco : decorations)
+    {
+        {
+            engine.rendererSystem.erase(deco->meshIt);
         }
     }
 
@@ -103,7 +103,7 @@ void EntityGroup::removeEnemy(unsigned int index)
     enemies.pop_back();
 }
 
-void EntityGroup::colletGarbage()
+void EntityGroup::collectGarbage()
 {
     for (uint i = 0; i < enemies.size(); i++)
     {

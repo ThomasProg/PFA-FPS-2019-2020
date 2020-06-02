@@ -150,7 +150,8 @@ void Resources::Model::loadOBJ(const char* pathToFile)
     for(unsigned int j = 0; j < uvIndicies.size(); j++)
     {
         unsigned int indexUV = uvIndicies[j];
-        textCoords.push_back(tempUV[indexUV - 1]); 
+        if (indexUV < tempUV.size())
+            textCoords.push_back(tempUV[indexUV - 1]); 
     }
 
     for(unsigned int j = 0; j < normalIndices.size(); j++)

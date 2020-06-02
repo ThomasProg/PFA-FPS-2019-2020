@@ -18,6 +18,8 @@ namespace Core
 
 namespace Entity 
 {
+    struct Player;
+
     struct EnemyState
     {
         enum E_State
@@ -35,35 +37,41 @@ namespace Entity
     };
 
     class Enemy final : public Physics::TransformInterface,
-                  public Physics::CollisionComponentInterface<Box>, 
+                  public Physics::CollisionComponentInterface<Physics::Shapes::Box>, 
                   public Physics::PhysicComponentInterface, 
                   public Renderer::RenderableInterface,
                   public Save::SaveInterface
     {
     private:
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.5f;
-        // static constexpr float maxSpeed = 0.07f;
-        static constexpr float maxSpeed = 5.f;
+        static constexpr float maxSpeed = 7.5f;
 
         float angle = 0.f;
-        float speed = 2.f; 
+        float speed = 3.f; 
 
         float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
         int life = 10;
-        float lastHitTime = -1.f;
+        float lastReceivedHitTime = -1.f;
+
+    public:
+        float attackCooldown = 1.f;
+        float lastAttackTime = -attackCooldown;
 
     public:
         EnemyState state;
-        float detectionRadius = 10.0f;
-        float patrolRadius = 5.f;
+        float detectionRadius = 20.0f;
+        float attackRadius    = 2.f;
+        float patrolRadius    = 5.f;
         Core::Maths::Vec3 position;
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
+
+        Entity::Player* target = nullptr;
         
         Enemy() 
-            : Physics::CollisionComponentInterface<Box>(&transform),
+            : Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
               Physics::PhysicComponentInterface(&transform),
               Renderer::RenderableInterface(&transform)
         {
@@ -76,12 +84,17 @@ namespace Entity
         void update(const Core::Engine& engine, float playTime);
         void move(const Core::Engine& engine);
         void patrol(const Core::Engine& engine);
-        bool isPlayerInRange() const;
+        bool isTargetInChaseRange() const;
+        bool isTargetInAttackRange() const;
         void chase(const Core::Engine& engine);
 
         void setResources(const DemoResourceManager&);
 
         void takeDamage(int damage, float playTime);
+        void tryToAttack(float playTime);
+        void tryToRespawn();
+
+        void lerpColorBackToNormal(float playTime);
 
         void kill();
         // ~Enemy() {};

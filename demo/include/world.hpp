@@ -3,7 +3,6 @@
 
 #include "scene.hpp"
 
-#include "enumedResourceManager.hpp"
 #include "transformGraph.hpp"
 #include "physicsSystem.hpp"
 #include "saveSystem.hpp"

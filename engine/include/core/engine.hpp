@@ -11,7 +11,7 @@
 #include "physicsSystem.hpp"
 #include "rendererSystem.hpp"
 #include "saveSystem.hpp"
-
+#include "audioContext.hpp"
 
 struct GLFWwindow;
 
@@ -21,6 +21,7 @@ namespace Core
     {   
     private:
         Save::SaveSystem saveSystem;
+        Resources::AudioContext audioContext;
 
     public:
         DemoResourceManager resourceManager;

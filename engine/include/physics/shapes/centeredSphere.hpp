@@ -3,15 +3,18 @@
 
 #include "vec3.hpp"
 
-// origin centered sphere
-struct CenteredSphere
+namespace Physics::Shapes
 {
-    float radius;
-
-    inline bool isInside(const Core::Maths::Vec3& v) const
+    // origin centered sphere
+    struct CenteredSphere
     {
-        return v.vectorSquareLength() < radius * radius;
-    }
-};
+        float radius;
+
+        inline bool isInside(const Core::Maths::Vec3& v) const
+        {
+            return v.vectorSquareLength() < radius * radius;
+        }
+    };
+}
 
 #endif

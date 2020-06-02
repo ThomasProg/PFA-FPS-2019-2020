@@ -17,7 +17,6 @@ namespace Renderer
         RenderableInterface() = delete;
         RenderableInterface(Physics::GTransform* transform);
 
-        // void setResources(const EnumedResourceManager&);
         void addRendering(Renderer::RendererSystem& renderer);
     };
 }

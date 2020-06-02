@@ -3,11 +3,14 @@
 
 #include "vec3.hpp"
 
-struct SegmentHit
+namespace Physics::Shapes
 {
-    float t;
-    Core::Maths::Vec3 collisionPoint;
-    Core::Maths::Vec3 normal;
-}; 
+    struct SegmentHit
+    {
+        float t;
+        Core::Maths::Vec3 collisionPoint;
+        Core::Maths::Vec3 normal;
+    };
+} 
 
 #endif

@@ -12,6 +12,9 @@
 ////////////////////////////
         Build
 ////////////////////////////
+- Make sure you have a version of opengl higher or equal to 3.3
+- Make sure you have downloaded the glfw library
+- Make sure you have downloaded the openal library (use this command on linux : "sudo apt-get install libopenal-dev")
 - Type the command "make run" in the root of the project
 
 ////////////////////////////
