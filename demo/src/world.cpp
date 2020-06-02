@@ -553,8 +553,8 @@ void World::hud()
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
 
-    ImGui::SetCursorPosY(game.engine.height / 2 - imageHeight / 2);
-    ImGui::SetCursorPosX(game.engine.width / 2 - imageWidth / 2);
+    ImGui::SetCursorPosY(game.engine.height / 2 - imageHeight/2);
+    ImGui::SetCursorPosX(game.engine.width / 2 - imageWidth/2);
     ImGui::Image((void*)(intptr_t)imageText, ImVec2(imageWidth, imageHeight));
 
     ImGui::PopStyleColor(5);
