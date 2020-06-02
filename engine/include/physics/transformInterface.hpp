@@ -24,6 +24,7 @@ namespace Physics
         void setTransformParent(Physics::TransformGraph& transformParent)
         {
             transform.transformMatrixNode = transformParent.addChild();
+            assert(transform.transformMatrixNode.isValid());
         }
     };
 }

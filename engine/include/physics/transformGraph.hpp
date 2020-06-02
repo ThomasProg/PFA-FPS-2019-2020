@@ -45,32 +45,32 @@ namespace Physics
         }           
     };
     
-    class DataSaverAndLoader
-    {
-    public:
-        static void saveLocalData(Save::Saver&  saver,  const Core::Maths::Matrix4x4& data)
-        {
-            saver.savePtr(data.matrix, data.nbColumns * data.nbLines);
-        }
+    // class DataSaverAndLoader
+    // {
+    // public:
+    //     static void saveLocalData(Save::Saver&  saver,  const Core::Maths::Matrix4x4& data)
+    //     {
+    //         saver.savePtr(data.matrix, data.nbColumns * data.nbLines);
+    //     }
 
-        static void saveWorldData(Save::Saver&  saver,  const Core::Maths::Matrix4x4& data)
-        {
-            saver.savePtr(data.matrix, data.nbColumns * data.nbLines);
-        }
+    //     static void saveWorldData(Save::Saver&  saver,  const Core::Maths::Matrix4x4& data)
+    //     {
+    //         saver.savePtr(data.matrix, data.nbColumns * data.nbLines);
+    //     }
 
-        static void loadLocalData(Save::Loader& loader, Core::Maths::Matrix4x4& data)
-        {
-            loader.loadPtr(data.matrix);
-        }
+    //     static void loadLocalData(Save::Loader& loader, Core::Maths::Matrix4x4& data)
+    //     {
+    //         loader.loadPtr(data.matrix);
+    //     }
 
-        static void loadWorldData(Save::Loader& loader, Core::Maths::Matrix4x4& data)
-        {
-            loader.loadPtr(data.matrix);
-        }
+    //     static void loadWorldData(Save::Loader& loader, Core::Maths::Matrix4x4& data)
+    //     {
+    //         loader.loadPtr(data.matrix);
+    //     }
 
-    };
+    // };
 
-    using TransformGraph = Core::DataStructure::Graph<Core::Maths::Matrix4x4, TransformGraphFunctor, DataSaverAndLoader, GraphKey>;
+    using TransformGraph = Core::DataStructure::Graph;//<Core::Maths::Matrix4x4, TransformGraphFunctor, DataSaverAndLoader, GraphKey>;
 }
 
 namespace std

@@ -35,6 +35,8 @@ inline void Core::Engine::endFrame()
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwPollEvents();
+    if (isKeyDown(GLFW_KEY_SPACE))
+        std::cout << 1.f / deltaTime << '\n';
 }
 
 inline bool Core::Engine::shouldStop() const

@@ -18,13 +18,13 @@ Matrix4x4::Matrix4x4()
 
     this->matrix = new float[nbLines * nbColumns];
 
-    // for (unsigned int i = 0; i < this->nbColumns * this->nbLines; i++)
-    //     matrix[i] = 0;
-    // //set identity
-    // for (unsigned int i = 0; i < this->nbColumns; i++)
-    // {
-    //     matrix[i + nbColumns * i] = 1;
-    // }
+    for (unsigned int i = 0; i < this->nbColumns * this->nbLines; i++)
+        matrix[i] = 0;
+    //set identity
+    for (unsigned int i = 0; i < this->nbColumns; i++)
+    {
+        matrix[i + nbColumns * i] = 1;
+    }
 }
 
 Matrix4x4::Matrix4x4 (const Matrix4x4& copiedMatrix) 

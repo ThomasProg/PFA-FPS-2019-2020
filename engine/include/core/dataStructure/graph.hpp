@@ -1,95 +1,64 @@
 #ifndef _GRAPH_HPP_
 #define _GRAPH_HPP_
 
-#include <unordered_map>
 #include <memory>
 #include <functional>
-
-#include "saveInterface.hpp"
+#include <vector>
 
 #include "matrix4x4.hpp"
 
 namespace Core::DataStructure
 {
-    //
-    // DATA_TYPE : The type of the data we want to store (example : Matrix4x4)
-    //
-    // UPDATE_FUNCTOR : A functor (a class overloading the () operator), this will be used to update the data
-    //
-    // DATA_SAVER_AND_LOADER : A class containing the following functions : 
-    //      - static void saveLocalData(Save::Saver&  saver,  const DATA_TYPE& data);
-    //      - static void saveWorldData(Save::Saver&  saver,  const DATA_TYPE& data);
-    //      - static void loadLocalData(Save::Loader& loader, DATA_TYPE& data);
-    //      - static void loadWorldData(Save::Loader& loader, DATA_TYPE& data);
-    // Inheriting from SaveInterface is costly, because it would make the function virtual;
-    // Instead, by using these functions, we have no memory overhead
-    // 
-    // KEY_TYPE : The type of the key to retrieve the wanted DATA_TYPE instance. Default is unsigned int. 
-    //
-    template<typename DATA_TYPE, typename UPDATE_FUNCTOR, typename DATA_SAVER_AND_LOADER, typename KEY_TYPE = unsigned int>
     // By inheriting the functor, we can use the desired function.
     // If we stored it as a member, even if the functor would have no members (variables),
     // the size would have grown up.
-    class Graph : UPDATE_FUNCTOR, public Save::SaveInterface
+    class Graph
     {  
-    public:
-        // class iterator;
-
-        using CURRENT_GRAPH_TYPE = Graph<DATA_TYPE, UPDATE_FUNCTOR, DATA_SAVER_AND_LOADER, KEY_TYPE>;
-
     protected:
-        static constexpr size_t maxChildrenAtLoad = 100;
-        static KEY_TYPE nbGraph;
-
         // No smart ptr, too much nodes would weight too much,
         // allocation is managed
-        std::unordered_map<KEY_TYPE, CURRENT_GRAPH_TYPE*> children;
-        CURRENT_GRAPH_TYPE* parent = nullptr;
+        std::vector<std::unique_ptr<Graph>> children;
+        Graph* parent = nullptr;
 
         bool isDirty = false;
 
     public:
-        KEY_TYPE graphID;
+        Core::Maths::Matrix4x4 localData = Core::Maths::Matrix4x4::identity(4);;
+        Core::Maths::Matrix4x4 worldData = Core::Maths::Matrix4x4::identity(4);;
 
-        DATA_TYPE localData = Core::Maths::Matrix4x4::identity(4);;
-        DATA_TYPE worldData = Core::Maths::Matrix4x4::identity(4);;
+        inline Graph() = default;
+        inline Graph(const Graph& rhs) = delete;
+        inline ~Graph() = default;
 
-        Graph();
-        Graph(const CURRENT_GRAPH_TYPE& rhs) = delete;
-        virtual ~Graph();
+        inline Graph& operator=(const Graph& rhs) = delete;
 
-        CURRENT_GRAPH_TYPE& operator=(const CURRENT_GRAPH_TYPE& rhs) = delete;
-
-        // Executes the function for every child and sub childs.
-        void actionThroughChildren(const std::function<void(DATA_TYPE& parent, DATA_TYPE& child)>& func);
-
-        // Executes the function for every child and sub childs.
-        void foreach(const std::function<void(CURRENT_GRAPH_TYPE&)>& func);
+        // // Executes the function for every child and sub childs.
+        // void foreach(const std::function<void(Graph&)>& func);
 
         // Set the dirty flag to true for this object and its children.
-        void setDirtySelfAndChildren();
+        inline void setDirtySelfAndChildren();
         
         // Considers the parents are not dirty, and update this object current worldData.
         // Considers this node has a parent (so parent != nullptr), 
         // and uses the parent world transform matrix to compute its own world transform matrix.
-        void updateSelfFromParent();
+        inline void updateSelfFromParent();
         // Sets the world matrix the same as the local matrix.
-        void updateSelfAsRoot();
+        inline void updateSelfAsRoot();
         // Switches on updateSelfFromParent() or updateSelfAsRoot()
         // if the node is a root or not.
         // If you already know, 
         // consider using updateSelfFromParent() or updateSelfAsRoot() instead.
-        void updateSelf();
+        inline void updateSelf();
         // Considers the parents as not dirty, and update the children worldData.
-        void updateChildren();
+        inline void updateChildren();
         // Considers the parents as not dirty, and update this object and its children worldData.
-        void updateSelfAndChildren();
+        inline void updateSelfAndChildren();
 
         // Returns the highest dirty parent in the hierarchy.
-        CURRENT_GRAPH_TYPE* getHighestDirtyParent();
+        inline Graph* getHighestDirtyParent();
 
         // Get the highest dirty parent, and update every children from there.
-        void cleanUpdate();
+        inline void cleanUpdate();
 
         // "Iterators" are returned to the user.
         // The user can then use them to erase the object, move it into the graph, etc 
@@ -97,47 +66,41 @@ namespace Core::DataStructure
         class iterator
         {
         private:
-            using GraphListIt = typename std::unordered_map<KEY_TYPE, CURRENT_GRAPH_TYPE>::iterator;
-
             // pointer towards pointed graph
-            CURRENT_GRAPH_TYPE* graphPtr = nullptr;
+            Graph* graphPtr = nullptr;
             
         public:
-            iterator() = default;
-            iterator(const iterator&) = default;
-            iterator(CURRENT_GRAPH_TYPE* graphPtr);
-            ~iterator() = default;
+            inline iterator() = default;
+            inline iterator(const iterator&) = default;
+            inline iterator(Graph* graphPtr);
+            inline ~iterator() = default;
 
-            CURRENT_GRAPH_TYPE& operator*();
-            const CURRENT_GRAPH_TYPE& operator*() const;
-            CURRENT_GRAPH_TYPE* operator->();
-            const CURRENT_GRAPH_TYPE* operator->() const;
+            inline Graph& operator*();
+            inline const Graph& operator*() const;
+            inline Graph* operator->();
+            inline const Graph* operator->() const;
 
             // bool operator!=(const iterator& it) const noexcept;
 
-            bool isValid() const noexcept;
-            void setInvalid();
-            void erase();
+            inline bool isValid() const noexcept;
+            inline void setInvalid();
+            inline void erase();
 
             // We can't use attachTo() without accessing the iterator's members
             // and without breaking encapsulation.
-            friend class Graph<DATA_TYPE, UPDATE_FUNCTOR, KEY_TYPE>;
+            friend class Graph;
         };
 
         // Add child to the graph, setting the parent to this, 
         // and returns an iterator to it. 
-        iterator addChild(); 
-        iterator addChild(const KEY_TYPE& key); 
+        inline iterator addChild(); 
 
 
         // // // Change the parent of the node pointed by "it" to "newParent".
         // // // Inputs :
         // // // iterator it : the iterator used for the current node we want to change parent
-        // // // CURRENT_GRAPH_TYPE& newParent : the graph which will become the parent of it
-        // // static void attachTo(iterator& it, CURRENT_GRAPH_TYPE& newParent);
-
-        void save(Save::Saver& saver)       override;
-        void loadData(Save::Loader& loader) override;
+        // // // Graph& newParent : the graph which will become the parent of it
+        // // static void attachTo(iterator& it, Graph& newParent);
     };
 }
 
