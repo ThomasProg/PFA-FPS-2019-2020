@@ -7,6 +7,8 @@
 
 #include "saveInterface.hpp"
 
+#include "matrix4x4.hpp"
+
 namespace Core::DataStructure
 {
     //
@@ -49,8 +51,8 @@ namespace Core::DataStructure
     public:
         KEY_TYPE graphID;
 
-        DATA_TYPE localData;
-        DATA_TYPE worldData;
+        DATA_TYPE localData = Core::Maths::Matrix4x4::identity(4);;
+        DATA_TYPE worldData = Core::Maths::Matrix4x4::identity(4);;
 
         Graph();
         Graph(const CURRENT_GRAPH_TYPE& rhs) = delete;

@@ -44,10 +44,8 @@ namespace Core::Maths
 		// used to verify if 2 vectors are equals
 		static constexpr decimal epsilon = 0.1;
 
-		inline
-		Vec3();
-		inline
-		Vec3(decimal x, decimal y, decimal z);
+		constexpr inline Vec3() noexcept;
+		constexpr inline Vec3(decimal x, decimal y, decimal z) noexcept;
 		Vec3(const char* x, const char* y, const char* z) 
 			: x(stringToFloat(x)), 
 			y(stringToFloat(y)), 
@@ -56,22 +54,22 @@ namespace Core::Maths
 
 		}
 		Vec3(const Vec4& rhs);
-		~Vec3() = default;
+		inline ~Vec3() noexcept = default;
 
 		
-		inline decimal vectorSquareLength() const;
+		constexpr inline decimal vectorSquareLength() const noexcept;
 		inline decimal vectorLength() const;
 		inline Vec3 unitVector() const;
 		inline Vec3 rotateAround(const Vec3& unitVec, decimal angle);
 
-		inline void negate() { x = -x; y = -y; z = -z;}
+		constexpr inline void negate() noexcept { x = -x; y = -y; z = -z;}
 
 		static bool isNearlyColinear(const Vec3& v1, const Vec3& v2, const decimal epsilon = __FLT_EPSILON__);
 
 		
-		static inline decimal dotProduct(const Vec3& u, const Vec3& v);
+		static constexpr inline decimal dotProduct(const Vec3& u, const Vec3& v) noexcept;
 		
-		static inline Vec3 crossProduct(const Vec3& v1, const Vec3& v2);
+		static constexpr inline Vec3 crossProduct(const Vec3& v1, const Vec3& v2) noexcept;
 		
 		// Inputs : coordinates of the triangle points
 		static inline decimal getTriangleArea(const point3D& point1, 
