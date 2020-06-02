@@ -3,20 +3,6 @@
 #include <cassert>
 #include <algorithm>
 
-// // Executes the function for every child and sub childs.
-// void Core::DataStructure::Graph::
-//         foreach(const std::function<void(Graph&)>& func)
-// {
-//     func(*this);
-
-//     typename std::vector<std::unique_ptr<Graph>>::iterator it = children.begin();
-//     while (it != children.end())
-//     {
-//         (*it)->foreach(func);
-//         it++;
-//     };
-// }
-
 inline typename Core::DataStructure::Graph::iterator // return type
     Core::DataStructure::Graph::addChild()
 {
@@ -27,99 +13,6 @@ inline typename Core::DataStructure::Graph::iterator // return type
     newGraph->parent = this;
     return Core::DataStructure::Graph::iterator{newGraph};
 }
-
-inline void Core::DataStructure::Graph::setDirtySelfAndChildren()
-{
-    isDirty = true;
-
-    typename std::vector<std::unique_ptr<Graph>>::iterator it = children.begin();
-    while (it != children.end())
-    {
-        (*it)->setDirtySelfAndChildren();
-        it++;
-    };
-}
-
-inline Core::DataStructure::Graph* // return type
-    Core::DataStructure::Graph
-    ::getHighestDirtyParent()
-{
-    if (!isDirty)
-        return nullptr;
-
-    Graph* highestDirtyParent = this;
-
-    while (highestDirtyParent != nullptr && highestDirtyParent->isDirty)
-    {
-        highestDirtyParent = highestDirtyParent->parent;
-    }
-
-    return highestDirtyParent;
-}
-
-inline void Core::DataStructure::Graph::updateSelfFromParent()
-{
-    // worldData = updateFunctor(parent->worldData, localData);
-    worldData = parent->worldData * localData;
-    isDirty = false;
-}
-
-inline void Core::DataStructure::Graph::updateSelfAsRoot()
-{
-    worldData = localData;
-    isDirty = false;
-}
-
-inline void Core::DataStructure::Graph::updateSelf()
-{
-    if (parent != nullptr)
-    {
-        updateSelfFromParent();
-    }
-    else 
-    {
-        updateSelfAsRoot();
-    }
-}
-
-inline void Core::DataStructure::Graph::updateChildren()
-{
-    typename std::vector<std::unique_ptr<Graph>>::iterator it = children.begin();
-    while (it != children.end())
-    {
-        (*it)->updateSelfAndChildren();
-        it++;
-    };
-}
-
-inline void Core::DataStructure::Graph::updateSelfAndChildren()
-{
-    updateSelfFromParent();
-    updateChildren();
-}
-
-inline void Core::DataStructure::Graph::cleanUpdate()
-{
-    Core::DataStructure::Graph* dirty = getHighestDirtyParent();
-    
-    if (dirty)
-    {
-        dirty->updateChildren();
-    }
-}
-
-//
-// inline void Core::DataStructure::Graph::attachTo(
-//                                                             Core::DataStructure::Graph::iterator& it, 
-//                                                             Core::DataStructure::Graph<Core::Maths::Matrix4x4, UPDATE_FUNCTOR, Core::Maths::Matrix4x4>& newParent)
-// {
-//     if (it.graphPtr != nullptr) // if node existing, we don't want to reallocate the node
-//         newParent.children.splice(it.listIt, it.graphPtr->children);
-//     else // if node not existing, create a new node
-//         it = newParent.addChild(); 
-
-//     it.graphPtr->parent = &newParent;
-// }
 
 //////////////////////////////////////////////////
 // ================= ITERATOR ================= //

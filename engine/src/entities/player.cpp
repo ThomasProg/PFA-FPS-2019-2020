@@ -111,10 +111,7 @@ void Entity::Player::inputs(const Core::Engine& engine)
     camera.transform.transform.rotation.x = clamp(camera.transform.transform.rotation.x + deltaMouseY * rotationSpeed, float(- M_PI / 2.f), float(M_PI / 2.f));
 
     transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->setDirtySelfAndChildren();
-
     camera.transform.UpdateLocalTransformMatrix();
-    camera.transform.transformMatrixNode->setDirtySelfAndChildren(); 
 }
 
 void Entity::Player::tryToJump(const Core::Engine& engine)

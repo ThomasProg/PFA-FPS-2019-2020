@@ -11,7 +11,6 @@ void Renderer::FPSCamera::attachTo(Physics::GTransform& parent)
 {
     transform.transformMatrixNode = parent.transformMatrixNode->addChild();
     transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->setDirtySelfAndChildren();
 }
 
 void Renderer::FPSCamera::inputs(const Core::Engine& engine)
@@ -68,6 +67,4 @@ void Renderer::FPSCamera::inputs(const Core::Engine& engine)
         transform.transform.location.y += translationSpeed * engine.deltaTime;
 
     transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->setDirtySelfAndChildren();
-    transform.transformMatrixNode->cleanUpdate();
 }

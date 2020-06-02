@@ -160,8 +160,6 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
     simulateGravity(physicComp->physicComp, engine);
 
     physicComp->physicComp.collider.transform->UpdateLocalTransformMatrix();
-    physicComp->physicComp.collider.transform->transformMatrixNode->setDirtySelfAndChildren();
-    physicComp->physicComp.collider.transform->transformMatrixNode->cleanUpdate();
 }
 
 void Physics::PhysicsSystem::simulatePhysicsForASphere(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine)

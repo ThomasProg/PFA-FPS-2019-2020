@@ -10,7 +10,6 @@ void Renderer::TPSCamera::setup(Physics::GTransform& parent)
     transform.transformMatrixNode = camAnchor.transformMatrixNode->addChild();
     transform.transform.location.z = distanceToTarget;
     transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->cleanUpdate();
 }
 
 void Renderer::TPSCamera::inputs(const Core::Engine& engine)
@@ -31,6 +30,4 @@ void Renderer::TPSCamera::inputs(const Core::Engine& engine)
     }
 
     camAnchor.UpdateLocalTransformMatrix();
-    if (camAnchor.transformMatrixNode.isValid())
-        camAnchor.transformMatrixNode->cleanUpdate();
 }

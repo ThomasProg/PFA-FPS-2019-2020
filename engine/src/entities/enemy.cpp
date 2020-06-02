@@ -31,7 +31,6 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
                 transform.transform.rotation.y = std::atan2(delta.x, delta.z);
 
                 transform.UpdateLocalTransformMatrix();
-                transform.transformMatrixNode->setDirtySelfAndChildren();
             }
         }
 
@@ -132,7 +131,6 @@ void Entity::Enemy::chase(const Core::Engine& engine)
     physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
     physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
     transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->cleanUpdate();
 }
 
 bool Entity::Enemy::isTargetInChaseRange() const

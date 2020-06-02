@@ -20,52 +20,78 @@ namespace Core::DataStructure
         std::vector<std::unique_ptr<Graph>> children;
         Graph* parent = nullptr;
 
-        bool isDirty = false;
+        Core::Maths::Matrix4x4 localData = Core::Maths::Matrix4x4::identity(4);
+    
+        // Normally, we would update it each time we use "setLocalMatrix()".
+        // However, in this case, we would also update children's "worldData" at the same time.
+        // If we use multiple times setLocalMatrix() in a graph then in its children,
+        // it would mean we'd have to compute the world matrix again each time for each children.
+        // To prevent that, we cache the worldData, and update it only when it is necessary.
+        // However, the user could want to use "worldData" in a const function ;
+        // after all, he doesn't want to modify "worldData", he just wants to get it!
+        // That is why we put the "mutable" keyword to both "worldData" and "isDirty".
+        mutable Core::Maths::Matrix4x4 worldData = Core::Maths::Matrix4x4::identity(4);
 
-    public:
-        Core::Maths::Matrix4x4 localData = Core::Maths::Matrix4x4::identity(4);;
-    protected:
-        Core::Maths::Matrix4x4 worldData = Core::Maths::Matrix4x4::identity(4);;
+    private:
+        mutable bool isDirty = false;
 
-    public:
-        inline const Core::Maths::Matrix4x4& getWorldMatrix() const
+        // We update a mutable value, which can be used in const state.
+        // That is why we also have to put this function const, to call it when using getWorldMatrix().
+        // This function should not be called by the user in a const function directly,
+        // or it would just reduce performance.
+        // That is why this function is private.
+        inline void setDirty() const
         {
-            return worldData;
-        } 
+            isDirty = true;
+            for (const std::unique_ptr<Graph>& child : children)
+            {
+                child->setDirty();
+            }
+        }
 
+    public:
         inline Graph() = default;
         inline Graph(const Graph& rhs) = delete;
         inline ~Graph() = default;
 
         inline Graph& operator=(const Graph& rhs) = delete;
 
-        // // Executes the function for every child and sub childs.
-        // void foreach(const std::function<void(Graph&)>& func);
+        inline const Core::Maths::Matrix4x4& getLocalMatrix() const
+        {
+            return localData;
+        }
 
-        // Set the dirty flag to true for this object and its children.
-        inline void setDirtySelfAndChildren();
-        
-        // Considers the parents are not dirty, and update this object current worldData.
-        // Considers this node has a parent (so parent != nullptr), 
-        // and uses the parent world transform matrix to compute its own world transform matrix.
-        inline void updateSelfFromParent();
-        // Sets the world matrix the same as the local matrix.
-        inline void updateSelfAsRoot();
-        // Switches on updateSelfFromParent() or updateSelfAsRoot()
-        // if the node is a root or not.
-        // If you already know, 
-        // consider using updateSelfFromParent() or updateSelfAsRoot() instead.
-        inline void updateSelf();
-        // Considers the parents as not dirty, and update the children worldData.
-        inline void updateChildren();
-        // Considers the parents as not dirty, and update this object and its children worldData.
-        inline void updateSelfAndChildren();
+        // Be careful !
+        inline const Core::Maths::Matrix4x4&& borrowLocalMatrix() const
+        {
+            return std::move(localData);
+        }
 
-        // Returns the highest dirty parent in the hierarchy.
-        inline Graph* getHighestDirtyParent();
+        inline void setLocalMatrix(Core::Maths::Matrix4x4&& mat)
+        {
+            localData = std::move(mat);
+            isDirty = true;
+        }
 
-        // Get the highest dirty parent, and update every children from there.
-        inline void cleanUpdate();
+        inline void setLocalMatrix(const Core::Maths::Matrix4x4& mat)
+        {
+            localData = mat;
+            isDirty = true;
+        }
+
+        inline const Core::Maths::Matrix4x4& getWorldMatrix() const
+        {
+            if (isDirty)
+            {
+                if (parent != nullptr)
+                    worldData = parent->getWorldMatrix() * localData;
+                else 
+                    worldData = localData;
+
+                setDirty();
+            }
+            return worldData;
+        } 
 
         // "Iterators" are returned to the user.
         // The user can then use them to erase the object, move it into the graph, etc 

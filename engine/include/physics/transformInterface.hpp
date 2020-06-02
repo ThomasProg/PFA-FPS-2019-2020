@@ -19,7 +19,6 @@ namespace Physics
 
             this->transform.transform = newTransform;
             transform.UpdateLocalTransformMatrix();
-            transform.transformMatrixNode->setDirtySelfAndChildren();
         }
         void setTransformParent(Physics::TransformGraph& transformParent)
         {
