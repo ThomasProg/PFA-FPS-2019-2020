@@ -24,7 +24,14 @@ namespace Core::DataStructure
 
     public:
         Core::Maths::Matrix4x4 localData = Core::Maths::Matrix4x4::identity(4);;
+    protected:
         Core::Maths::Matrix4x4 worldData = Core::Maths::Matrix4x4::identity(4);;
+
+    public:
+        inline const Core::Maths::Matrix4x4& getWorldMatrix() const
+        {
+            return worldData;
+        } 
 
         inline Graph() = default;
         inline Graph(const Graph& rhs) = delete;

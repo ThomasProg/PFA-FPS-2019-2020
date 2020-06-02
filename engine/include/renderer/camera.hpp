@@ -19,7 +19,7 @@ namespace Renderer
 
         void updateViewProjectionMatrix()
         {
-            viewProjectionMatrix = projection * transform.transformMatrixNode->worldData.getInverse();
+            viewProjectionMatrix = projection * transform.transformMatrixNode->getWorldMatrix().getInverse();
         }
     };
 }

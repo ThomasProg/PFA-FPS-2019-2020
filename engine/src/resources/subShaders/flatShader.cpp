@@ -12,7 +12,7 @@ void Resources::FlatShader::loadUniformValuesLocation()
 
 void Resources::FlatShader::useUniformValues(const Renderer::Camera& cam, const Renderer::Mesh& mesh) const
 {
-    Core::Maths::Matrix4x4 mvp = (cam.viewProjectionMatrix * mesh.transform->transformMatrixNode->worldData);
+    Core::Maths::Matrix4x4 mvp = (cam.viewProjectionMatrix * mesh.transform->transformMatrixNode->getWorldMatrix());
     mvp.transposeThis();
 
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);

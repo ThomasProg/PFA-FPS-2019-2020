@@ -112,7 +112,7 @@ void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
         if (box == nullptr)
             continue;
 
-        box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->worldData;
+        box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->getWorldMatrix();
         box->collider.aabb.setFrom(box->collider.worldCollider);
     }
 

@@ -22,10 +22,10 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 
         if (target != nullptr)
         {
-            chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
+            chaseTarget = target->transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
 
             // look at target
-            const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+            const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
             if (delta.x != 0.f)
             {              
                 transform.transform.rotation.y = std::atan2(delta.x, delta.z);
@@ -66,12 +66,12 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
     if (!transform.transformMatrixNode.isValid())
         return;
 
-    Core::Maths::Vec3 patrolDir = patrolTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+    Core::Maths::Vec3 patrolDir = patrolTarget - transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
     patrolDir.y = 0.f;
 
     if (state.enemyState == EnemyState::E_CHASING)
     {
-        Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+        Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
         firstPointOfCircle.x += patrolRadius;
         firstPointOfCircle.y = 0;
 
@@ -118,7 +118,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
 {
     state.enemyState = EnemyState::E_CHASING;
 
-    const Core::Maths::Vec3& loc = transform.transformMatrixNode->worldData.getTranslationVector();
+    const Core::Maths::Vec3& loc = transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
     Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
     Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
 
@@ -140,7 +140,7 @@ bool Entity::Enemy::isTargetInChaseRange() const
     if (!transform.transformMatrixNode.isValid())
         return false;
 
-    return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+    return (transform.transformMatrixNode->getWorldMatrix().getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= detectionRadius * detectionRadius;
 }
 
@@ -149,7 +149,7 @@ bool Entity::Enemy::isTargetInAttackRange() const
     if (!transform.transformMatrixNode.isValid())
         return false;
 
-    return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+    return (transform.transformMatrixNode->getWorldMatrix().getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= attackRadius * attackRadius;
 }
 
