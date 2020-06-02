@@ -6,7 +6,7 @@
 void Resources::PhongFlat::loadUniformValuesLocation()
 {
     nbCurrentLightsID = getUniformLocation("nbCurrentLights");
-    if (nbCurrentLightsID == GL_INVALID_INDEX)
+    if (nbCurrentLightsID == GLint(GL_INVALID_INDEX))
         std::cout << "Could not set uniform value : " "nbCUrrentLights\n";
 
     // ===== ===== ===== //
@@ -18,7 +18,7 @@ void Resources::PhongFlat::loadUniformValuesLocation()
     colorID = getUniformLocation("color");
 
     lightsBlockID = glGetUniformBlockIndex(programID, "lightsBlock");
-    if (nbCurrentLightsID == GL_INVALID_INDEX)
+    if (nbCurrentLightsID == GLint(GL_INVALID_INDEX))
         std::cout << "Could not set uniform value : " "lightsBlock\n";
 }
 
