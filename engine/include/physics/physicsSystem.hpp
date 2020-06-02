@@ -60,9 +60,9 @@ namespace Physics
         std::vector<PhysicCompIt> freePhysicCompsIndices;
 
         static constexpr float gravityAcc = 9.81f; 
-        static constexpr float linearDamping  = 0.98f;
+        static constexpr float linearDamping  = 0.90f;
 
-        static constexpr float epsilon = 0.0001;//0.00001f;
+        static constexpr float epsilon = 0.0001;
 
     public:
         // reserve vector to prevent too much move
