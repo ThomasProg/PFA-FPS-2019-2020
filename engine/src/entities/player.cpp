@@ -134,8 +134,8 @@ Physics::Shapes::Segment3D Entity::Player::getShootRay() const
 
     seg.p1 = {0.f, 0, -3};
     seg.p2 = {0.f, 0, -shootRayLength};
-    seg.p1 = camera.transform.transformMatrixNode->getWorldMatrix() * seg.p1;
-    seg.p2 = camera.transform.transformMatrixNode->getWorldMatrix() * seg.p2;
+    seg.p1 = Core::Maths::Vec3{camera.transform.transformMatrixNode->getWorldMatrix() * Core::Maths::Vec4{seg.p1, 1}};
+    seg.p2 = Core::Maths::Vec3{camera.transform.transformMatrixNode->getWorldMatrix() * Core::Maths::Vec4{seg.p2, 1}};
 
     return seg;
 }

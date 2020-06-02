@@ -26,7 +26,7 @@ namespace Renderer
         // Updates lightingData location
         void update() 
         {
-            lightData.location = gTransform.transformMatrixNode->getWorldMatrix().getTranslationVector();
+            lightData.location = Core::Maths::Vec4{gTransform.transformMatrixNode->getWorldMatrix().getTranslationVector()};
         }
     };
 }

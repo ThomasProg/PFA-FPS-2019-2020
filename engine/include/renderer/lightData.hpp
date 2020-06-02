@@ -20,7 +20,7 @@ namespace Renderer
         // should not be updated anywhere else
         Core::Maths::Vec4 location {0.f, -27.f, 5, 0.0}; 
 
-        Core::Maths::Vec4 spotDirection = Core::Maths::Vec3(0,-1,0);
+        Core::Maths::Vec4 spotDirection = Core::Maths::Vec4{Core::Maths::Vec3{0,-1,0}};
 
         float light_cutOff = 0.99; // spot light center cutoff
         float light_outerCutOff = 0.98; // spot light outer cutoff

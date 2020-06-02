@@ -53,7 +53,7 @@ namespace Core::Maths
 		{
 
 		}
-		Vec3(const Vec4& rhs);
+		explicit Vec3(const Vec4& rhs);
 		inline ~Vec3() noexcept = default;
 
 		

@@ -13,7 +13,7 @@ namespace Resources
 
         GLint mvpID;             // index of "mvp"
         GLint modelID;           // index of "model"
-        GLint colorID;           // index of "color"\\
+        GLint colorID;           // index of "color"
 
     public:
         PhongFlat(Shader&& shader)
