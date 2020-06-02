@@ -481,42 +481,13 @@ Matrix4x4 Matrix4x4::getProjectionMatrixOnZAxis(const float d)
 }
 
 Matrix4x4 Matrix4x4::CreatePerspectiveProjectionMatrix(int width, int height,float near,float far,float fov)
-// {
-//     // float ymax = tanf(fov * M_PI / 180.f / 2.f);
-
-//     Matrix4x4 m;
-
-//     float tanHalffov = tanf(fov * M_PI / 180.f / 2.f);
-
-//     m.matrix[0] = 1/(tanHalffov * width / height);
-//     m.matrix[1] = 0.0;
-//     m.matrix[2] = 0.0;
-//     m.matrix[3] = 0.0;
-
-//     m.matrix[4] = 0.0;
-//     m.matrix[5] = 1 / tanHalffov;
-//     m.matrix[6] = 0.0;
-//     m.matrix[7] = 0.0;
-
-//     m.matrix[8] = 0.f;
-//     m.matrix[9] = 0.f;
-//     m.matrix[10] = - (far + near) / (far - near);//0;
-//     m.matrix[11] = -1;
-                                
-//     m.matrix[12] = 0.0;
-//     m.matrix[13] = 0.0;
-//     m.matrix[14] = - ((2) * far * near) / (far - near); //0;
-//     m.matrix[15] = 0.0;
-
-//     return m;
-// }
 {
     Matrix4x4 m = Matrix4x4::zero(4,4);
     
     //convert to radian
     fov = fov / 180.f * M_PI;
 
-    m[0][0] = 1 / ((width / height) * std::tan(fov / 2));
+    m[0][0] = 1 / ((float(width) / float(height)) * std::tan(fov / 2));
     m[1][1] = 1 / (std::tan(fov / 2));
     m[2][2] = -((far + near) / (far - near));
 
