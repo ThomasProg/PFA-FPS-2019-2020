@@ -7,6 +7,8 @@ Menu::Menu(Game& game)
 {
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+    Resources::Texture::loadTexture("resources/textures/background.png", imageWidth, imageHeight, imageText);
 }
 
 void Menu::update()
@@ -53,8 +55,12 @@ void Menu::mainMenu()
 bool Menu::setupMainMenuButtons()
 {
     preparePanel({0.f, 0.f}, {float(game.engine.width), float(game.engine.height)}, PURPLE, PINK, GREY);
-    ImGui::Begin("Game", &isMainMenuOpen, ImGuiWindowFlags_NoTitleBar);
+    ImGui::Begin("Game", &isMainMenuOpen, ImGuiWindowFlags_NoDecoration);
     ImGui::Indent(game.engine.width / 2.5);
+
+    ImGui::SetCursorPosY(0);
+    ImGui::SetCursorPosX(0);
+    ImGui::Image((void*)(intptr_t)imageText, ImVec2(game.engine.width, game.engine.height));
 
     //////////////////////////////////////
     ImGui::PushFont(game.engine.font);
@@ -62,7 +68,7 @@ bool Menu::setupMainMenuButtons()
     ImGui::SetCursorPosX(100.0f);
     ImGui::PushStyleColor(ImGuiCol_Text, PURPLE);
     ImGui::SetWindowFontScale(3.0);
-    ImGui::Text("Platformer, The game");
+    ImGui::Text("Wild Dogs");
     ImGui::PopStyleColor(1);
     ImGui::SetWindowFontScale(1);
     //////////////////////////////////////
