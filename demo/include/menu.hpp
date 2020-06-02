@@ -3,6 +3,9 @@
 
 #include "scene.hpp"
 
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -24,6 +27,9 @@ public:
     Menu(Game& game);
 
     bool isMainMenuOpen{true};
+    int imageWidth = 0;
+    int imageHeight = 0;
+    GLuint imageText = 0;
 
     void update() override;   
     void renderUI() override; 
