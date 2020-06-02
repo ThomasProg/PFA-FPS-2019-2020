@@ -6,7 +6,7 @@
 void Resources::PhongFlat::loadUniformValuesLocation()
 {
     nbCurrentLightsID = getUniformLocation("nbCurrentLights");
-    if (nbCurrentLightsID == -1)
+    if (nbCurrentLightsID == GL_INVALID_INDEX)
         std::cout << "Could not set uniform value : " "nbCUrrentLights\n";
 
     // ===== ===== ===== //
@@ -18,18 +18,14 @@ void Resources::PhongFlat::loadUniformValuesLocation()
     colorID = getUniformLocation("color");
 
     lightsBlockID = glGetUniformBlockIndex(programID, "lightsBlock");
+    if (nbCurrentLightsID == GL_INVALID_INDEX)
+        std::cout << "Could not set uniform value : " "lightsBlock\n";
 }
 
 void Resources::PhongFlat::useUniformValues(const Renderer::Camera& cam, const Renderer::Mesh& mesh) const
 {
     Core::Maths::Matrix4x4 mvp = (cam.viewProjectionMatrix * mesh.transform->transformMatrixNode->worldData);
     mvp.transposeThis();
-    
-    // ===== Lights ===== //
-
-    // glUniform1i(nbCurrentLightsID, lightManager.lights.size());
-
-    // ===== ===== ===== //
 
     glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
