@@ -85,15 +85,7 @@ namespace Entity
 
         Entity::Player* target = nullptr;
         
-        Enemy() 
-            : Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
-              Physics::PhysicComponentInterface(&transform),
-              Renderer::RenderableInterface(&transform)
-        {
-            type.enemyType = EnemyType::E_NORMAL;
-            collider.isOverlap = true;
-            physicComp.collider.worldCollider.radius = 1.f;
-        }
+        Enemy();
 
         ~Enemy() = default;
         
