@@ -132,6 +132,7 @@ Entity::Enemy* EntityGroup::addEnemyBoss(const Physics::Transform& transform, AR
     enemy->type.enemyType = Entity::EnemyType::E_BOSS;
     enemy->life = 100;
     enemy->speed = 6.0f;
+    enemy->patrolRadius = 10.0f;
 
     enemy->setResources(engine.resourceManager);
     enemy->setTransformParent(root);            

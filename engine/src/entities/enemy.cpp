@@ -42,9 +42,18 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 
 void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_DOG);
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    if (type.enemyType == EnemyType::E_NORMAL)
+    {
+        mesh.model   = &resourceManager.get(E_Model::E_DOG);
+        mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    }
+    else if (type.enemyType == EnemyType::E_BOSS)
+    {
+        mesh.model   = &resourceManager.get(E_Model::E_CAT);
+        mesh.texture = &resourceManager.get(E_Texture::E_CAT);
+    }
+   
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED); 
     mesh.linkShaderWithModel();
 }
 
@@ -145,7 +154,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
         }
         else
         {   timeForHit = 0.0f;
-            target->lifePoints -= 2;
+            target->dealDamages(2);
         }
     }
     
