@@ -80,7 +80,7 @@ bool Physics::PhysicsSystem::raycast(const Physics::Shapes::Segment3D& seg, Phys
 
     for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
-        if (boxCollider == nullptr || (consideredLayers & boxCollider->collider.layers == 0))
+        if (boxCollider == nullptr || ((consideredLayers & boxCollider->collider.layers) == 0))
             continue;
 
         Physics::Shapes::SegmentHit tempHit;

@@ -10,6 +10,8 @@
 #include "physicsSystem.hpp"
 #include "entityGroup.hpp"
 
+#include "layersEnum.hpp"
+
 #define _IS_MOUSE_ENABLED_ 1
 
 Entity::Player::Player() 
@@ -19,6 +21,7 @@ Entity::Player::Player()
 {
     collider.isOverlap = true;
     physicComp.collider.worldCollider.radius = 1.f;
+    collider.layers = LayersEnum::E_PLAYER;
 }
 
 void Entity::Player::setTransformParent(Physics::TransformGraph& transformParent)
@@ -152,7 +155,7 @@ Physics::Shapes::Segment3D Entity::Player::getShootRay() const
 {
     Physics::Shapes::Segment3D seg;
 
-    seg.p1 = {0.f, 0, -3};
+    seg.p1 = {0.f, 0, 0};
     seg.p2 = {0.f, 0, -shootRayLength};
     seg.p1 = Core::Maths::Vec3{camera.transform.transformMatrixNode->getWorldMatrix() * Core::Maths::Vec4{seg.p1, 1}};
     seg.p2 = Core::Maths::Vec3{camera.transform.transformMatrixNode->getWorldMatrix() * Core::Maths::Vec4{seg.p2, 1}};
@@ -174,7 +177,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
             Physics::Shapes::SegmentHit hit;
             Physics::CollisionComponentInterface<Physics::Shapes::Box>* touchEntity = nullptr;
 
-            if(physicsSystem.raycast(directionHit, hit, touchEntity))
+            if(physicsSystem.raycast(directionHit, hit, touchEntity, ~LayersEnum::E_PLAYER))
             {
                 //test hit enemy
                 std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();

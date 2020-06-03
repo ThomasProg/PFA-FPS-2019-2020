@@ -9,6 +9,19 @@
 #include "saver.hpp"
 #include "utilities.hpp"
 
+#include "layersEnum.hpp"
+
+Entity::Enemy::Enemy() 
+    : Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
+        Physics::PhysicComponentInterface(&transform),
+        Renderer::RenderableInterface(&transform)
+{
+    type.enemyType = EnemyType::E_NORMAL;
+    collider.isOverlap = true;
+    physicComp.collider.worldCollider.radius = 1.f;
+    collider.layers = LayersEnum::E_ENTITY | LayersEnum::E_ENEMY;
+}
+
 void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 {   
     if (state.enemyState == EnemyState::E_DEAD)
