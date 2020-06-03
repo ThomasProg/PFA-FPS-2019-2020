@@ -30,10 +30,10 @@ namespace Core::DataStructure
         // However, the user could want to use "worldData" in a const function ;
         // after all, he doesn't want to modify "worldData", he just wants to get it!
         // That is why we put the "mutable" keyword to both "worldData" and "isDirty".
-        mutable Core::Maths::Matrix4x4 worldData = Core::Maths::Matrix4x4::identity(4);
+        mutable Core::Maths::Matrix4x4 worldData;
 
     private:
-        mutable bool isDirty = false;
+        mutable bool isDirty = true;
 
         // Set self and children dirty flag to true.
         inline void setDirty()
@@ -88,6 +88,8 @@ namespace Core::DataStructure
                     Core::Maths::Matrix4x4::multiply(parent->getWorldMatrix(), localData, worldData);
                 else 
                     worldData = localData;
+
+                isDirty = false;
             }
             return worldData;
         } 
