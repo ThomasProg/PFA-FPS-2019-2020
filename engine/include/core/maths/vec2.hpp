@@ -16,9 +16,9 @@ namespace Core::Maths
 
         Vec2()  = default;
         ~Vec2() = default;
-        Vec2(const Vec2& vec);
-        Vec2(float f);
-        Vec2(float x, float y);
+        inline Vec2(const Vec2& vec) noexcept;
+        inline Vec2(float f) noexcept;
+        inline Vec2(float x, float y) noexcept;
 
         void operator=(const Vec2&);
         bool operator==(const Vec2& vec) const;
@@ -93,5 +93,7 @@ namespace Core::Maths
 
     float operator,(const Vec2&, const Vec2&);
 }
+
+#include "vec2.inl"
 
 #endif

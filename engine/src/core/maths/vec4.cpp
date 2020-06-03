@@ -42,52 +42,6 @@ float Vec4::dotProduct(const Vec4& lhs, const Vec4& rhs)
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 }
 
-float& Vec4::operator[](unsigned int index)
-{
-    return components[index];
-    // // LOGIC_ASSERT(index < 4, "Invalid arguments : index is out of bounds (> 3).");
-    // switch (index)
-    // {
-    // case 0:
-    //     return x;
-    //     break;
-    // case 1:
-    //     return y;
-    //     break;
-    
-    // case 2:
-    //     return z;
-    //     break;
-
-    // default: //the only left index is 3
-    //     return w;
-    //     break;
-    // }
-}
-
-float Vec4::operator[](unsigned int index) const
-{
-    return components[index];
-    // LOGIC_ASSERT(index < 4, "Invalid arguments : index is out of bounds (> 3).");
-    // switch (index)
-    // {
-    // case 0:
-    //     return x;
-    //     break;
-    // case 1:
-    //     return y;
-    //     break;
-    
-    // case 2:
-    //     return z;
-    //     break;
-
-    // default: //the only left index is 3
-    //     return w;
-    //     break;
-    // }
-}
-
 std::ostream& Core::Maths::operator<<(std::ostream& stream, const Vec4& vector)
 {
     stream << "x : " << vector.x << " | y : " << vector.y << " | z : " << vector.z << " | w : " << vector.w << std::endl;
