@@ -82,8 +82,7 @@ namespace Entity
         //// Audio ////
         Resources::AudioSource audio;
 
-    //     // ====== Input Keys ====== //
-    // public:
+        // ====== Input Keys ====== //
         enum E_Inputs : unsigned int
         {
             E_FORWARD = 0,
@@ -113,23 +112,6 @@ namespace Entity
         }
 
         std::array<bool, nbInputKeys> (*getDownKeys) (const Core::Engine& engine) = getDownKeysAzertyAndQwery;
-    //     union 
-    //     {
-    //         struct 
-    //         {
-    //             unsigned int forward  = GLFW_KEY_W,
-    //                          backward = GLFW_KEY_S,
-    //                          right    = GLFW_KEY_D,
-    //                          left     = GLFW_KEY_A,
-    //                          jump     = GLFW_KEY_SPACE,
-    //                          fire     = GLFW_MOUSE_BUTTON_RIGHT;
-    //         };
-
-    //         std::array<unsigned int, nbInputKeys> keys;
-    //     } inputKeys;
-    // public:
-    //     using InputsKeys = std::array<unsigned int, nbInputKeys>;
-    //     // ======================== //
 
     public:
         
