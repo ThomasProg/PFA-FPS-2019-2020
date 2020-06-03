@@ -9,6 +9,8 @@
 
 #include "saveInterface.hpp"
 
+#include "audioSource.hpp"
+
 struct Vec3;
 
 namespace Core
@@ -84,6 +86,9 @@ namespace Entity
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
 
         Entity::Player* target = nullptr;
+
+        //// Audio ////
+        Resources::AudioSource attackSound;
         
         Enemy();
 

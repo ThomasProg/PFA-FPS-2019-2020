@@ -110,6 +110,8 @@ void Game::loadResources()
 
     {
         engine.resourceManager.add(Resources::Audio{"resources/audio/pew.wav"}, E_Audio::E_SHOOT);
+        engine.resourceManager.add(Resources::Audio{"resources/audio/waf.wav"}, E_Audio::E_DOG_ATTACK);
+        engine.resourceManager.add(Resources::Audio{"resources/audio/miaw.wav"}, E_Audio::E_BOSS_ATTACK);
     }
 }
 

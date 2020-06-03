@@ -49,6 +49,8 @@ enum class E_Shader : ContainerType
 enum class E_Audio : ContainerType
 {
     E_SHOOT,
+    E_DOG_ATTACK,
+    E_BOSS_ATTACK,
 };
 
 #endif

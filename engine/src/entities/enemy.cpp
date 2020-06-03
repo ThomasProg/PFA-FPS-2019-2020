@@ -58,11 +58,13 @@ void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
     {
         mesh.model   = &resourceManager.get(E_Model::E_DOG);
         mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+        attackSound.setAudio(resourceManager.get(E_Audio::E_DOG_ATTACK));
     }
     else if (type.enemyType == EnemyType::E_BOSS)
     {
         mesh.model   = &resourceManager.get(E_Model::E_CAT);
         mesh.texture = &resourceManager.get(E_Texture::E_CAT);
+        attackSound.setAudio(resourceManager.get(E_Audio::E_BOSS_ATTACK));
     }
    
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED); 
@@ -162,7 +164,9 @@ void Entity::Enemy::chase(const Core::Engine& engine)
             timeForHit += engine.deltaTime;
         }
         else
-        {   timeForHit = 0.0f;
+        {   
+            attackSound.play();
+            timeForHit = 0.0f;
             target->dealDamages(2);
         }
     }
@@ -260,6 +264,7 @@ void Entity::Enemy::tryToAttack(float playTime)
     {
         if (isTargetInAttackRange())
         {
+            attackSound.play();
             lastAttackTime = playTime;
             target->dealDamages(1.f);
         }
