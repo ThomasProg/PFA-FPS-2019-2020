@@ -87,23 +87,14 @@ void Game::loadResources()
         {
             pos /= 30.f;
             std::swap(pos.y, pos.z);
+            std::swap(pos.x, pos.z);
 
-            // pos.y -= 1.1f;
-            // pos.z /= 2.f;
-            // pos.y /= 1.3f;
-
-            pos.z *= -1;
-            pos.y -= 1;
+            pos.y -= 1.02f;
         }
         for (Core::Maths::Vec3& normal : model.normals)
         {
             std::swap(normal.y, normal.z);
-
-            // pos.y -= 1.1f;
-            // pos.z /= 2.f;
-            // pos.y /= 1.3f;
-
-            normal.z *= -1;
+            std::swap(normal.x, normal.z);
         }
         model.setupModel();
         engine.resourceManager.add(std::move(model), E_Model::E_CAT);
@@ -138,7 +129,8 @@ void Game::quitGame()
 }
 
 void Game::run()
-{
+{        glClearColor(0.1,0.1,0.2,1.f);
+
     while (!engine.shouldStop())
     {
         update(); 
@@ -152,7 +144,7 @@ void Game::run()
         engine.endFrame();
 
         // glClearColor(0.5,0.5,0.9,1.f);
-        glClearColor(0.1,0.1,0.2,1.f);
+        // glClearColor(0.1,0.1,0.2,1.f);
     }
 }
 
