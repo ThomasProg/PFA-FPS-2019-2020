@@ -45,3 +45,13 @@ inline constexpr Core::Maths::Vec4 Core::Maths::operator*(float f, const Core::M
 {
     return Core::Maths::Vec4(vec.x * f, vec.y * f, vec.z * f, vec.w * f);
 }
+
+inline float& Core::Maths::Vec4::operator[](unsigned int index) noexcept
+{
+    return components[index];
+}
+
+inline float Core::Maths::Vec4::operator[](unsigned int index) const noexcept
+{
+    return components[index];
+}

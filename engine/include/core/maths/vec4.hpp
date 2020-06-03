@@ -30,8 +30,8 @@ namespace Core::Maths
         inline constexpr Vec4 operator+(const Vec4&) const;
         inline constexpr Vec4 operator*(const Matrix4x4&) const = delete; //line convention
         inline constexpr Vec4 operator-(const Vec4&) const;
-        float& operator[](unsigned int index);
-        float operator[](unsigned int index) const;
+        inline float& operator[](unsigned int index) noexcept;
+        inline float operator[](unsigned int index) const noexcept;
 
         float getMagnitude() const;
         void  normalize();

@@ -141,12 +141,14 @@ void Resources::Model::loadOBJ(const char* pathToFile)
         }
     }
 
+    positions.reserve(vertexIndices.size());
     for(unsigned int j = 0; j < vertexIndices.size(); j++)
     {
         unsigned int indexVertex = vertexIndices[j];
         positions.push_back(tempVertex[indexVertex - 1]);
     }
 
+    textCoords.reserve(uvIndicies.size());
     for(unsigned int j = 0; j < uvIndicies.size(); j++)
     {
         unsigned int indexUV = uvIndicies[j];
@@ -154,6 +156,7 @@ void Resources::Model::loadOBJ(const char* pathToFile)
             textCoords.push_back(tempUV[indexUV - 1]); 
     }
 
+    normals.reserve(normalIndices.size());
     for(unsigned int j = 0; j < normalIndices.size(); j++)
     {
         unsigned int indexNormal = normalIndices[j];
