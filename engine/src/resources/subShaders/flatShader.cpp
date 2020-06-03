@@ -3,6 +3,12 @@
 #include "mesh.hpp"
 #include "lightManager.hpp"
 
+Resources::FlatShader::FlatShader(const char* vsFilename, const char* fsFilename)
+    : Shader(vsFilename, fsFilename)
+{
+    loadUniformValuesLocation();
+}
+
 void Resources::FlatShader::loadUniformValuesLocation()
 {
     mvpID = getUniformLocation("mvp");  

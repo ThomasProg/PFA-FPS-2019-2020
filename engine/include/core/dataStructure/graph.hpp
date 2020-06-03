@@ -36,19 +36,7 @@ namespace Core::DataStructure
         mutable bool isDirty = true;
 
         // Set self and children dirty flag to true.
-        inline void setDirty()
-        {
-            // If the graph is already dirty, so are its children,
-            // and we do not have to continue.
-            if (isDirty)
-                return;
-
-            isDirty = true;
-            for (const std::unique_ptr<Graph>& child : children)
-            {
-                child->setDirty();
-            }
-        }
+        inline void setDirty() noexcept;
 
     public:
         inline Graph() = default;
@@ -57,42 +45,11 @@ namespace Core::DataStructure
 
         inline Graph& operator=(const Graph& rhs) = delete;
 
-        inline const Core::Maths::Matrix4x4& getLocalMatrix() const
-        {
-            return localData;
-        }
+        inline const Core::Maths::Matrix4x4& getLocalMatrix() const noexcept;
+        inline void setLocalMatrix(Core::Maths::Matrix4x4&& mat);
+        inline void setLocalMatrix(const Core::Maths::Matrix4x4& mat);
 
-        // Be careful !
-        inline const Core::Maths::Matrix4x4&& borrowLocalMatrix() const
-        {
-            return std::move(localData);
-        }
-
-        inline void setLocalMatrix(Core::Maths::Matrix4x4&& mat)
-        {
-            localData = std::move(mat);
-            setDirty();
-        }
-
-        inline void setLocalMatrix(const Core::Maths::Matrix4x4& mat)
-        {
-            localData = mat;
-            setDirty();
-        }
-
-        inline const Core::Maths::Matrix4x4& getWorldMatrix() const
-        {
-            if (isDirty)
-            {
-                if (parent != nullptr)
-                    Core::Maths::Matrix4x4::multiply(parent->getWorldMatrix(), localData, worldData);
-                else 
-                    worldData = localData;
-
-                isDirty = false;
-            }
-            return worldData;
-        } 
+        inline const Core::Maths::Matrix4x4& getWorldMatrix() const;
 
         // "Iterators" are returned to the user.
         // The user can then use them to erase the object, move it into the graph, etc 
@@ -109,19 +66,22 @@ namespace Core::DataStructure
             inline iterator(Graph* graphPtr);
             inline ~iterator() = default;
 
+            inline iterator& operator=(const iterator&) = default;
+
             inline Graph& operator*();
             inline const Graph& operator*() const;
             inline Graph* operator->();
             inline const Graph* operator->() const;
 
-            // bool operator!=(const iterator& it) const noexcept;
+            inline bool operator!=(const iterator& it) const noexcept;
 
             inline bool isValid() const noexcept;
-            inline void setInvalid();
-            inline void erase();
+            inline void setInvalid() noexcept;
+            inline void erase(); // O(n)
 
             // We can't use attachTo() without accessing the iterator's members
-            // and without breaking encapsulation.
+            // without using a friend,
+            // or it would break encapsulation.
             friend class Graph;
         };
 
@@ -130,11 +90,11 @@ namespace Core::DataStructure
         inline iterator addChild(); 
 
 
-        // // // Change the parent of the node pointed by "it" to "newParent".
-        // // // Inputs :
-        // // // iterator it : the iterator used for the current node we want to change parent
-        // // // Graph& newParent : the graph which will become the parent of it
-        // // static void attachTo(iterator& it, Graph& newParent);
+        // Change the parent of the node pointed by "it" to "newParent".
+        // Inputs :
+        // iterator it : the iterator used for the current node we want to change parent
+        // Graph& newParent : the graph which will become the parent of it
+        static inline void attachTo(iterator& it, Graph& newParent); // O(n)
     };
 }
 

@@ -3,6 +3,12 @@
 #include "mesh.hpp"
 #include "lightManager.hpp"
 
+Resources::PhongFlat::PhongFlat(const char* vsFilename, const char* fsFilename)
+    : Shader(vsFilename, fsFilename)
+{
+    loadUniformValuesLocation();
+}
+
 void Resources::PhongFlat::loadUniformValuesLocation()
 {
     nbCurrentLightsID = getUniformLocation("nbCurrentLights");

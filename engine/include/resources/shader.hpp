@@ -30,10 +30,7 @@ namespace Resources
     protected:
         // Read only, to send data to program only
         // Only children should be able to send data to the program
-        inline GLuint getProgramID() const noexcept
-        {
-            return programID;
-        }
+        inline GLuint getProgramID() const noexcept;
 
     public:
         Shader() = default;

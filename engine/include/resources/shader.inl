@@ -1,5 +1,11 @@
 #include "shader.hpp"
 #include <iostream>
+
+inline GLuint Resources::Shader::getProgramID() const noexcept
+{
+    return programID;
+}
+
 inline constexpr bool Resources::Shader::isValid() const noexcept
 {
     return programID != 0;
