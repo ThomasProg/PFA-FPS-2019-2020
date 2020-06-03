@@ -78,9 +78,12 @@ private:
     bool isPauseMenuOpen {false};
     bool inGame {true};
     bool gWin {false};
-    int imageWidth = 0;
-    int imageHeight = 0;
-    GLuint imageText = 0;
+    int crosshairWidth = 0;
+    int crosshairHeight = 0;
+    GLuint crosshair = 0;
+    int crossWidth = 0;
+    int crossHeight = 0;
+    GLuint cross = 0;
     float t = 0;
     //////////////////////////////
 

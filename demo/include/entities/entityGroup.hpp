@@ -78,6 +78,10 @@ public:
 
     template<class... ARGS>
     Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... enemyArgs);
+
+    template<class... ARGS>
+    Entity::Enemy* addEnemyBoss (const Physics::Transform& transform, ARGS&&... enemyArgs);
+
     void removeEnemy(unsigned int index);
     void removeEnemyFromSytems(Entity::Enemy* enemy);
 

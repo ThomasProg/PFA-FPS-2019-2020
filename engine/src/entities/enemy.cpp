@@ -41,9 +41,18 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 
 void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_DOG);
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    if (type.enemyType == EnemyType::E_NORMAL)
+    {
+        mesh.model   = &resourceManager.get(E_Model::E_DOG);
+        mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    }
+    else if (type.enemyType == EnemyType::E_BOSS)
+    {
+        mesh.model   = &resourceManager.get(E_Model::E_CAT);
+        mesh.texture = &resourceManager.get(E_Texture::E_CAT);
+    }
+   
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED); 
     mesh.linkShaderWithModel();
 }
 
@@ -115,22 +124,35 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
 void Entity::Enemy::chase(const Core::Engine& engine)
 {
-    state.enemyState = EnemyState::E_CHASING;
-
-    const Core::Maths::Vec3& loc = transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
-    Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
-    Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
-
-    velocityXZ += direction * speed;
-
-    if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
+    if(type.enemyType == EnemyType::E_NORMAL)
     {
-        velocityXZ = velocityXZ.unitVector() * maxSpeed;
-    }
+        state.enemyState = EnemyState::E_CHASING;
 
-    physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
-    physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
-    transform.UpdateLocalTransformMatrix();
+        const Core::Maths::Vec3& loc = transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
+        Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
+        Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
+        velocityXZ += direction * speed;
+
+        if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
+        {
+            velocityXZ = velocityXZ.unitVector() * maxSpeed;
+        }
+
+        physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
+        physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
+        transform.UpdateLocalTransformMatrix();
+    }
+    else if(type.enemyType == EnemyType::E_BOSS)
+    {
+        if(timeForHit < timeBetweenHitBoss)
+        {
+            timeForHit += engine.deltaTime;
+        }
+        else
+        {   timeForHit = 0.0f;
+            target->dealDamages(2);
+        }
+    }
 }
 
 bool Entity::Enemy::isTargetInChaseRange() const

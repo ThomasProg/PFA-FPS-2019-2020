@@ -80,6 +80,35 @@ void Game::loadResources()
         engine.resourceManager.add(std::move(model), E_Model::E_GUN);
         engine.resourceManager.add(Resources::Texture{"resources/obj/M14warna.png"}, E_Texture::E_GUN);
     }
+    {
+        Resources::Model model;
+        model.loadOBJ("resources/obj/cat.obj");
+         for (Core::Maths::Vec3& pos : model.positions)
+        {
+            pos /= 30.f;
+            std::swap(pos.y, pos.z);
+
+            // pos.y -= 1.1f;
+            // pos.z /= 2.f;
+            // pos.y /= 1.3f;
+
+            pos.z *= -1;
+            pos.y -= 1;
+        }
+        for (Core::Maths::Vec3& normal : model.normals)
+        {
+            std::swap(normal.y, normal.z);
+
+            // pos.y -= 1.1f;
+            // pos.z /= 2.f;
+            // pos.y /= 1.3f;
+
+            normal.z *= -1;
+        }
+        model.setupModel();
+        engine.resourceManager.add(std::move(model), E_Model::E_CAT);
+        engine.resourceManager.add(Resources::Texture{"resources/obj/cat.jpg"}, E_Texture::E_CAT);
+    }
 
     {
         engine.resourceManager.add(std::make_unique<Resources::FlatShader>("resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"), E_Shader::E_FLAT);
