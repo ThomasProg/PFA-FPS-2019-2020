@@ -94,6 +94,9 @@ namespace Entity
         //// Audio ////
         Resources::AudioSource audio;
 
+
+        bool canJump = false;
+
         // ====== Input Keys ====== //
         enum E_Inputs : unsigned int
         {
@@ -133,12 +136,14 @@ namespace Entity
 
         void reloadAmmo();
 
-        void physicCompOnCollisionEnter        (const Physics::Shapes::SegmentHit&) override 
+        void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
         {
+            if (hit.normal.y > 0.5) canJump = true;
+            // std::cout << hit.normal << std::endl;
             // std::cout << "Enter collision" << std::endl;
         }
 
-        void physicCompOnCollisionExit        () override 
+        void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
         {
             // std::cout << "Exit collision" << std::endl;
         }
