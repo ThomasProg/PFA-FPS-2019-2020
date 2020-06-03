@@ -7,11 +7,13 @@
 
 #define _IS_MOUSE_ENABLED_ 1
 
-void Renderer::FPSCamera::attachTo(Physics::GTransform& parent)
-{
-    transform.transformMatrixNode = parent.transformMatrixNode->addChild();
-    transform.UpdateLocalTransformMatrix();
-}
+// void Renderer::FPSCamera::attachTo(Physics::GTransform& parent)
+// {
+//     if (transform.transformMatrixNode.isValid())
+//         transform.transformMatrixNode.erase();
+//     transform.transformMatrixNode = parent.transformMatrixNode->addChild();
+//     transform.UpdateLocalTransformMatrix();
+// }
 
 void Renderer::FPSCamera::inputs(const Core::Engine& engine)
 {

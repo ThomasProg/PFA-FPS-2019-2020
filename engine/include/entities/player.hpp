@@ -47,11 +47,23 @@ namespace Entity
 
     // Example Class for Player
     class Player final : public Physics::TransformInterface,
-                         public Renderer::RenderableInterface,
+                        // public Renderer::RenderableInterface,
                          public Physics::CollisionComponentInterface<Physics::Shapes::Box>,
                          public Physics::PhysicComponentInterface,
                          public Controller::ControllerInterface
     {
+    private: 
+        class Gun : public Physics::TransformInterface,
+                    public Renderer::RenderableInterface
+        {
+        public:
+            Gun() 
+                : Renderer::RenderableInterface(&transform)
+            {}
+        };
+
+        Gun gun;
+
     private:
         static constexpr float movementSpeed  = 10.f * 1.f;
         static constexpr float jumpSpeed      = 7.0f;
@@ -95,34 +107,19 @@ namespace Entity
         };
         static constexpr unsigned int nbInputKeys = static_cast<unsigned int> (E_Inputs::E_LAST);
 
-        static std::array<bool, nbInputKeys> getDownKeysAzertyAndQwery(const Core::Engine& engine)
-        {
-            std::array<bool, nbInputKeys> keys;
-
-            keys[E_FORWARD]  = (engine.isKeyDown(GLFW_KEY_W) || engine.isKeyDown(GLFW_KEY_Z));
-            keys[E_LEFT]     = (engine.isKeyDown(GLFW_KEY_A) || engine.isKeyDown(GLFW_KEY_Q));
-            keys[E_BACKWARD] = (engine.isKeyDown(GLFW_KEY_S));
-            keys[E_RIGHT]    = (engine.isKeyDown(GLFW_KEY_D));
-
-            keys[E_JUMP] = (engine.isKeyDown(GLFW_KEY_SPACE));
-
-            keys[E_FIRE] = (engine.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT));
-
-            return keys;
-        }
+        static std::array<bool, nbInputKeys> getDownKeysAzertyAndQwery(const Core::Engine& engine);
 
         std::array<bool, nbInputKeys> (*getDownKeys) (const Core::Engine& engine) = getDownKeysAzertyAndQwery;
 
     public:
         
-        Player() 
-            : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
-              Physics::PhysicComponentInterface(&transform)
-        {
-            collider.isOverlap = true;
-            physicComp.collider.worldCollider.radius = 1.f;
-        }
+        Player();
+
+        inline void addRendering(Renderer::RendererSystem& rendererSystem);
+        inline void removeRendering(Renderer::RendererSystem& rendererSystem);
+
+        void setTransformParent(Physics::TransformGraph& transformParent);
+        void setTransform(const Physics::Transform& newTransform);
 
         void inputs(const Core::Engine& engine) override;
 
@@ -170,5 +167,7 @@ namespace Entity
         }
     };
 }
+
+#include "player.inl"
 
 #endif

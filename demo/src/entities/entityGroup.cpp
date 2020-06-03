@@ -8,7 +8,7 @@ EntityGroup::EntityGroup(Core::Engine& engine)
 
 EntityGroup::~EntityGroup()
 {
-    engine.rendererSystem.erase(player->meshIt);
+    player->removeRendering(engine.rendererSystem);
     engine.physicsSystem.erase(player->colliderIt);
     engine.physicsSystem.erase(player->physicCompIt);
 

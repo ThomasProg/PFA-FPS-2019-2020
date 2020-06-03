@@ -12,6 +12,33 @@
 
 #define _IS_MOUSE_ENABLED_ 1
 
+Entity::Player::Player() 
+    : //Renderer::RenderableInterface(&transform),
+        Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
+        Physics::PhysicComponentInterface(&transform)
+{
+    collider.isOverlap = true;
+    physicComp.collider.worldCollider.radius = 1.f;
+}
+
+void Entity::Player::setTransformParent(Physics::TransformGraph& transformParent)
+{
+    TransformInterface::setTransformParent(transformParent);
+
+    camera.setTransformParent(*this);
+
+    gun.setTransformParent(camera);
+}
+
+void Entity::Player::setTransform(const Physics::Transform& newTransform)
+{
+    TransformInterface::setTransform(newTransform);
+    
+    camera.setTransform({{0,1,0}, {0.f,0.f,0.f}, {1,1,1}});
+
+    gun.setTransform({{1.f,0.2f,0.f}, {0.f,0.f,0.f}, {1,1,1}});
+}
+
 bool Entity::PlayerState::isOnGround() const noexcept
 {
     return playerState == E_IDLE || playerState == E_WALKING;
@@ -19,22 +46,17 @@ bool Entity::PlayerState::isOnGround() const noexcept
 
 void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_GUN);
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    mesh.texture = &resourceManager.get(E_Texture::E_GUN);
-    mesh.linkShaderWithModel();
+    gun.mesh.model   = &resourceManager.get(E_Model::E_GUN);
+    gun.mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+    gun.mesh.texture = &resourceManager.get(E_Texture::E_GUN);
+    gun.mesh.linkShaderWithModel();
 
     audio.setAudio(resourceManager.get(E_Audio::E_SHOOT));
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
-    // if (!physicCompIt.isValid())
-    //     return;
-
     std::array<bool, nbInputKeys> keys = getDownKeys(engine);
-    
-    // std::vector<unsigned int>::iterator it;
 
     if (keys[E_JUMP])
         lastJumpPressTime = glfwGetTime();
@@ -230,3 +252,20 @@ void Entity::Player::reloadAmmo()
 // {
         
 // }
+
+
+std::array<bool, Entity::Player::nbInputKeys> Entity::Player::getDownKeysAzertyAndQwery(const Core::Engine& engine)
+{
+    std::array<bool, nbInputKeys> keys;
+
+    keys[E_FORWARD]  = (engine.isKeyDown(GLFW_KEY_W) || engine.isKeyDown(GLFW_KEY_Z));
+    keys[E_LEFT]     = (engine.isKeyDown(GLFW_KEY_A) || engine.isKeyDown(GLFW_KEY_Q));
+    keys[E_BACKWARD] = (engine.isKeyDown(GLFW_KEY_S));
+    keys[E_RIGHT]    = (engine.isKeyDown(GLFW_KEY_D));
+
+    keys[E_JUMP] = (engine.isKeyDown(GLFW_KEY_SPACE));
+
+    keys[E_FIRE] = (engine.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT));
+
+    return keys;
+}

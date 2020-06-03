@@ -22,8 +22,19 @@ namespace Physics
         }
         void setTransformParent(Physics::TransformGraph& transformParent)
         {
+            if (transform.transformMatrixNode.isValid())
+                transform.transformMatrixNode.erase();
             transform.transformMatrixNode = transformParent.addChild();
             assert(transform.transformMatrixNode.isValid());
+        }
+        inline void setTransformParent(Physics::GTransform& transformParent)
+        {
+            assert(transformParent.transformMatrixNode.isValid());
+            setTransformParent(*transformParent.transformMatrixNode);
+        }
+        inline void setTransformParent(Physics::TransformInterface& transformParent)
+        {
+            setTransformParent(transformParent.transform);
         }
     };
 }

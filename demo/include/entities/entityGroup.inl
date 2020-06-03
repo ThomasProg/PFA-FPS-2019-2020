@@ -14,16 +14,12 @@ Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS
         return nullptr;
 
     player->setTransformParent(root);
+    player->setTransform(transform);
     player->setResources(engine.resourceManager);
 
     player->addRendering(engine.rendererSystem);
     player->addCollisions(engine.physicsSystem);
     player->addPhysics(engine.physicsSystem);
-
-    player->camera.attachTo(player->transform);
-    player->setTransform(transform);
-
-    player->camera.transform.transform.location.y = 1.f;
 
     if (controller == nullptr)
         controller = player.get();
