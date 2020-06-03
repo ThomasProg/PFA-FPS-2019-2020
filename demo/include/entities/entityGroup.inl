@@ -109,6 +109,29 @@ Entity::Enemy* EntityGroup::addEnemy(const Physics::Transform& transform, ARGS&&
 { 
     enemies.emplace_back(std::make_unique<Entity::Enemy>(std::forward<ARGS>(enemyArgs)...));
     Entity::Enemy* enemy = enemies.back().get();
+    enemy->life = 10;
+
+    enemy->setResources(engine.resourceManager);
+    enemy->setTransformParent(root);            
+    enemy->setTransform(transform);
+
+    enemy->addRendering(engine.rendererSystem);
+    enemy->addCollisions(engine.physicsSystem);
+    enemy->addPhysics(engine.physicsSystem);
+
+    enemy->patrolTarget = transform.location;
+    return enemy;
+}
+
+template<class... ARGS>
+Entity::Enemy* EntityGroup::addEnemyBoss(const Physics::Transform& transform, ARGS&&... enemyArgs)
+{ 
+    enemies.emplace_back(std::make_unique<Entity::Enemy>(std::forward<ARGS>(enemyArgs)...));
+    Entity::Enemy* enemy = enemies.back().get();
+    enemy->physicComp.collider.worldCollider.radius = 5.0f;
+    enemy->type.enemyType = Entity::EnemyType::E_BOSS;
+    enemy->life = 100;
+    enemy->speed = 6.0f;
 
     enemy->setResources(engine.resourceManager);
     enemy->setTransformParent(root);            

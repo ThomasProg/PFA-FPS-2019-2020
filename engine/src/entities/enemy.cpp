@@ -116,23 +116,39 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
 void Entity::Enemy::chase(const Core::Engine& engine)
 {
-    state.enemyState = EnemyState::E_CHASING;
-
-    const Core::Maths::Vec3& loc = transform.transformMatrixNode->worldData.getTranslationVector();
-    Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
-    Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
-
-    velocityXZ += direction * speed;
-
-    if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
+    if(type.enemyType == EnemyType::E_NORMAL)
     {
-        velocityXZ = velocityXZ.unitVector() * maxSpeed;
-    }
+        state.enemyState = EnemyState::E_CHASING;
 
-    physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
-    physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
-    transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->cleanUpdate();
+        const Core::Maths::Vec3& loc = transform.transformMatrixNode->worldData.getTranslationVector();
+        Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
+        Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
+
+        velocityXZ += direction * speed;
+
+        if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
+        {
+            velocityXZ = velocityXZ.unitVector() * maxSpeed;
+        }
+
+        physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
+        physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
+        transform.UpdateLocalTransformMatrix();
+        
+        transform.transformMatrixNode->cleanUpdate();
+    }
+    else if(type.enemyType == EnemyType::E_BOSS)
+    {
+        if(timeForHit < timeBetweenHitBoss)
+        {
+            timeForHit += engine.deltaTime;
+        }
+        else
+        {   timeForHit = 0.0f;
+            target->lifePoints -= 2;
+        }
+    }
+    
 }
 
 bool Entity::Enemy::isTargetInChaseRange() const

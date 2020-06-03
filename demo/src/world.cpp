@@ -150,13 +150,15 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
 
-    for (uint j = 0; j < 5; j++)
+    /*for (uint j = 0; j < 5; j++)
     {
         for (uint i = 0; i < 5; i++)
         {
             entityGroup.addEnemy({{100.f + float(i), 0, 70 + float(j)}, {0.f,0,0}, {1,1,1}});
         }
-    }
+    }*/
+
+    entityGroup.addEnemyBoss({{100.f, 15, 70 }, {0.f,0,0}, {5,5,5}});
 
     // === Add Player === //
     entityGroup.addPlayer({{0,0,10.0 + 0.0}});
