@@ -1,6 +1,6 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
-CXXFLAGS=-O0 -g -Wall -MMD -Wno-unused-function
+CXXFLAGS=-O3 -Wall -MMD -Wno-unused-function
 CXXFLAGS+=-Idemo/include -Idemo/include/entities\
 		  -Iengine/include -Iengine/include/core -Iengine/include/core/maths\
 		  -Iengine/include/resources -Iengine/include/resources/subShaders -Iengine/include/renderer\
