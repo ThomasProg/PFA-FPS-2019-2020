@@ -87,14 +87,14 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    entityGroup.addLight();
-    {
-        Renderer::LightData data;
-        data.location = {20.f, -27.f, 12, 0.0}; 
-        data.lightType = 3;
-        data.ambient = {0.2, 0.2,0.2,0};
-        entityGroup.addLight(std::move(data));
-    }
+    // entityGroup.addLight();
+    // {
+    //     Renderer::LightData data;
+    //     data.location = {20.f, -27.f, 12, 0.0}; 
+    //     data.lightType = 0;
+    //     data.ambient = {0.2, 0.2,0.2,0};
+    //     entityGroup.addLight(std::move(data));
+    // }
 
      Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
      Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
@@ -113,12 +113,23 @@ void World::makeNewLevel()
     }
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addFirefly({{10, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
+    auto addFireflyWithLight = [&](const Core::Maths::Vec3& loc = {0, -26, 0.15}) 
     {
-        Renderer::LightData data;
-        data.location = {9, -26, 20, 1};
-        entityGroup.addLight(std::move(data));
-    }
+        entityGroup.addFirefly({loc, {0.f,0,0}, {0.4,0.4,0.4}});
+        {
+            Renderer::LightData data;
+            data.location = Core::Maths::Vec4{loc, 1};
+            data.ambient  = Core::Maths::Vec4{1, 1, 1, 1};
+            entityGroup.addLight(std::move(data));
+        }
+    };
+
+    // addFireflyWithLight();
+    addFireflyWithLight({0, -26, 0.15});
+
+    entityGroup.addLight(Core::Maths::Vec3{0, -26, 70});
+    entityGroup.addLight(Core::Maths::Vec3{50, -26, 70});
+    entityGroup.addLight(Core::Maths::Vec3{100, -20, 70});
 
 
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
@@ -161,27 +172,10 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
 
-    /*for (uint j = 0; j < 5; j++)
-    {
-        for (uint i = 0; i < 5; i++)
-        {
-            entityGroup.addEnemy({{100.f + float(i), 0, 70 + float(j)}, {0.f,0,0}, {1,1,1}});
-        }
-    }*/
-
     entityGroup.addEnemyBoss({{100.f, 15, 70 }, {0.f,0.f,0}, {5,5,5}});
 
     // === Add Player === //
     entityGroup.addPlayer({{0,0,10.0 + 0.0}});
-
-    // for (uint i = 0; i < 100; i++)
-    // {
-    //     entityGroup.addBullet({});
-    // }
-
-    // // === Add other cameras === //
-    // fpsCamera.setup(player.transform);
-    // tpsCamera.setup(player.transform);
 }
 #include <array>
 void World::load()

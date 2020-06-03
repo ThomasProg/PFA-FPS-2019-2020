@@ -17,6 +17,7 @@ namespace Renderer
 
         Light() = default;
         inline Light(const LightData& data);
+        inline Light(const Core::Maths::Vec3& location);
         Light(const Light&) = default;
         Light& operator=(Light&) = default;
         ~Light() = default;
