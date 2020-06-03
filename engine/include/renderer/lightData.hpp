@@ -14,7 +14,7 @@ namespace Renderer
         // Basic lighting data 
         Core::Maths::Vec4 ambient {0.0f, 0.0f, 0.0f, 0.0f};
         Core::Maths::Vec4 dif {1.0f, 1.0f, 1.0f, 0.0f};
-        Core::Maths::Vec4 spec {0.0f, 0.0f, 0.0f, 0.0f};
+        Core::Maths::Vec4 spec {0.3f, 0.3f, 0.3f, 0.0f};
 
         // updated by setLight() 
         // should not be updated anywhere else

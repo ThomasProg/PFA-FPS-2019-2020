@@ -1,10 +1,9 @@
 #include "entityGroup.hpp"
 
 template<class... ARGS>
-Renderer::Light& EntityGroup::addLight(ARGS&&... lightArgs)
+void EntityGroup::addLight(ARGS&&... lightArgs)
 {
-    lightManager.lights.emplace_back(std::forward<ARGS>(lightArgs)...);
-    return lightManager.lights.back();
+    lightManager.getLightsToModifyThem().emplace_back(std::forward<ARGS>(lightArgs)...);
 }
 
 template<class... ARGS>

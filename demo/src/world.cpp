@@ -88,10 +88,11 @@ void World::makeNewLevel()
 
     entityGroup.addLight();
     {
-        Renderer::Light& l = entityGroup.addLight();
-        l.lightData.location = {20.f, -27.f, 12, 0.0}; 
-        l.lightData.lightType = 3;
-        l.lightData.ambient = {0.7, 0.7,0.7,0};
+        Renderer::LightData data;
+        data.location = {20.f, -27.f, 12, 0.0}; 
+        data.lightType = 3;
+        data.ambient = {0.2, 0.2,0.2,0};
+        entityGroup.addLight(std::move(data));
     }
 
      Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
@@ -106,15 +107,16 @@ void World::makeNewLevel()
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
     for (uint i = 0; i < 10; i++)
     {
-        entityGroup.addTree({{6+std::sin(float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
-        entityGroup.addTree({{-6-std::sin(10+float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addTree({{6+std::sin(float(i)*5)*2.f, -30, 5+float(i)*5}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addTree({{-6-std::sin(10+float(i)*5)*2.f, -30, 5+float(i)*5}, {0.f,0,0}, {1,1,1}});
     }
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
 
     entityGroup.addFirefly({{10, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
     {
-        Renderer::Light& l = entityGroup.addLight();
-        l.lightData.location = {9, -26, 20, 1};
+        Renderer::LightData data;
+        data.location = {9, -26, 20, 1};
+        entityGroup.addLight(std::move(data));
     }
 
 

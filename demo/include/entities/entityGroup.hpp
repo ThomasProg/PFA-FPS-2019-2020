@@ -47,8 +47,12 @@ public:
 
     ~EntityGroup();
 
+    // Not returning a reference or a pointer;
+    // Modifying lights sets a dirty flag, 
+    // we do not want the reference to be used too long, 
+    // or the dirty flag would become pointless.
     template<class... ARGS>
-    Renderer::Light& addLight (ARGS&&... lightArgs);
+    void addLight (ARGS&&... lightArgs);
 
     template<class... ARGS>
     Entity::Player* addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs);

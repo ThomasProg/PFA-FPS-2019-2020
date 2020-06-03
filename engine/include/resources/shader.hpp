@@ -23,9 +23,17 @@ namespace Resources
 {
     class Shader
     {
-    protected:
+    private:
         // OpenGL shader program Index on GPU
         GLuint programID = 0;
+
+    protected:
+        // Read only, to send data to program only
+        // Only children should be able to send data to the program
+        inline GLuint getProgramID() const noexcept
+        {
+            return programID;
+        }
 
     public:
         Shader() = default;

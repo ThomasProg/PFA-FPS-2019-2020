@@ -11,10 +11,22 @@ namespace Renderer
     class LightManager
     {
     private:
+        std::vector<Light> lights;
 
     public:
-        std::vector<Light> lights;
         GLuint lightsUniformBuffer = 0;
+        bool hasLightChanged = true; // dirty flag to send the data to gpu again when lights are modified
+
+        inline const std::vector<Light>& getLights() const
+        {
+            return lights;
+        }
+
+        inline std::vector<Light>& getLightsToModifyThem()
+        {
+            hasLightChanged = true;
+            return lights;
+        }
 
         inline LightManager(unsigned int nbMaxLights, GLenum usage = GL_DYNAMIC_DRAW)
         {

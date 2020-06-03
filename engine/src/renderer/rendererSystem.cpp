@@ -45,7 +45,8 @@ void Renderer::RendererSystem::draw(const Camera& camera, Renderer::LightManager
                 mesh->shader->use();
                 lastShader = mesh->shader;
                 
-                lastShader->useLightsUniformValues(lightManager);
+                if (lightManager.hasLightChanged)
+                    lastShader->useLightsUniformValues(lightManager);
 
                 // for (uint i = 0; i < lightManager.lights.size(); i++)
                 // {
@@ -58,6 +59,8 @@ void Renderer::RendererSystem::draw(const Camera& camera, Renderer::LightManager
             mesh->draw(camera, lightManager);
         }
     }
+
+    lightManager.hasLightChanged = false;
 }
 
 

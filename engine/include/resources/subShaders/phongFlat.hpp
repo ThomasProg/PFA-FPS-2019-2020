@@ -16,11 +16,10 @@ namespace Resources
         GLint colorID;           // index of "color"
 
     public:
-        PhongFlat(Shader&& shader)
-            : Shader(std::move(shader))
+        PhongFlat(const char* vsFilename, const char* fsFilename)
+            : Shader(vsFilename, fsFilename)
         {
-            if (programID != 0)
-                loadUniformValuesLocation();
+            loadUniformValuesLocation();
         }
 
         void loadUniformValuesLocation() override;

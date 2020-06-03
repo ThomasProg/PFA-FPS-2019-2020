@@ -82,10 +82,10 @@ void Game::loadResources()
     }
 
     {
-        engine.resourceManager.add(std::make_unique<Resources::FlatShader>(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}), E_Shader::E_FLAT);
-        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"}), E_Shader::E_LIGHTED_FLATCOLOR);
-        engine.resourceManager.add(std::make_unique<Resources::Shader>(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}), E_Shader::E_TEXTURED);
-        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}), E_Shader::E_LIGHTED);
+        engine.resourceManager.add(std::make_unique<Resources::FlatShader>("resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"), E_Shader::E_FLAT);
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>("resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"), E_Shader::E_LIGHTED_FLATCOLOR);
+        engine.resourceManager.add(std::make_unique<Resources::Shader>("resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"), E_Shader::E_TEXTURED);
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>("resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"), E_Shader::E_LIGHTED);
     }
 
     {
@@ -122,7 +122,8 @@ void Game::run()
 
         engine.endFrame();
 
-        glClearColor(0.5,0.5,0.9,1.f);
+        // glClearColor(0.5,0.5,0.9,1.f);
+        glClearColor(0.1,0.1,0.2,1.f);
     }
 }
 

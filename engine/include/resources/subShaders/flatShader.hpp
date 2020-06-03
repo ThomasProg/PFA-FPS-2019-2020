@@ -12,11 +12,10 @@ namespace Resources
         GLint colorID;           // index of "color"
 
     public:
-        FlatShader(Shader&& shader)
-            : Shader(std::move(shader))
+        FlatShader(const char* vsFilename, const char* fsFilename)
+            : Shader(vsFilename, fsFilename)
         {
-            if (programID != 0)
-                loadUniformValuesLocation();
+            loadUniformValuesLocation();
         }
 
         void loadUniformValuesLocation() override;

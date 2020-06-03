@@ -35,13 +35,14 @@ namespace Core::DataStructure
     private:
         mutable bool isDirty = false;
 
-        // We update a mutable value, which can be used in const state.
-        // That is why we also have to put this function const, to call it when using getWorldMatrix().
-        // This function should not be called by the user in a const function directly,
-        // or it would just reduce performance.
-        // That is why this function is private.
-        inline void setDirty() const
+        // Set self and children dirty flag to true.
+        inline void setDirty()
         {
+            // If the graph is already dirty, so are its children,
+            // and we do not have to continue.
+            if (isDirty)
+                return;
+
             isDirty = true;
             for (const std::unique_ptr<Graph>& child : children)
             {
@@ -70,13 +71,13 @@ namespace Core::DataStructure
         inline void setLocalMatrix(Core::Maths::Matrix4x4&& mat)
         {
             localData = std::move(mat);
-            isDirty = true;
+            setDirty();
         }
 
         inline void setLocalMatrix(const Core::Maths::Matrix4x4& mat)
         {
             localData = mat;
-            isDirty = true;
+            setDirty();
         }
 
         inline const Core::Maths::Matrix4x4& getWorldMatrix() const
@@ -87,8 +88,6 @@ namespace Core::DataStructure
                     Core::Maths::Matrix4x4::multiply(parent->getWorldMatrix(), localData, worldData);
                 else 
                     worldData = localData;
-
-                setDirty();
             }
             return worldData;
         } 
