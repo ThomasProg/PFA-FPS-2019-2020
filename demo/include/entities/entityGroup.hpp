@@ -84,8 +84,6 @@ public:
     template<class... ARGS>
     std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
 
-    void setKeys(bool isAzerty);
-
     void collectGarbage();
 };
 

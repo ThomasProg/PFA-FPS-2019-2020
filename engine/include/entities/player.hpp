@@ -82,27 +82,54 @@ namespace Entity
         //// Audio ////
         Resources::AudioSource audio;
 
-        // ====== Input Keys ====== //
-    public:
-        static constexpr size_t nbInputKeys = 5;
-
-        union 
+    //     // ====== Input Keys ====== //
+    // public:
+        enum E_Inputs : unsigned int
         {
-            struct 
-            {
-                unsigned int forward  = GLFW_KEY_W,
-                             backward = GLFW_KEY_S,
-                             right    = GLFW_KEY_D,
-                             left     = GLFW_KEY_A,
-                             jump     = GLFW_KEY_SPACE,
-                             fire     = GLFW_MOUSE_BUTTON_RIGHT;
-            };
+            E_FORWARD = 0,
+            E_BACKWARD,
+            E_RIGHT,
+            E_LEFT,
+            E_JUMP,
+            E_FIRE,
+            E_LAST
+        };
+        static constexpr unsigned int nbInputKeys = static_cast<unsigned int> (E_Inputs::E_LAST);
 
-            std::array<unsigned int, nbInputKeys> keys;
-        } inputKeys;
-    public:
-        using InputsKeys = std::array<unsigned int, nbInputKeys>;
-        // ======================== //
+        static std::array<bool, nbInputKeys> getDownKeysAzertyAndQwery(const Core::Engine& engine)
+        {
+            std::array<bool, nbInputKeys> keys;
+
+            keys[E_FORWARD]  = (engine.isKeyDown(GLFW_KEY_W) || engine.isKeyDown(GLFW_KEY_Z));
+            keys[E_LEFT]     = (engine.isKeyDown(GLFW_KEY_A) || engine.isKeyDown(GLFW_KEY_Q));
+            keys[E_BACKWARD] = (engine.isKeyDown(GLFW_KEY_S));
+            keys[E_RIGHT]    = (engine.isKeyDown(GLFW_KEY_D));
+
+            keys[E_JUMP] = (engine.isKeyDown(GLFW_KEY_SPACE));
+
+            keys[E_FIRE] = (engine.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT));
+
+            return keys;
+        }
+
+        std::array<bool, nbInputKeys> (*getDownKeys) (const Core::Engine& engine) = getDownKeysAzertyAndQwery;
+    //     union 
+    //     {
+    //         struct 
+    //         {
+    //             unsigned int forward  = GLFW_KEY_W,
+    //                          backward = GLFW_KEY_S,
+    //                          right    = GLFW_KEY_D,
+    //                          left     = GLFW_KEY_A,
+    //                          jump     = GLFW_KEY_SPACE,
+    //                          fire     = GLFW_MOUSE_BUTTON_RIGHT;
+    //         };
+
+    //         std::array<unsigned int, nbInputKeys> keys;
+    //     } inputKeys;
+    // public:
+    //     using InputsKeys = std::array<unsigned int, nbInputKeys>;
+    //     // ======================== //
 
     public:
         
@@ -120,7 +147,6 @@ namespace Entity
         void tryToJump(const Core::Engine& engine);
         void setResources(const DemoResourceManager&);
 
-        bool isShooting(const Core::Engine& engine) const;
         Physics::Shapes::Segment3D getShootRay() const;
         void shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime);
 

@@ -180,7 +180,7 @@ void World::makeNewLevel()
     // fpsCamera.setup(player.transform);
     // tpsCamera.setup(player.transform);
 }
-
+#include <array>
 void World::load()
 {
     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
@@ -198,8 +198,6 @@ void World::load()
         loadFromSavefile(Game::savedFilename);
     else 
         makeNewLevel();
-
-    entityGroup.setKeys(game.isAzerty);
 
     // lightManager.lightsBufferInit(10);
     // lightManager.lights.emplace_back();

@@ -31,10 +31,12 @@ void Entity::Player::inputs(const Core::Engine& engine)
 {       
     // if (!physicCompIt.isValid())
     //     return;
-    
-    std::vector<unsigned int>::iterator it;
 
-    if (engine.isKeyDown(inputKeys.jump))
+    std::array<bool, nbInputKeys> keys = getDownKeys(engine);
+    
+    // std::vector<unsigned int>::iterator it;
+
+    if (keys[E_JUMP])
         lastJumpPressTime = glfwGetTime();
 
     Core::Maths::Vec3 forward = transform.transform.getForwardXZVector() * movementSpeed;
@@ -44,22 +46,22 @@ void Entity::Player::inputs(const Core::Engine& engine)
 
     bool hasMoved = false;
 
-    if (engine.isKeyDown(inputKeys.forward))
+    if (keys[E_FORWARD])
     {
         addedVelocity += forward; 
         hasMoved = true;
     }
-    if (engine.isKeyDown(inputKeys.backward))
+    if (keys[E_BACKWARD])
     {
         addedVelocity += - forward; 
         hasMoved = true;
     }
-    if (engine.isKeyDown(inputKeys.right))
+    if (keys[E_RIGHT])
     {
         addedVelocity += right; 
         hasMoved = true;
     }
-    if (engine.isKeyDown(inputKeys.left))
+    if (keys[E_LEFT])
     {
         addedVelocity += - right; 
         hasMoved = true;
@@ -123,10 +125,6 @@ void Entity::Player::tryToJump(const Core::Engine& engine)
     }
 }
 
-bool Entity::Player::isShooting(const Core::Engine& engine) const
-{
-    return engine.isMouseButtonDown(inputKeys.fire);
-}
 
 Physics::Shapes::Segment3D Entity::Player::getShootRay() const
 {
