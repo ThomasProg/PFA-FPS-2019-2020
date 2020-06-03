@@ -106,12 +106,15 @@ void World::makeNewLevel()
     entityGroup.addGround({{-20, -30, 40}, {0.f,0,0}, {10,5,60}}, stoneColor);
     
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
-    for (uint i = 0; i < 10; i++)
+    for (uint i = 0; i < 5; i++)
     {
-        entityGroup.addTree({{6+std::sin(float(i)*5)*2.f, -30, 5+float(i)*5}, {0.f,0,0}, {1,1,1}});
-        entityGroup.addTree({{-6-std::sin(10+float(i)*5)*2.f, -30, 5+float(i)*5}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addTree({{6+std::sin(float(i)*10)*2.f, -30, 5+float(i)*13},     {0.f,std::cos(float(i)),0}, {1,1,1}});
+        entityGroup.addTree({{-6-std::sin(10+float(i)*10)*2.f, -30, 5+float(i)*13}, {0.f,std::sin(float(i)),0}, {1,1,1}});
     }
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{4.4, -29, 36}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{-5, -29, 60}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{-6, -29, 40}, {0.f,0,0}, {1,1,1}});
 
     auto addFireflyWithLight = [&](const Core::Maths::Vec3& loc = {0, -26, 0.15}) 
     {
@@ -130,7 +133,15 @@ void World::makeNewLevel()
     entityGroup.addLight(Core::Maths::Vec3{0, -26, 70});
     entityGroup.addLight(Core::Maths::Vec3{50, -26, 70});
     entityGroup.addLight(Core::Maths::Vec3{100, -20, 70});
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        const float size = std::sin(i*3)/5 + 1; 
+        entityGroup.addRock({{52 - 7 * float(i), -33, 75 + 2 * std::cos(float(i * 2))}, {size,0,0}, {size,size,size}});
+        entityGroup.addRock({{58 - 7 * float(i), -33, 63 + 2 * std::cos(float(i * 7))}, {size,0,0}, {size,size,size}});
+    }
 
+    entityGroup.addTree({{87, -29, 78}, {0.f,0.f,0.f}, {1,1,1}});
+    entityGroup.addTree({{87, -29, 63}, {0.f,0.f,0.f}, {1,1,1}});
 
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
     entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);
@@ -159,23 +170,31 @@ void World::makeNewLevel()
         entityGroup.addGround({{103, -30.2 + 0.1, 70}, {0.f,0,0}, {12.5,1,12.5}}, pathColor);
     }
 
-    entityGroup.addEnemy({{0.f, 0, 35}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, -24, 35}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{0.f, 0, 50}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{-2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, -24, 45}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f, -24, 45}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{50.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{52.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{54.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, -24, 50}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f,-24, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, -24, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, -24, 52}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f,-24, 64}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, -24, 64}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemyBoss({{100.f, 15, 70 }, {0.f,0.f,0}, {5,5,5}});
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        entityGroup.addEnemy({{46.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{48.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{50.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{52.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{54.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+    }
+
+    entityGroup.addEnemyBoss({{100.f, -10, 70 }, {0.f,0.f,0}, {5,5,5}});
 
     // === Add Player === //
-    entityGroup.addPlayer({{0,0,10.0 + 0.0}});
+    entityGroup.addPlayer({{0,-26,10.0 + 0.0}});
 }
 #include <array>
 void World::load()
