@@ -214,6 +214,7 @@ void Entity::Player::dealDamages(float damages)
         state.playerState = PlayerState::E_DEAD;
         //onPlayerDeath();
         gOver = true;
+        lifePoints = 0;
     }
 }
 
