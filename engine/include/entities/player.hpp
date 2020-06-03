@@ -95,7 +95,7 @@ namespace Entity
         Resources::AudioSource audio;
 
 
-        bool canJump = false;
+        CollisionComponentInterface<Physics::Shapes::Box>* currentGround = nullptr;
 
         // ====== Input Keys ====== //
         enum E_Inputs : unsigned int
@@ -138,14 +138,14 @@ namespace Entity
 
         void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
         {
-            if (hit.normal.y > 0.5) canJump = true;
-            // std::cout << hit.normal << std::endl;
-            // std::cout << "Enter collision" << std::endl;
+            if (hit.normal.y > 0.5) 
+                currentGround = otherCollider;
         }
 
         void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
         {
-            // std::cout << "Exit collision" << std::endl;
+            if (currentGround == otherCollider)
+                currentGround = nullptr;
         }
 
 

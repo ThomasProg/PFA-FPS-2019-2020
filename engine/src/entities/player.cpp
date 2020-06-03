@@ -143,9 +143,8 @@ void Entity::Player::inputs(const Core::Engine& engine)
 
 void Entity::Player::tryToJump(const Core::Engine& engine)
 {
-    if (canJump && physicComp.collider.collidingEntities.size() > 0 && glfwGetTime() - lastJumpPressTime < jumpCoyoteTime)
+    if (currentGround && glfwGetTime() - lastJumpPressTime < jumpCoyoteTime)
     {
-        canJump = false;
         physicComp.velocity.y = jumpSpeed; // impulse
         state.playerState = PlayerState::E_JUMPING;
     }
