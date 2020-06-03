@@ -36,6 +36,18 @@ namespace Entity
             
     };
 
+    struct EnemyType
+    {
+        enum E_Type
+        {
+            E_NORMAL,
+            E_BOSS
+        };
+
+        public:
+            E_Type enemyType = E_NORMAL;
+    };
+    
     class Enemy final : public Physics::TransformInterface,
                   public Physics::CollisionComponentInterface<Physics::Shapes::Box>, 
                   public Physics::PhysicComponentInterface, 
@@ -47,20 +59,23 @@ namespace Entity
         static constexpr float maxSpeed = 7.5f;
 
         float angle = 0.f;
-        float speed = 3.f; 
 
         float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 4.f;
         int maxLife = 10;
-        int life = 10;
         float lastReceivedHitTime = -1.f;
+        float timeBetweenHitBoss = 2.0f;
+        float timeForHit = 0.0f;
 
     public:
         float attackCooldown = 1.f;
         float lastAttackTime = -attackCooldown;
 
     public:
+        int life = 10;
+        float speed = 3.f; 
         EnemyState state;
+        EnemyType type;
         float detectionRadius = 20.0f;
         float attackRadius    = 2.f;
         float patrolRadius    = 5.f;
@@ -75,6 +90,7 @@ namespace Entity
               Physics::PhysicComponentInterface(&transform),
               Renderer::RenderableInterface(&transform)
         {
+            type.enemyType = EnemyType::E_NORMAL;
             collider.isOverlap = true;
             physicComp.collider.worldCollider.radius = 1.f;
         }

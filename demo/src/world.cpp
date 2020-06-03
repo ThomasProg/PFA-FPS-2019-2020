@@ -72,7 +72,8 @@
 World::World(Game& game, bool isLoaded, bool isEditorMode)
     : game(game), entityGroup(game.engine), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
-    Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
+    Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshairWidth, crosshairHeight, crosshair);
+    Resources::Texture::loadTexture("resources/textures/cross.png", crossWidth, crossHeight, cross);
 }
 
 void World::loadFromSavefile(const char* savedFilename)
@@ -160,13 +161,15 @@ void World::makeNewLevel()
     entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
     entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
 
-    for (uint j = 0; j < 5; j++)
+    /*for (uint j = 0; j < 5; j++)
     {
         for (uint i = 0; i < 5; i++)
         {
             entityGroup.addEnemy({{100.f + float(i), 0, 70 + float(j)}, {0.f,0,0}, {1,1,1}});
         }
-    }
+    }*/
+
+    entityGroup.addEnemyBoss({{100.f, 15, 70 }, {0.f,0.f,0}, {5,5,5}});
 
     // === Add Player === //
     entityGroup.addPlayer({{0,0,10.0 + 0.0}});
@@ -539,23 +542,32 @@ void World::render()
 void World::hud()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
     ImGui::SetCursorPosY(game.engine.height - 30.f);
     assert(entityGroup.player->maxLifePoints != 0.f);
     ImGui::SetWindowFontScale(1.0);
-    ImGui::ProgressBar(entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, ImVec2(200,20));
+    
+    ImDrawList* drawList = ImGui::GetOverlayDrawList();
+    drawList->AddRectFilled(ImVec2(50.f, game.engine.height - 50.f), ImVec2(250.f, game.engine.height - 20.f), ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f)), 50.f);
+    drawList->AddRectFilled(ImVec2(50.f + 1.f, game.engine.height - 50.f + 1.f), ImVec2((250.f - 1.f) * (entityGroup.player->lifePoints / entityGroup.player->maxLifePoints), game.engine.height - 20.f - 1.f), ImGui::GetColorU32(ImVec4(1.f - entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, 0.f, 1.f)), 50.f);
 
-    ImGui::SetCursorPosY(game.engine.height - 30.f);
+    ImGui::SetCursorPosY(game.engine.height - crossHeight/5);
+    ImGui::SetCursorPosX(0.f);
+    ImGui::Image((void*)(intptr_t)cross, ImVec2(crossWidth/5, crossHeight/5));
+
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, 1.f)));
+
+    ImGui::SetCursorPosY(game.engine.height - 50.f);
     ImGui::SetCursorPosX(game.engine.width - 130.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
 
-    ImGui::SetCursorPosY(game.engine.height / 2 - imageHeight/2);
-    ImGui::SetCursorPosX(game.engine.width / 2 - imageWidth/2);
-    ImGui::Image((void*)(intptr_t)imageText, ImVec2(imageWidth, imageHeight));
+    ImGui::SetCursorPosY(game.engine.height / 2 - crosshairHeight / 2);
+    ImGui::SetCursorPosX(game.engine.width / 2 - crosshairWidth / 2);
+    ImGui::Image((void*)(intptr_t)crosshair, ImVec2(crosshairWidth, crosshairHeight));
 
     ImGui::PopStyleColor(5);
     //ImGui::PopFont();
