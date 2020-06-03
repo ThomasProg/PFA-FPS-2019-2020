@@ -147,7 +147,9 @@ namespace Physics
                                             Physics::Shapes::SegmentHit& hit,
                                             Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface);
 
-        bool raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const;
+        bool raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, 
+                     Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity,
+                     unsigned int consideredLayers = 0xFFFFFFFF) const;
 
         void reset();
     };

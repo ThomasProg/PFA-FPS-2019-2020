@@ -72,13 +72,15 @@ void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicCom
     physicComp.velocity.y -= (gravityAcc *  physicComp.mass) * engine.deltaTime;
 }
 
-bool Physics::PhysicsSystem::raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const
+bool Physics::PhysicsSystem::raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, 
+                                     Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity,
+                                     unsigned int consideredLayers) const
 {
     hit.t = 2.f;
 
     for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
-        if (boxCollider == nullptr)
+        if (boxCollider == nullptr || (consideredLayers & boxCollider->collider.layers == 0))
             continue;
 
         Physics::Shapes::SegmentHit tempHit;
