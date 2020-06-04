@@ -60,8 +60,21 @@ namespace Entity
             Gun() 
                 : Renderer::RenderableInterface(&transform)
             {}
+
+            void setHighQuality(const DemoResourceManager& resourceManager)
+            {
+                mesh.model = &resourceManager.get(E_Model::E_GUN);
+                setTransform({{1.4f,-0.5f,0.f}, {0.f,0.f,0.f}, {1,1,1}});
+            }
+
+            void setLowQuality(const DemoResourceManager& resourceManager)
+            {
+                mesh.model = &resourceManager.get(E_Model::E_BOX);
+                setTransform({{2, -1, 1}, {0.f,0.f,0.f}, {0.4, 0.4, 5}});
+            }
         };
 
+    public:
         Gun gun;
 
     private:

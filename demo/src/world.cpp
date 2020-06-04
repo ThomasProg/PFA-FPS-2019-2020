@@ -251,6 +251,8 @@ void World::setLowQualitySettings()
     light.dif       = {0.6, 0.6, 0.6, 1};
     light.location  = {-1,-1,-1,1};
     entityGroup.addLight(light);
+
+    entityGroup.player->gun.setLowQuality(game.engine.resourceManager);
 }
 
 void World::setHighQualitySettings()
@@ -298,6 +300,8 @@ void World::setHighQualitySettings()
 
     entityGroup.addTree({{87, -29, 78}, {0.f,0.f,0.f}, {1,1,1}});
     entityGroup.addTree({{87, -29, 63}, {0.f,0.f,0.f}, {1,1,1}});
+
+    entityGroup.player->gun.setHighQuality(game.engine.resourceManager);
 }
 
 void World::switchQualitySettings()

@@ -38,8 +38,6 @@ void Entity::Player::setTransform(const Physics::Transform& newTransform)
     TransformInterface::setTransform(newTransform);
     
     camera.setTransform({{0,1,0}, {0.f,0.f,0.f}, {1,1,1}});
-
-    gun.setTransform({{1.f,0.2f,0.f}, {0.f,0.f,0.f}, {1,1,1}});
 }
 
 bool Entity::PlayerState::isOnGround() const noexcept
