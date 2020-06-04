@@ -35,12 +35,6 @@ inline void Core::Engine::endFrame()
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwPollEvents();
-
-    if (time < 4)
-        return;
-    static float min = 99999999.f;
-    min = std::min(min, 1.f / deltaTime);
-    std::cout << 1.f / deltaTime << std::endl;
 }
 
 inline bool Core::Engine::shouldStop() const
