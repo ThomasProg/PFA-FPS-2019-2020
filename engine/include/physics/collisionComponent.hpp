@@ -28,7 +28,7 @@ namespace Physics
 
         // Defines this object's layer.
         // Default layer is 1
-        unsigned int layer = 1 << 0;
+        unsigned int layers = 1 << 0;
 
         bool isEnabled = true;
         bool isOverlap = false;

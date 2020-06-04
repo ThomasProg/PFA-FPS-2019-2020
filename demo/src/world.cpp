@@ -72,7 +72,8 @@
 World::World(Game& game, bool isLoaded, bool isEditorMode)
     : game(game), entityGroup(game.engine), isLoaded(isLoaded), isEditorMode(isEditorMode)
 {
-    Resources::Texture::loadTexture("resources/textures/crosshair.png", imageWidth, imageHeight, imageText);
+    Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshairWidth, crosshairHeight, crosshair);
+    Resources::Texture::loadTexture("resources/textures/cross.png", crossWidth, crossHeight, cross);
 }
 
 void World::loadFromSavefile(const char* savedFilename)
@@ -86,13 +87,14 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    entityGroup.addLight();
-    {
-        Renderer::Light& l = entityGroup.addLight();
-        l.lightData.location = {20.f, -27.f, 12, 0.0}; 
-        l.lightData.lightType = 3;
-        l.lightData.ambient = {0.7, 0.7,0.7,0};
-    }
+    // entityGroup.addLight();
+    // {
+    //     Renderer::LightData data;
+    //     data.location = {20.f, -27.f, 12, 0.0}; 
+    //     data.lightType = 0;
+    //     data.ambient = {0.2, 0.2,0.2,0};
+    //     entityGroup.addLight(std::move(data));
+    // }
 
      Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
      Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
@@ -104,19 +106,42 @@ void World::makeNewLevel()
     entityGroup.addGround({{-20, -30, 40}, {0.f,0,0}, {10,5,60}}, stoneColor);
     
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
-    for (uint i = 0; i < 10; i++)
+    for (uint i = 0; i < 5; i++)
     {
-        entityGroup.addTree({{6+sin(float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
-        entityGroup.addTree({{-6-sin(10+float(i)*5)*2.f, -30, 0+float(i)*5}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addTree({{6+std::sin(float(i)*10)*2.f, -30, 5+float(i)*13},     {0.f,std::cos(float(i)),0}, {1,1,1}});
+        entityGroup.addTree({{-6-std::sin(10+float(i)*10)*2.f, -30, 5+float(i)*13}, {0.f,std::sin(float(i)),0}, {1,1,1}});
     }
     entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{4.4, -29, 36}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{-5, -29, 60}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{-6, -29, 40}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addFirefly({{10, -26, 20}, {0.f,0,0}, {0.4,0.4,0.4}});
+    auto addFireflyWithLight = [&](const Core::Maths::Vec3& loc = {0, -26, 0.15}) 
     {
-        Renderer::Light& l = entityGroup.addLight();
-        l.lightData.location = {9, -26, 20, 1};
+        entityGroup.addFirefly({loc, {0.f,0,0}, {0.4,0.4,0.4}});
+        {
+            Renderer::LightData data;
+            data.location = Core::Maths::Vec4{loc, 1};
+            data.ambient  = Core::Maths::Vec4{1, 1, 1, 1};
+            entityGroup.addLight(std::move(data));
+        }
+    };
+
+    // addFireflyWithLight();
+    addFireflyWithLight({0, -26, 0.15});
+
+    entityGroup.addLight(Core::Maths::Vec3{0, -26, 70});
+    entityGroup.addLight(Core::Maths::Vec3{50, -26, 70});
+    entityGroup.addLight(Core::Maths::Vec3{100, -20, 70});
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        const float size = std::sin(i*3)/5 + 1; 
+        entityGroup.addRock({{52 - 7 * float(i), -33, 75 + 2 * std::cos(float(i * 2))}, {size,0,0}, {size,size,size}});
+        entityGroup.addRock({{58 - 7 * float(i), -33, 63 + 2 * std::cos(float(i * 7))}, {size,0,0}, {size,size,size}});
     }
 
+    entityGroup.addTree({{87, -29, 78}, {0.f,0.f,0.f}, {1,1,1}});
+    entityGroup.addTree({{87, -29, 63}, {0.f,0.f,0.f}, {1,1,1}});
 
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
     entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);
@@ -145,40 +170,33 @@ void World::makeNewLevel()
         entityGroup.addGround({{103, -30.2 + 0.1, 70}, {0.f,0,0}, {12.5,1,12.5}}, pathColor);
     }
 
-    entityGroup.addEnemy({{0.f, 0, 35}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, -24, 35}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{0.f, 0, 50}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{-2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{2.f, 0, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, -24, 45}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f, -24, 45}, {0.f,0,0}, {1,1,1}});
 
-    entityGroup.addEnemy({{50.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{52.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{54.f, 0, 70}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{52.f, 0, 72}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addEnemy({{50.f, 0, 72}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, -24, 50}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f,-24, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, -24, 62}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{0.f, -24, 52}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{-2.f,-24, 64}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addEnemy({{2.f, -24, 64}, {0.f,0,0}, {1,1,1}});
 
-    for (uint j = 0; j < 5; j++)
+    for (unsigned int i = 0; i < 5; i++)
     {
-        for (uint i = 0; i < 5; i++)
-        {
-            entityGroup.addEnemy({{100.f + float(i), 0, 70 + float(j)}, {0.f,0,0}, {1,1,1}});
-        }
+        entityGroup.addEnemy({{46.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{48.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{50.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{52.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
+        entityGroup.addEnemy({{54.f,-24, 66 + float(i) * 2.f}, {0.f,0,0}, {1,1,1}});
     }
 
+    entityGroup.addEnemyBoss({{100.f, -10, 70 }, {0.f,0.f,0}, {5,5,5}});
+
     // === Add Player === //
-    entityGroup.addPlayer({{0,0,10.0 + 0.0}});
-
-    // for (uint i = 0; i < 100; i++)
-    // {
-    //     entityGroup.addBullet({});
-    // }
-
-    // // === Add other cameras === //
-    // fpsCamera.setup(player.transform);
-    // tpsCamera.setup(player.transform);
+    entityGroup.addPlayer({{0,-26,10.0 + 0.0}});
 }
-
+#include <array>
 void World::load()
 {
     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
@@ -196,8 +214,6 @@ void World::load()
         loadFromSavefile(Game::savedFilename);
     else 
         makeNewLevel();
-
-    entityGroup.setKeys(game.isAzerty);
 
     // lightManager.lightsBufferInit(10);
     // lightManager.lights.emplace_back();
@@ -539,23 +555,32 @@ void World::render()
 void World::hud()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
     ImGui::SetCursorPosY(game.engine.height - 30.f);
     assert(entityGroup.player->maxLifePoints != 0.f);
     ImGui::SetWindowFontScale(1.0);
-    ImGui::ProgressBar(entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, ImVec2(200,20));
+    
+    ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+    drawList->AddRectFilled(ImVec2(50.f, game.engine.height - 50.f), ImVec2(250.f, game.engine.height - 20.f), ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f)), 50.f);
+    drawList->AddRectFilled(ImVec2(50.f + 1.f, game.engine.height - 50.f + 1.f), ImVec2(50.f + (250.f - 1.f) * (entityGroup.player->lifePoints / entityGroup.player->maxLifePoints), game.engine.height - 20.f - 1.f), ImGui::GetColorU32(ImVec4(1.f - entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, 0.f, 1.f)), 50.f);
 
-    ImGui::SetCursorPosY(game.engine.height - 30.f);
+    ImGui::SetCursorPosY(game.engine.height - crossHeight/5);
+    ImGui::SetCursorPosX(0.f);
+    ImGui::Image((void*)(intptr_t)cross, ImVec2(crossWidth/5, crossHeight/5));
+
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, 1.f)));
+
+    ImGui::SetCursorPosY(game.engine.height - 50.f);
     ImGui::SetCursorPosX(game.engine.width - 130.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
 
-    ImGui::SetCursorPosY(game.engine.height / 2 - imageHeight/2);
-    ImGui::SetCursorPosX(game.engine.width / 2 - imageWidth/2);
-    ImGui::Image((void*)(intptr_t)imageText, ImVec2(imageWidth, imageHeight));
+    ImGui::SetCursorPosY(game.engine.height / 2 - crosshairHeight / 2);
+    ImGui::SetCursorPosX(game.engine.width / 2 - crosshairWidth / 2);
+    ImGui::Image((void*)(intptr_t)crosshair, ImVec2(crosshairWidth, crosshairHeight));
 
     ImGui::PopStyleColor(5);
     //ImGui::PopFont();

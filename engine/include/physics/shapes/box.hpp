@@ -25,7 +25,7 @@ namespace Physics::Shapes
         CenteredAABB aabb;
 
         // Contains Translation, Rotation and Size/Scale of the cube.
-        Core::Maths::Matrix4x4 transform;
+        Core::Maths::Matrix4x4 transform = Core::Maths::Matrix4x4::identity(4);
 
         std::array<Core::Maths::Vec3, nbPoints> getPoints() const
         {

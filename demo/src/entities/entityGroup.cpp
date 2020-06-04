@@ -8,7 +8,7 @@ EntityGroup::EntityGroup(Core::Engine& engine)
 
 EntityGroup::~EntityGroup()
 {
-    engine.rendererSystem.erase(player->meshIt);
+    player->removeRendering(engine.rendererSystem);
     engine.physicsSystem.erase(player->colliderIt);
     engine.physicsSystem.erase(player->physicCompIt);
 
@@ -45,48 +45,6 @@ EntityGroup::~EntityGroup()
 
 
     player = nullptr;
-}
-
-void EntityGroup::setKeys(bool isAzerty)
-{
-    if (isAzerty)
-    {
-        player->inputKeys.keys = 
-        {
-            GLFW_KEY_Z,
-            GLFW_KEY_S,
-            GLFW_KEY_D,
-            GLFW_KEY_Q,
-            GLFW_KEY_SPACE
-        };
-
-        // fpsCamera.inputKeys.keys = 
-        // {
-        //     GLFW_KEY_Z,
-        //     GLFW_KEY_S,
-        //     GLFW_KEY_D,
-        //     GLFW_KEY_Q,
-        // };
-    }
-    else 
-    {
-        player->inputKeys.keys = 
-        {
-            GLFW_KEY_W,
-            GLFW_KEY_S,
-            GLFW_KEY_D,
-            GLFW_KEY_A,
-            GLFW_KEY_SPACE
-        };
-
-        // fpsCamera.inputKeys.keys = 
-        // {
-        //     GLFW_KEY_W,
-        //     GLFW_KEY_S,
-        //     GLFW_KEY_D,
-        //     GLFW_KEY_A,
-        // };
-    }
 }
 
 void EntityGroup::removeEnemyFromSytems(Entity::Enemy* enemy)

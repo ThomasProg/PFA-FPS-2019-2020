@@ -44,10 +44,8 @@ namespace Core::Maths
 		// used to verify if 2 vectors are equals
 		static constexpr decimal epsilon = 0.1;
 
-		inline
-		Vec3();
-		inline
-		Vec3(decimal x, decimal y, decimal z);
+		constexpr inline Vec3() noexcept;
+		constexpr inline Vec3(decimal x, decimal y, decimal z) noexcept;
 		Vec3(const char* x, const char* y, const char* z) 
 			: x(stringToFloat(x)), 
 			y(stringToFloat(y)), 
@@ -55,23 +53,23 @@ namespace Core::Maths
 		{
 
 		}
-		Vec3(const Vec4& rhs);
-		~Vec3() = default;
+		explicit Vec3(const Vec4& rhs);
+		inline ~Vec3() noexcept = default;
 
 		
-		inline decimal vectorSquareLength() const;
+		constexpr inline decimal vectorSquareLength() const noexcept;
 		inline decimal vectorLength() const;
 		inline Vec3 unitVector() const;
 		inline Vec3 rotateAround(const Vec3& unitVec, decimal angle);
 
-		inline void negate() { x = -x; y = -y; z = -z;}
+		constexpr inline void negate() noexcept { x = -x; y = -y; z = -z;}
 
 		static bool isNearlyColinear(const Vec3& v1, const Vec3& v2, const decimal epsilon = __FLT_EPSILON__);
 
 		
-		static inline decimal dotProduct(const Vec3& u, const Vec3& v);
+		static constexpr inline decimal dotProduct(const Vec3& u, const Vec3& v) noexcept;
 		
-		static inline Vec3 crossProduct(const Vec3& v1, const Vec3& v2);
+		static constexpr inline Vec3 crossProduct(const Vec3& v1, const Vec3& v2) noexcept;
 		
 		// Inputs : coordinates of the triangle points
 		static inline decimal getTriangleArea(const point3D& point1, 
@@ -110,7 +108,7 @@ namespace Core::Maths
 
 		Core::Maths::Vec3& operator/=(const float rhs);
 
-		inline Vec3& operator*=(const float rhs)
+		constexpr inline Vec3& operator*=(const float rhs) noexcept
 		{
 			x *= rhs;
 			y *= rhs;
@@ -118,7 +116,7 @@ namespace Core::Maths
 			return *this;
 		}
 
-		inline Vec3& operator-=(const float rhs)
+		constexpr inline Vec3& operator-=(const float rhs) noexcept
 		{
 			x -= rhs;
 			y -= rhs;
@@ -126,7 +124,7 @@ namespace Core::Maths
 			return *this;
 		}
 
-		inline Vec3& operator+=(const float rhs)
+		constexpr inline Vec3& operator+=(const float rhs) noexcept
 		{
 			x += rhs;
 			y += rhs;
@@ -134,49 +132,27 @@ namespace Core::Maths
 			return *this;
 		}
 
-		inline float operator[](unsigned int index) const
+		inline float operator[](unsigned int index) const noexcept
 		{
-			assert(index < 3);
+			assert(index < getAxisNumber());
 			return components[index];
 		}
 
-		inline float& operator[](unsigned int index) 
+		inline float& operator[](unsigned int index) noexcept
 		{
-			assert(index < 3);
+			assert(index < getAxisNumber());
 			return components[index];
 		}
 
+		constexpr inline static Vec3 getAxis(unsigned int index) noexcept;
 
-		inline static Vec3 getAxis(unsigned int index)
-		{
-			assert(index < 3);
-
-			switch (index)
-			{
-			case 0:
-				return Vec3{1, 0, 0};
-			
-			case 1:
-				return Vec3{0, 1, 0};
-
-			case 2:
-				return Vec3{0, 0, 1};
-
-			default:
-				break;
-			}
-
-			// will never be executed
-			return Core::Maths::Vec3{0.f, 0, 0};
-		}
-
-		constexpr inline static unsigned int getAxisNumber()
+		constexpr inline static unsigned int getAxisNumber() noexcept
 		{
 			return 3;
 		}
 	};
-	Core::Maths::Vec3 operator*(const Core::Maths::Vec3&, float);
-	Core::Maths::Vec3 operator*(float, const Core::Maths::Vec3&);
+	inline Core::Maths::Vec3 operator*(const Core::Maths::Vec3&, float);
+	inline Core::Maths::Vec3 operator*(float, const Core::Maths::Vec3&);
 	
 	inline Core::Maths::Vec3 operator/(float, const Core::Maths::Vec3&);
 

@@ -9,6 +9,19 @@
 #include "saver.hpp"
 #include "utilities.hpp"
 
+#include "layersEnum.hpp"
+
+Entity::Enemy::Enemy() 
+    : Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
+        Physics::PhysicComponentInterface(&transform),
+        Renderer::RenderableInterface(&transform)
+{
+    type.enemyType = EnemyType::E_NORMAL;
+    collider.isOverlap = true;
+    physicComp.collider.worldCollider.radius = 1.f;
+    collider.layers = LayersEnum::E_ENTITY | LayersEnum::E_ENEMY;
+}
+
 void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 {   
     if (state.enemyState == EnemyState::E_DEAD)
@@ -22,16 +35,15 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 
         if (target != nullptr)
         {
-            chaseTarget = target->transform.transformMatrixNode->worldData.getTranslationVector();
+            chaseTarget = target->transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
 
             // look at target
-            const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+            const Core::Maths::Vec3 delta = chaseTarget - transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
             if (delta.x != 0.f)
             {              
                 transform.transform.rotation.y = std::atan2(delta.x, delta.z);
 
                 transform.UpdateLocalTransformMatrix();
-                transform.transformMatrixNode->setDirtySelfAndChildren();
             }
         }
 
@@ -42,9 +54,20 @@ void Entity::Enemy::update(const Core::Engine& engine, float playTime)
 
 void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_DOG);
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+    if (type.enemyType == EnemyType::E_NORMAL)
+    {
+        mesh.model   = &resourceManager.get(E_Model::E_DOG);
+        mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
+        attackSound.setAudio(resourceManager.get(E_Audio::E_DOG_ATTACK));
+    }
+    else if (type.enemyType == EnemyType::E_BOSS)
+    {
+        mesh.model   = &resourceManager.get(E_Model::E_CAT);
+        mesh.texture = &resourceManager.get(E_Texture::E_CAT);
+        attackSound.setAudio(resourceManager.get(E_Audio::E_BOSS_ATTACK));
+    }
+   
+    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED); 
     mesh.linkShaderWithModel();
 }
 
@@ -66,12 +89,12 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
     if (!transform.transformMatrixNode.isValid())
         return;
 
-    Core::Maths::Vec3 patrolDir = patrolTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+    Core::Maths::Vec3 patrolDir = patrolTarget - transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
     patrolDir.y = 0.f;
 
     if (state.enemyState == EnemyState::E_CHASING)
     {
-        Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform.transformMatrixNode->worldData.getTranslationVector();
+        Core::Maths::Vec3 firstPointOfCircle = patrolTarget - transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
         firstPointOfCircle.x += patrolRadius;
         firstPointOfCircle.y = 0;
 
@@ -116,23 +139,37 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
 
 void Entity::Enemy::chase(const Core::Engine& engine)
 {
-    state.enemyState = EnemyState::E_CHASING;
-
-    const Core::Maths::Vec3& loc = transform.transformMatrixNode->worldData.getTranslationVector();
-    Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
-    Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
-
-    velocityXZ += direction * speed;
-
-    if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
+    if(type.enemyType == EnemyType::E_NORMAL)
     {
-        velocityXZ = velocityXZ.unitVector() * maxSpeed;
-    }
+        state.enemyState = EnemyState::E_CHASING;
 
-    physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
-    physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
-    transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->cleanUpdate();
+        const Core::Maths::Vec3& loc = transform.transformMatrixNode->getWorldMatrix().getTranslationVector();
+        Core::Maths::Vec3 direction = (chaseTarget - loc).unitVector();
+        Core::Maths::Vec3 velocityXZ { physicComp.velocity.x, 0, physicComp.velocity.z };
+        velocityXZ += direction * speed;
+
+        if (velocityXZ.vectorSquareLength() > maxSpeed * maxSpeed && velocityXZ.vectorSquareLength() != 0.f)
+        {
+            velocityXZ = velocityXZ.unitVector() * maxSpeed;
+        }
+
+        physicComp.setVelocityOnAxis<0>(velocityXZ.x, engine);
+        physicComp.setVelocityOnAxis<2>(velocityXZ.z, engine);
+        transform.UpdateLocalTransformMatrix();
+    }
+    else if(type.enemyType == EnemyType::E_BOSS)
+    {
+        if(timeForHit < timeBetweenHitBoss)
+        {
+            timeForHit += engine.deltaTime;
+        }
+        else
+        {   
+            attackSound.play();
+            timeForHit = 0.0f;
+            target->dealDamages(2);
+        }
+    }
 }
 
 bool Entity::Enemy::isTargetInChaseRange() const
@@ -140,7 +177,7 @@ bool Entity::Enemy::isTargetInChaseRange() const
     if (!transform.transformMatrixNode.isValid())
         return false;
 
-    return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+    return (transform.transformMatrixNode->getWorldMatrix().getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= detectionRadius * detectionRadius;
 }
 
@@ -149,7 +186,7 @@ bool Entity::Enemy::isTargetInAttackRange() const
     if (!transform.transformMatrixNode.isValid())
         return false;
 
-    return (transform.transformMatrixNode->worldData.getTranslationVector() - chaseTarget).vectorSquareLength() 
+    return (transform.transformMatrixNode->getWorldMatrix().getTranslationVector() - chaseTarget).vectorSquareLength() 
         <= attackRadius * attackRadius;
 }
 
@@ -227,6 +264,7 @@ void Entity::Enemy::tryToAttack(float playTime)
     {
         if (isTargetInAttackRange())
         {
+            attackSound.play();
             lastAttackTime = playTime;
             target->dealDamages(1.f);
         }

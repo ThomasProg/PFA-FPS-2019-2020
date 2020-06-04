@@ -27,6 +27,7 @@ enum class E_Model : ContainerType
     E_ROCK1,
     E_ROCK2,
     E_GRASS,
+    E_CAT,
 };
 
 enum class E_Texture : ContainerType
@@ -34,6 +35,7 @@ enum class E_Texture : ContainerType
     E_DOG_TEXTURE = 0,
     E_GROUND,
     E_GUN,
+    E_CAT,
 };
 
 enum class E_Shader : ContainerType
@@ -47,6 +49,8 @@ enum class E_Shader : ContainerType
 enum class E_Audio : ContainerType
 {
     E_SHOOT,
+    E_DOG_ATTACK,
+    E_BOSS_ATTACK,
 };
 
 #endif

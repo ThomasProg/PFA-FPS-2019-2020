@@ -9,6 +9,9 @@
 
 #include "primitives.hpp"
 
+#include "phongFlat.hpp"
+#include "flatShader.hpp"
+
 Game::Game()
 {
     loadResources();
@@ -77,16 +80,38 @@ void Game::loadResources()
         engine.resourceManager.add(std::move(model), E_Model::E_GUN);
         engine.resourceManager.add(Resources::Texture{"resources/obj/M14warna.png"}, E_Texture::E_GUN);
     }
+    {
+        Resources::Model model;
+        model.loadOBJ("resources/obj/cat.obj");
+         for (Core::Maths::Vec3& pos : model.positions)
+        {
+            pos /= 30.f;
+            std::swap(pos.y, pos.z);
+            std::swap(pos.x, pos.z);
+
+            pos.y -= 1.02f;
+        }
+        for (Core::Maths::Vec3& normal : model.normals)
+        {
+            std::swap(normal.y, normal.z);
+            std::swap(normal.x, normal.z);
+        }
+        model.setupModel();
+        engine.resourceManager.add(std::move(model), E_Model::E_CAT);
+        engine.resourceManager.add(Resources::Texture{"resources/obj/cat.jpg"}, E_Texture::E_CAT);
+    }
 
     {
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"}, E_Shader::E_FLAT);
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"}, E_Shader::E_LIGHTED_FLATCOLOR);
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"}, E_Shader::E_TEXTURED);
-        engine.resourceManager.add(Resources::Shader{"resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"}, E_Shader::E_LIGHTED);
+        engine.resourceManager.add(std::make_unique<Resources::FlatShader>("resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"), E_Shader::E_FLAT);
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>("resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"), E_Shader::E_LIGHTED_FLATCOLOR);
+        engine.resourceManager.add(std::make_unique<Resources::Shader>("resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"), E_Shader::E_TEXTURED);
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>("resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"), E_Shader::E_LIGHTED);
     }
 
     {
         engine.resourceManager.add(Resources::Audio{"resources/audio/pew.wav"}, E_Audio::E_SHOOT);
+        engine.resourceManager.add(Resources::Audio{"resources/audio/waf.wav"}, E_Audio::E_DOG_ATTACK);
+        engine.resourceManager.add(Resources::Audio{"resources/audio/miaw.wav"}, E_Audio::E_BOSS_ATTACK);
     }
 }
 
@@ -106,7 +131,8 @@ void Game::quitGame()
 }
 
 void Game::run()
-{
+{        glClearColor(0.1,0.1,0.2,1.f);
+
     while (!engine.shouldStop())
     {
         update(); 
@@ -119,7 +145,8 @@ void Game::run()
 
         engine.endFrame();
 
-        glClearColor(0.5,0.5,0.9,1.f);
+        // glClearColor(0.5,0.5,0.9,1.f);
+        // glClearColor(0.1,0.1,0.2,1.f);
     }
 }
 

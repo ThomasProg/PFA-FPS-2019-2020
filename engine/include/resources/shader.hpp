@@ -13,6 +13,10 @@
 namespace Renderer
 {
     struct LightData;
+
+    struct Mesh;
+    struct Camera;
+    class LightManager;
 }
 
 namespace Resources 
@@ -22,6 +26,11 @@ namespace Resources
     private:
         // OpenGL shader program Index on GPU
         GLuint programID = 0;
+
+    protected:
+        // Read only, to send data to program only
+        // Only children should be able to send data to the program
+        inline GLuint getProgramID() const noexcept;
 
     public:
         Shader() = default;
@@ -33,6 +42,10 @@ namespace Resources
         Shader& operator=(Shader&&);
 
         ~Shader();
+
+        virtual void loadUniformValuesLocation() {}
+        virtual void useUniformValues(const Renderer::Camera& cam, const Renderer::Mesh& mesh) const {}
+        virtual void useLightsUniformValues(const Renderer::LightManager&) const {}
 
         // Loads vertex from file.
         // Filename is the file's name.
@@ -68,11 +81,7 @@ namespace Resources
 
         inline void use() const;
 
-        inline GLuint getUniformLocation(const char* str) const;
-
-
-        // Send lightingData subBlock to GPU
-        void linkLight(unsigned int lightID, const Renderer::LightData& lightData, GLuint lightsUniformBuffer) const;
+        inline GLint getUniformLocation(const char* str) const;
     };
 }
 

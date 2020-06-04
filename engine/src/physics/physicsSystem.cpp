@@ -72,13 +72,15 @@ void Physics::PhysicsSystem::simulateGravity(Physics::PhysicComponent& physicCom
     physicComp.velocity.y -= (gravityAcc *  physicComp.mass) * engine.deltaTime;
 }
 
-bool Physics::PhysicsSystem::raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const
+bool Physics::PhysicsSystem::raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, 
+                                     Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity,
+                                     unsigned int consideredLayers) const
 {
     hit.t = 2.f;
 
     for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
-        if (boxCollider == nullptr)
+        if (boxCollider == nullptr || ((consideredLayers & boxCollider->collider.layers) == 0))
             continue;
 
         Physics::Shapes::SegmentHit tempHit;
@@ -112,7 +114,7 @@ void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
         if (box == nullptr)
             continue;
 
-        box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->worldData;
+        box->collider.worldCollider.transform = box->collider.transform->transformMatrixNode->getWorldMatrix();
         box->collider.aabb.setFrom(box->collider.worldCollider);
     }
 
@@ -147,11 +149,13 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
         if (!itColliding->second)
         {
             // callbacks.onCollisionExit(physicComp);//it->first);
-            physicComp->physicCompOnCollisionExit();  
+            physicComp->physicCompOnCollisionExit(itColliding->first);  
             itColliding = physicComp->physicComp.collider.collidingEntities.erase(itColliding);
         }
         else 
+        {
             ++itColliding;
+        }
     }
 
     // if (physicComp.second.collider.isColliding)
@@ -160,8 +164,6 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
     simulateGravity(physicComp->physicComp, engine);
 
     physicComp->physicComp.collider.transform->UpdateLocalTransformMatrix();
-    physicComp->physicComp.collider.transform->transformMatrixNode->setDirtySelfAndChildren();
-    physicComp->physicComp.collider.transform->transformMatrixNode->cleanUpdate();
 }
 
 void Physics::PhysicsSystem::simulatePhysicsForASphere(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine)
@@ -281,9 +283,9 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
     if (sphereCollisionWithBoxes(sphere, usedVelocity, data, hit, collidedMeshInterface))
     {
         std::pair<std::map<CollisionComponentInterface<Physics::Shapes::Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
-        if (!it.second)
+        if (it.second)
         {
-            physicComp->physicCompOnCollisionEnter(hit);
+            physicComp->physicCompOnCollisionEnter(hit, collidedMeshInterface);
             collidedMeshInterface->colliderOnCollisionEnter(hit);
         }
 
@@ -297,7 +299,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         }
 
         {
-            // TODO : verify if correct 
+            // Physical Response
             float dot2 = Core::Maths::Vec3::dotProduct(physicComp->physicComp.velocity/* - usedVelocity * hit.t*/, hit.normal);
             Core::Maths::Vec3 otherFinalLoc = sphere.center + physicComp->physicComp.velocity - dot2 * hit.normal;
             physicComp->physicComp.velocity = otherFinalLoc - (sphere.center + hit.t * usedVelocity);

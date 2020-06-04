@@ -10,7 +10,37 @@
 #include "physicsSystem.hpp"
 #include "entityGroup.hpp"
 
+#include "layersEnum.hpp"
+
 #define _IS_MOUSE_ENABLED_ 1
+
+Entity::Player::Player() 
+    : //Renderer::RenderableInterface(&transform),
+        Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
+        Physics::PhysicComponentInterface(&transform)
+{
+    collider.isOverlap = true;
+    physicComp.collider.worldCollider.radius = 1.f;
+    collider.layers = LayersEnum::E_PLAYER;
+}
+
+void Entity::Player::setTransformParent(Physics::TransformGraph& transformParent)
+{
+    TransformInterface::setTransformParent(transformParent);
+
+    camera.setTransformParent(*this);
+
+    gun.setTransformParent(camera);
+}
+
+void Entity::Player::setTransform(const Physics::Transform& newTransform)
+{
+    TransformInterface::setTransform(newTransform);
+    
+    camera.setTransform({{0,1,0}, {0.f,0.f,0.f}, {1,1,1}});
+
+    gun.setTransform({{1.f,0.2f,0.f}, {0.f,0.f,0.f}, {1,1,1}});
+}
 
 bool Entity::PlayerState::isOnGround() const noexcept
 {
@@ -19,22 +49,19 @@ bool Entity::PlayerState::isOnGround() const noexcept
 
 void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_GUN);
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    mesh.texture = &resourceManager.get(E_Texture::E_GUN);
-    mesh.linkShaderWithModel();
+    gun.mesh.model   = &resourceManager.get(E_Model::E_GUN);
+    gun.mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
+    gun.mesh.texture = &resourceManager.get(E_Texture::E_GUN);
+    gun.mesh.linkShaderWithModel();
 
     audio.setAudio(resourceManager.get(E_Audio::E_SHOOT));
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
 {       
-    // if (!physicCompIt.isValid())
-    //     return;
-    
-    std::vector<unsigned int>::iterator it;
+    std::array<bool, nbInputKeys> keys = getDownKeys(engine);
 
-    if (engine.isKeyDown(inputKeys.jump))
+    if (keys[E_JUMP])
         lastJumpPressTime = glfwGetTime();
 
     Core::Maths::Vec3 forward = transform.transform.getForwardXZVector() * movementSpeed;
@@ -44,22 +71,22 @@ void Entity::Player::inputs(const Core::Engine& engine)
 
     bool hasMoved = false;
 
-    if (engine.isKeyDown(inputKeys.forward))
+    if (keys[E_FORWARD])
     {
         addedVelocity += forward; 
         hasMoved = true;
     }
-    if (engine.isKeyDown(inputKeys.backward))
+    if (keys[E_BACKWARD])
     {
         addedVelocity += - forward; 
         hasMoved = true;
     }
-    if (engine.isKeyDown(inputKeys.right))
+    if (keys[E_RIGHT])
     {
         addedVelocity += right; 
         hasMoved = true;
     }
-    if (engine.isKeyDown(inputKeys.left))
+    if (keys[E_LEFT])
     {
         addedVelocity += - right; 
         hasMoved = true;
@@ -111,34 +138,27 @@ void Entity::Player::inputs(const Core::Engine& engine)
     camera.transform.transform.rotation.x = clamp(camera.transform.transform.rotation.x + deltaMouseY * rotationSpeed, float(- M_PI / 2.f), float(M_PI / 2.f));
 
     transform.UpdateLocalTransformMatrix();
-    transform.transformMatrixNode->setDirtySelfAndChildren();
-
     camera.transform.UpdateLocalTransformMatrix();
-    camera.transform.transformMatrixNode->setDirtySelfAndChildren(); 
 }
 
 void Entity::Player::tryToJump(const Core::Engine& engine)
 {
-    if (physicComp.collider.collidingEntities.size() > 0 && glfwGetTime() - lastJumpPressTime < jumpCoyoteTime)
+    if (currentGround && glfwGetTime() - lastJumpPressTime < jumpCoyoteTime)
     {
         physicComp.velocity.y = jumpSpeed; // impulse
         state.playerState = PlayerState::E_JUMPING;
     }
 }
 
-bool Entity::Player::isShooting(const Core::Engine& engine) const
-{
-    return engine.isMouseButtonDown(inputKeys.fire);
-}
 
 Physics::Shapes::Segment3D Entity::Player::getShootRay() const
 {
     Physics::Shapes::Segment3D seg;
 
-    seg.p1 = {0.f, 0, -3};
+    seg.p1 = {0.f, 0, 0};
     seg.p2 = {0.f, 0, -shootRayLength};
-    seg.p1 = camera.transform.transformMatrixNode->worldData * seg.p1;
-    seg.p2 = camera.transform.transformMatrixNode->worldData * seg.p2;
+    seg.p1 = Core::Maths::Vec3{camera.transform.transformMatrixNode->getWorldMatrix() * Core::Maths::Vec4{seg.p1, 1}};
+    seg.p2 = Core::Maths::Vec3{camera.transform.transformMatrixNode->getWorldMatrix() * Core::Maths::Vec4{seg.p2, 1}};
 
     return seg;
 }
@@ -157,7 +177,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
             Physics::Shapes::SegmentHit hit;
             Physics::CollisionComponentInterface<Physics::Shapes::Box>* touchEntity = nullptr;
 
-            if(physicsSystem.raycast(directionHit, hit, touchEntity))
+            if(physicsSystem.raycast(directionHit, hit, touchEntity, ~LayersEnum::E_PLAYER))
             {
                 //test hit enemy
                 std::vector<std::unique_ptr<Entity::Enemy>>::iterator it = entityGroup.enemies.begin();
@@ -197,6 +217,7 @@ void Entity::Player::dealDamages(float damages)
         state.playerState = PlayerState::E_DEAD;
         //onPlayerDeath();
         gOver = true;
+        lifePoints = 0;
     }
 }
 
@@ -235,3 +256,20 @@ void Entity::Player::reloadAmmo()
 // {
         
 // }
+
+
+std::array<bool, Entity::Player::nbInputKeys> Entity::Player::getDownKeysAzertyAndQwery(const Core::Engine& engine)
+{
+    std::array<bool, nbInputKeys> keys;
+
+    keys[E_FORWARD]  = (engine.isKeyDown(GLFW_KEY_W) || engine.isKeyDown(GLFW_KEY_Z));
+    keys[E_LEFT]     = (engine.isKeyDown(GLFW_KEY_A) || engine.isKeyDown(GLFW_KEY_Q));
+    keys[E_BACKWARD] = (engine.isKeyDown(GLFW_KEY_S));
+    keys[E_RIGHT]    = (engine.isKeyDown(GLFW_KEY_D));
+
+    keys[E_JUMP] = (engine.isKeyDown(GLFW_KEY_SPACE));
+
+    keys[E_FIRE] = (engine.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT));
+
+    return keys;
+}

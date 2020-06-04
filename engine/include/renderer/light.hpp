@@ -13,22 +13,20 @@ namespace Renderer
     public:
         // Data sent to GPU
         LightData lightData;
+        Physics::GTransform gTransform;
 
         Light() = default;
-        Light(const LightData& data)
-            : lightData(data)
-        {
-
-        }
-
-        Physics::GTransform gTransform;
+        inline Light(const LightData& data);
+        inline Light(const Core::Maths::Vec3& location);
+        Light(const Light&) = default;
+        Light& operator=(Light&) = default;
+        ~Light() = default;
         
         // Updates lightingData location
-        void update() 
-        {
-            lightData.location = gTransform.transformMatrixNode->worldData.getTranslationVector();
-        }
+        inline void update();
     };
 }
+
+#include "light.inl"
 
 #endif

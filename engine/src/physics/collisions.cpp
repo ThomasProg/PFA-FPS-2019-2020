@@ -584,14 +584,15 @@ bool Collisions::aabbSegmentCollision(const Physics::Shapes::AABB& aabb, const P
 bool Collisions::boxSegmentCollision(const Physics::Shapes::Box& box, const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit)
 {
     Core::Maths::Matrix4x4 mInv = box.transform.getInverse();
-    Physics::Shapes::Segment3D transSeg = Physics::Shapes::Segment3D{mInv * Core::Maths::Vec4{seg.p1, 1}, 
-                                   mInv * Core::Maths::Vec4{seg.p2, 1}};
+    Physics::Shapes::Segment3D transSeg = Physics::Shapes::Segment3D{
+                                   Core::Maths::Vec3{mInv * Core::Maths::Vec4{seg.p1, 1}}, 
+                                   Core::Maths::Vec3{mInv * Core::Maths::Vec4{seg.p2, 1}}};
 
     if (centeredAABBSegmentCollision(box.aabb, transSeg, hit))
     {
-        hit.collisionPoint = box.transform * Core::Maths::Vec4{hit.collisionPoint, 1.f};
-        hit.normal = box.transform * Core::Maths::Vec4{hit.normal, 0.f};
-        hit.normal = hit.normal.unitVector();
+        hit.collisionPoint = Core::Maths::Vec3{box.transform * Core::Maths::Vec4{hit.collisionPoint, 1.f}};
+        hit.normal = Core::Maths::Vec3{box.transform * Core::Maths::Vec4{hit.normal, 0.f}};
+        hit.normal = Core::Maths::Vec3{hit.normal.unitVector()};
         return true;
     }
     else 
@@ -621,7 +622,7 @@ bool Collisions::boxSphereCollision(const Physics::Shapes::Box& box, const Physi
     Core::Maths::Matrix4x4 mInv = box.transform;
     mInv.normalizeScale();
 
-    Core::Maths::Vec3 newSphereCenter = Core::Maths::Matrix4x4(mInv.getInverse()) * sphere.center;
+    Core::Maths::Vec3 newSphereCenter = Core::Maths::Vec3{Core::Maths::Matrix4x4(mInv.getInverse()) * Core::Maths::Vec4{sphere.center, 1}};
 
     return centeredAABBSphereCollision(box.transform.getScale(), {newSphereCenter, sphere.radius});
 }
@@ -855,15 +856,15 @@ bool Collisions::boxMovingShereCollision(const Physics::Shapes::Box& box, const 
     Core::Maths::Matrix4x4 mInverse = m.getInverse();
     // The new Segment, relative to the box
     Physics::Shapes::Segment3D seg2;
-    seg2.p1 = mInverse * seg.p1;
-    seg2.p2 = mInverse * seg.p2;
+    seg2.p1 = Core::Maths::Vec3{mInverse * Core::Maths::Vec4{seg.p1}};
+    seg2.p2 = Core::Maths::Vec3{mInverse * Core::Maths::Vec4{seg.p2}};
 
     if (centeredAABBMovingSphereCollision(box.transform.getScale(), s, seg2, hit))
     {
         // Pu the collision point and normal back to the previous referential.
-        hit.collisionPoint = m * Core::Maths::Vec4(hit.collisionPoint, 1);
-        hit.normal         = m * Core::Maths::Vec4(hit.normal, 0);
-        hit.normal         = hit.normal.unitVector();
+        hit.collisionPoint = Core::Maths::Vec3{m * Core::Maths::Vec4(hit.collisionPoint, 1)};
+        hit.normal         = Core::Maths::Vec3{m * Core::Maths::Vec4(hit.normal, 0)};
+        hit.normal         = Core::Maths::Vec3{hit.normal.unitVector()};
         return true;
     }
     else 

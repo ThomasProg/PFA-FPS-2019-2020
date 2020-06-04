@@ -86,24 +86,6 @@ Vec2 Vec2::down     (0.f, -1.f);
 Vec2 Vec2::left     (-1.f, 0.f);
 Vec2 Vec2::right    (1.f, 0.f);
 
-Vec2::Vec2(const Vec2& f32)
-{
-    this->x = f32.x;
-    this->y = f32.y;
-}
-
-Vec2::Vec2(float f)
-{
-    this->x = f;
-    this->y = f;
-}
-
-Vec2::Vec2(float x, float y)
-{
-    this->x = x;
-    this->y = y;
-}
-
 void Vec2::operator=(const Vec2& vec)
 {
     this->x = vec.x;

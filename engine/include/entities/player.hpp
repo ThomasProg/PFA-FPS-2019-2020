@@ -47,11 +47,23 @@ namespace Entity
 
     // Example Class for Player
     class Player final : public Physics::TransformInterface,
-                         public Renderer::RenderableInterface,
+                        // public Renderer::RenderableInterface,
                          public Physics::CollisionComponentInterface<Physics::Shapes::Box>,
                          public Physics::PhysicComponentInterface,
                          public Controller::ControllerInterface
     {
+    private: 
+        class Gun : public Physics::TransformInterface,
+                    public Renderer::RenderableInterface
+        {
+        public:
+            Gun() 
+                : Renderer::RenderableInterface(&transform)
+            {}
+        };
+
+        Gun gun;
+
     private:
         static constexpr float movementSpeed  = 10.f * 1.f;
         static constexpr float jumpSpeed      = 7.0f;
@@ -82,45 +94,41 @@ namespace Entity
         //// Audio ////
         Resources::AudioSource audio;
 
+
+        CollisionComponentInterface<Physics::Shapes::Box>* currentGround = nullptr;
+
         // ====== Input Keys ====== //
-    public:
-        static constexpr size_t nbInputKeys = 5;
-
-        union 
+        enum E_Inputs : unsigned int
         {
-            struct 
-            {
-                unsigned int forward  = GLFW_KEY_W,
-                             backward = GLFW_KEY_S,
-                             right    = GLFW_KEY_D,
-                             left     = GLFW_KEY_A,
-                             jump     = GLFW_KEY_SPACE,
-                             fire     = GLFW_MOUSE_BUTTON_RIGHT;
-            };
+            E_FORWARD = 0,
+            E_BACKWARD,
+            E_RIGHT,
+            E_LEFT,
+            E_JUMP,
+            E_FIRE,
+            E_LAST
+        };
+        static constexpr unsigned int nbInputKeys = static_cast<unsigned int> (E_Inputs::E_LAST);
 
-            std::array<unsigned int, nbInputKeys> keys;
-        } inputKeys;
-    public:
-        using InputsKeys = std::array<unsigned int, nbInputKeys>;
-        // ======================== //
+        static std::array<bool, nbInputKeys> getDownKeysAzertyAndQwery(const Core::Engine& engine);
+
+        std::array<bool, nbInputKeys> (*getDownKeys) (const Core::Engine& engine) = getDownKeysAzertyAndQwery;
 
     public:
         
-        Player() 
-            : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
-              Physics::PhysicComponentInterface(&transform)
-        {
-            collider.isOverlap = true;
-            physicComp.collider.worldCollider.radius = 1.f;
-        }
+        Player();
+
+        inline void addRendering(Renderer::RendererSystem& rendererSystem);
+        inline void removeRendering(Renderer::RendererSystem& rendererSystem);
+
+        void setTransformParent(Physics::TransformGraph& transformParent);
+        void setTransform(const Physics::Transform& newTransform);
 
         void inputs(const Core::Engine& engine) override;
 
         void tryToJump(const Core::Engine& engine);
         void setResources(const DemoResourceManager&);
 
-        bool isShooting(const Core::Engine& engine) const;
         Physics::Shapes::Segment3D getShootRay() const;
         void shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime);
 
@@ -128,14 +136,16 @@ namespace Entity
 
         void reloadAmmo();
 
-        void physicCompOnCollisionEnter        (const Physics::Shapes::SegmentHit&) override 
+        void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
         {
-            // std::cout << "Enter collision" << std::endl;
+            if (hit.normal.y > 0.5) 
+                currentGround = otherCollider;
         }
 
-        void physicCompOnCollisionExit        () override 
+        void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
         {
-            // std::cout << "Exit collision" << std::endl;
+            if (currentGround == otherCollider)
+                currentGround = nullptr;
         }
 
 
@@ -162,5 +172,7 @@ namespace Entity
         }
     };
 }
+
+#include "player.inl"
 
 #endif

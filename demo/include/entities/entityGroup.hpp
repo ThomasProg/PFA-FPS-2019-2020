@@ -47,8 +47,12 @@ public:
 
     ~EntityGroup();
 
+    // Not returning a reference or a pointer;
+    // Modifying lights sets a dirty flag, 
+    // we do not want the reference to be used too long, 
+    // or the dirty flag would become pointless.
     template<class... ARGS>
-    Renderer::Light& addLight (ARGS&&... lightArgs);
+    void addLight (ARGS&&... lightArgs);
 
     template<class... ARGS>
     Entity::Player* addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs);
@@ -74,13 +78,15 @@ public:
 
     template<class... ARGS>
     Entity::Enemy* addEnemy (const Physics::Transform& transform, ARGS&&... enemyArgs);
+
+    template<class... ARGS>
+    Entity::Enemy* addEnemyBoss (const Physics::Transform& transform, ARGS&&... enemyArgs);
+
     void removeEnemy(unsigned int index);
     void removeEnemyFromSytems(Entity::Enemy* enemy);
 
     template<class... ARGS>
     std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
-
-    void setKeys(bool isAzerty);
 
     void collectGarbage();
 };

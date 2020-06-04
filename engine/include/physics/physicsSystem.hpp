@@ -60,9 +60,9 @@ namespace Physics
         std::vector<PhysicCompIt> freePhysicCompsIndices;
 
         static constexpr float gravityAcc = 9.81f; 
-        static constexpr float linearDamping  = 0.98f;
+        static constexpr float linearDamping  = 0.90f;
 
-        static constexpr float epsilon = 0.0001;//0.00001f;
+        static constexpr float epsilon = 0.0001;
 
     public:
         // reserve vector to prevent too much move
@@ -147,7 +147,9 @@ namespace Physics
                                             Physics::Shapes::SegmentHit& hit,
                                             Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface);
 
-        bool raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity) const;
+        bool raycast(const Physics::Shapes::Segment3D& seg, Physics::Shapes::SegmentHit& hit, 
+                     Physics::CollisionComponentInterface<Physics::Shapes::Box>*& touchedEntity,
+                     unsigned int consideredLayers = 0xFFFFFFFF) const;
 
         void reset();
     };
