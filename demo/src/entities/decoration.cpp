@@ -3,7 +3,7 @@
 Entity::Decoration::Decoration() 
     : Renderer::RenderableInterface(&transform)
 {
-    mesh.color = Core::Maths::Vec4{0.1f, 0.450f, 0.1f,1};
+    mesh.color = defaultColor;
 }
 
 Entity::Decoration::Decoration(const Core::Maths::Vec4& color) 

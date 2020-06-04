@@ -5,9 +5,8 @@
 #include "collisionComponentInterface.hpp"
 #include "physicComponentInterface.hpp"
 #include "renderableInterface.hpp"
-#include "saveInterface.hpp"
 
-#include "saveInterface.hpp"
+#include "layersEnum.hpp"
 
 #include "audioSource.hpp"
 
@@ -56,10 +55,22 @@ namespace Entity
                   public Renderer::RenderableInterface
     {
     private:
-        int maxLife = 10;
+        static constexpr float defaultPhysicCompRadius = 1.f; 
+        static constexpr unsigned int defaultLayers = LayersEnum::E_ENTITY | LayersEnum::E_ENEMY;
+        // If the player goes on the enemy with normal.y higher than jumpKilledHeight for him,
+        // then it kills the entity.
+        static constexpr float jumpKilledHeight = 0.5;
+
+        static constexpr Core::Maths::Vec4 colorTakenOnDamage = {1,0,0,1};
+        static constexpr Core::Maths::Vec4 defaultColor = {1,1,1,1};
+        static constexpr float bossDamages = 2.f;
+        static constexpr float damages     = 1.f;
+
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.5f;
         static constexpr float maxSpeed = 7.5f;
         static constexpr float respawnCooldown = 4.f;
+
+        int maxLife = 10;
         float angle = 0.f;
         float timeLeftTillRespawn = 0.f;
         float lastReceivedHitTime = -1.f;
