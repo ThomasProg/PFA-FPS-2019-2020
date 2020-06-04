@@ -6,7 +6,7 @@
 #include "player.hpp"
 #include "enemy.hpp"
 #include "decoration.hpp"
-#include "renderedEntity.hpp"
+#include "bullet.hpp"
 #include "ground.hpp"
 
 #include <memory>
@@ -40,7 +40,7 @@ public:
     std::vector<std::unique_ptr<Entity::Decoration>> decorations;
 
     // Contains the bullets.
-    std::vector<std::unique_ptr<Entity::RenderedEntity>> bullets;
+    std::vector<std::unique_ptr<Entity::Bullet>> bullets;
 
     // Points toward current player controller.
     Controller::ControllerInterface* controller = nullptr;
@@ -122,7 +122,7 @@ public:
     // Adds a Bullet to the group
     // and attach it to systems.
     template<class... ARGS>
-    std::unique_ptr<Entity::RenderedEntity>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
+    std::unique_ptr<Entity::Bullet>& addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs);
 
     // Removes dead entities (enemies).
     void collectGarbage();

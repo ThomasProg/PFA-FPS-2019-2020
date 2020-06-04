@@ -15,6 +15,9 @@ namespace Entity
                          public Renderer::RenderableInterface,
                          public Physics::CollisionComponentInterface<Physics::Shapes::Box>
     {
+    private:
+        static constexpr Core::Maths::Vec4 defaultColor = {0.301f, 0.113f, 0.f, 1};
+
     public:
         Ground();
         Ground(const Core::Maths::Vec4& color);

@@ -11,15 +11,17 @@
 
 #include "layersEnum.hpp"
 
+constexpr Core::Maths::Vec4 Entity::Enemy::colorTakenOnDamage;
+constexpr Core::Maths::Vec4 Entity::Enemy::defaultColor;
+
 Entity::Enemy::Enemy() 
     : Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
         Physics::PhysicComponentInterface(&transform),
         Renderer::RenderableInterface(&transform)
 {
-    type.enemyType = EnemyType::E_NORMAL;
     collider.isOverlap = true;
-    physicComp.collider.worldCollider.radius = 1.f;
-    collider.layers = LayersEnum::E_ENTITY | LayersEnum::E_ENEMY;
+    physicComp.collider.worldCollider.radius = defaultPhysicCompRadius;
+    collider.layers = defaultLayers;
 }
 
 void Entity::Enemy::update(const Core::Engine& engine, float playTime)
@@ -165,7 +167,7 @@ void Entity::Enemy::chase(const Core::Engine& engine)
         {   
             attackSound.play();
             timeForHit = 0.0f;
-            target->dealDamages(2);
+            target->dealDamages(bossDamages);
         }
     }
 }
@@ -202,7 +204,7 @@ void Entity::Enemy::kill()
 void Entity::Enemy::takeDamage(int damage, float playTime)
 {
     lastReceivedHitTime = playTime;
-    mesh.color = {1,0,0,1};
+    mesh.color = colorTakenOnDamage;
     life = clamp(life - damage, 0, life);
 
     if(life == 0)
@@ -218,7 +220,7 @@ void Entity::Enemy::tryToAttack(float playTime)
         {
             attackSound.play();
             lastAttackTime = playTime;
-            target->dealDamages(1.f);
+            target->dealDamages(damages);
         }
     }
 }
@@ -241,10 +243,10 @@ void Entity::Enemy::lerpColorBackToNormal(float playTime)
     // Lerp color when hit
     if ((playTime - lastReceivedHitTime) < 1)
     {
-        mesh.color = mesh.color + (Core::Maths::Vec4{1,1,1,1} - mesh.color) * (playTime - lastReceivedHitTime);
+        mesh.color = mesh.color + (defaultColor - mesh.color) * (playTime - lastReceivedHitTime);
     }
     else 
-        mesh.color = {1,1,1,1};
+        mesh.color = defaultColor;
 }
 
  void Entity::Enemy::physicCompOnOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data)
@@ -253,7 +255,7 @@ void Entity::Enemy::lerpColorBackToNormal(float playTime)
         return;
 
     //kill when player jump over the enemy
-    if (data.hit.normal.y < -0.5)
+    if (data.hit.normal.y < - jumpKilledHeight)
         kill();
 }
 
@@ -262,7 +264,7 @@ void Entity::Enemy::colliderOnOverlapEnter(const Physics::PhysicsSystem::Collisi
     if (data.movingEntityID == this)
         return;
 
-    if (data.hit.normal.y > 0.5)
+    if (data.hit.normal.y > jumpKilledHeight)
     {
         kill();
     }
