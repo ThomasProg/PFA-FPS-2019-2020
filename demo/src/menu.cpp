@@ -8,18 +8,7 @@ Menu::Menu(Game& game)
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
-    int w, h;
-    Resources::Texture::loadTexture("resources/textures/background.png", imageText, &w, &h);
-}
-
-void Menu::update()
-{
-
-}
-
-void Menu::inputs()
-{
-
+    Resources::Texture::loadTexture("resources/textures/background.png", imageText);
 }
 
 void Menu::renderUI()
@@ -29,11 +18,6 @@ void Menu::renderUI()
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void Menu::render()
-{
-
 }
 
 void Menu::preparePanel(ImVec2 pos, ImVec2 size, ImVec4 buttonColor, ImVec4 buttonColorActive, ImVec4 windowColor)

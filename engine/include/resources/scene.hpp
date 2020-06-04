@@ -10,16 +10,14 @@ namespace Resources
 
     class Scene
     {
-    protected: 
-
     public:
         virtual void load()     {}
-        virtual void inputs()   = 0;
-        virtual void update()   = 0;
+        virtual void inputs()   {}
+        virtual void update()   {}
         virtual void renderUI() = 0;
 
-        // we can't render scenes in a good depth order if we have multiple scenes
-        virtual void render()   = 0;
+        // we can't render scenes in a good depth order if we have multiple scenes (without depth buffer) 
+        virtual void render()   {}
 
         virtual ~Scene() = default;
     };

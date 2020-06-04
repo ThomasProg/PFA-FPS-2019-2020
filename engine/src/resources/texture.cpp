@@ -32,13 +32,9 @@ bool Resources::Texture::loadTexture(const char* filename, GLuint& data, int* wi
 {
     // Load from file
     unsigned char* image_data;
-    if (width != nullptr && height != nullptr)
-        image_data = stbi_load(filename,width, height, NULL, 4);
-    else 
-    {
-        int tempWidth, tempHeight;
-        image_data = stbi_load(filename, &tempWidth, &tempHeight, NULL, 4);
-    }
+
+    int tempWidth, tempHeight;
+    image_data = stbi_load(filename, &tempWidth, &tempHeight, NULL, 4);
 
     if (image_data == NULL)
         return false;
@@ -54,11 +50,16 @@ bool Resources::Texture::loadTexture(const char* filename, GLuint& data, int* wi
 
     // Upload pixels into texture
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tempWidth, tempHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
     stbi_image_free(image_data);
 
     data = image_texture;
 
+    if (width != nullptr && height != nullptr)
+    {
+        *width  = tempWidth;
+        *height = tempHeight;
+    } 
 
     return true;
 }

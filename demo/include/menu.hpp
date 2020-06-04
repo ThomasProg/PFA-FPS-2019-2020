@@ -22,17 +22,15 @@ class Menu : public Resources::Scene
 private:
     Game& game;
 
+    // Index of the texture on opengl
+    GLuint imageText = 0;
+    
+    bool isMainMenuOpen{true};
+
 public:
     Menu(Game& game);
 
-    bool isMainMenuOpen{true};
-    // Index of the texture on opengl
-    GLuint imageText = 0;
-
-    void update() override;   
     void renderUI() override; 
-    void render() override;
-    void inputs() override;
 
     static void preparePanel(ImVec2 pos, ImVec2 size, ImVec4 buttonColor, ImVec4 buttonColorActive, ImVec4 windowColor);
     void mainMenu();
