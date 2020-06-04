@@ -18,6 +18,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include <array>
+
 // void World::save(Save::Saver& saver) 
 // {
 //     // saver.save(nextEntity);
@@ -196,7 +198,7 @@ void World::makeNewLevel()
     // === Add Player === //
     entityGroup.addPlayer({{0,-26,10.0 + 0.0}});
 }
-#include <array>
+
 void World::load()
 {
     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
@@ -276,8 +278,41 @@ void World::updatePhysics()
     game.engine.physicsSystem.simulatePhysics(game.engine);
 }
 
+void World::setLowQualitySettings()
+{
+    glClearColor(0.5,0.5,0.9, 1.f);
+    entityGroup.removeAllDecorations();
+    entityGroup.lightManager.getLightsToModifyThem().clear();
+
+    Renderer::LightData light;
+    light.lightType = 1;
+    light.ambient   = {0.4, 0.4, 0.4, 1};
+    light.dif       = {0.6, 0.6, 0.6, 1};
+    light.location  = {-1,-1,-1,1};
+    entityGroup.addLight(light);
+}
+
+void World::setLowQualitySettings()
+{
+    glClearColor(0.5,0.5,0.9, 1.f);
+    entityGroup.removeAllDecorations();
+    entityGroup.lightManager.getLightsToModifyThem().clear();
+
+    Renderer::LightData light;
+    light.lightType = 1;
+    light.ambient   = {0.4, 0.4, 0.4, 1};
+    light.dif       = {0.6, 0.6, 0.6, 1};
+    light.location  = {-1,-1,-1,1};
+    entityGroup.addLight(light);
+}
+
 void World::update()   
 {
+    if (game.engine.isKeyDown(GLFW_KEY_P))
+    {
+        setLowQualitySettings();
+    }
+
     if (game.engine.hasWindowSizeChanged)
         updateCameraProjection();
 

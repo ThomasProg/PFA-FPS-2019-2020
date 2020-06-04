@@ -120,7 +120,8 @@ void Game::quitGame()
 }
 
 void Game::run()
-{        glClearColor(0.1,0.1,0.2,1.f);
+{        
+    glClearColor(0.1,0.1,0.2,1.f); // dark blue
 
     while (!engine.shouldStop())
     {

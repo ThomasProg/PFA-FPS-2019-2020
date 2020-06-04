@@ -105,6 +105,8 @@ public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
 
+    void setLowQualitySettings();
+
     void loadFromSavefile(const char* savedFilename);
     void makeNewLevel();
 

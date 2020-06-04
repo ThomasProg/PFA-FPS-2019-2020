@@ -66,6 +66,7 @@ public:
                                       E_Shader shader,
                                       const Core::Maths::Vec4& color, 
                                       ARGS&&... groundArgs);
+    void removeAllDecorations();
 
     template<class... ARGS>
     Entity::Decoration* addTree(const Physics::Transform& transform, ARGS&&... decoArgs);

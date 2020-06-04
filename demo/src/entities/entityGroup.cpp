@@ -21,12 +21,7 @@ EntityGroup::~EntityGroup()
         }
     }
 
-    for (std::unique_ptr<Entity::Decoration>& deco : decorations)
-    {
-        {
-            engine.rendererSystem.erase(deco->meshIt);
-        }
-    }
+    removeAllDecorations();
 
     for (std::unique_ptr<Entity::Enemy>& enemy : enemies)
     {
@@ -45,6 +40,16 @@ EntityGroup::~EntityGroup()
 
 
     player = nullptr;
+}
+
+void EntityGroup::removeAllDecorations()
+{
+    for (std::unique_ptr<Entity::Decoration>& deco : decorations)
+    {
+        assert(deco);
+        engine.rendererSystem.erase(deco->meshIt);
+    }
+    decorations.clear();
 }
 
 void EntityGroup::removeEnemyFromSytems(Entity::Enemy* enemy)
