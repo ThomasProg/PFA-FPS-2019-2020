@@ -69,11 +69,6 @@ namespace Physics
         // reserve vector to prevent too much move
         unsigned int nextNbOverlapHint = 0;
 
-        struct PhysicsAdditionalData
-        {
-            std::unordered_set<Physics::CollisionComponentInterface<Physics::Shapes::Box>*> ignoredEntities;
-        };
-
         struct CollisionsCallbacksSentData
         {
             const Physics::Shapes::SegmentHit& hit;
@@ -123,19 +118,16 @@ namespace Physics
         void simulatePhysicsForASphere(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine);
 
         Core::Maths::Vec3 simulateCollisionsForASphere(
-                                              const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                               Physics::PhysicComponentInterface* physicCompID,
                                               const Core::Engine& engine,
                                               Core::Maths::Vec3& usedVelocity);
 
         void sphereFindOverlappingBoxes(const Physics::Shapes::Sphere& sphere, 
                                         const Core::Maths::Vec3& velocity,
-                                        const Physics::PhysicsSystem::PhysicsAdditionalData& data,
                                         Physics::PhysicComponentInterface* physicCompID);
 
         bool sphereCollisionWithBoxes(const Physics::Shapes::Sphere& sphere, 
                                             const Core::Maths::Vec3& velocity,
-                                            const Physics::PhysicsSystem::PhysicsAdditionalData& data, 
                                             Physics::Shapes::SegmentHit& hit,
                                             Physics::CollisionComponentInterface<Physics::Shapes::Box>*& collidedMeshInterface);
 
