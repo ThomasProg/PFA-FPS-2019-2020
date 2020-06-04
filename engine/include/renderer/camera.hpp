@@ -17,11 +17,10 @@ namespace Renderer
 
         Core::Maths::Matrix4x4 viewProjectionMatrix;
 
-        void updateViewProjectionMatrix()
-        {
-            Core::Maths::Matrix4x4::multiply(projection, transform.transformMatrixNode->getWorldMatrix().getInverse(), viewProjectionMatrix);
-        }
+        inline void updateViewProjectionMatrix();
     };
 }
+
+#include "camera.inl"
 
 #endif

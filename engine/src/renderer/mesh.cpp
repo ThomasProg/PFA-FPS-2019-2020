@@ -23,7 +23,8 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
     if (transform == nullptr)
         return;
         
-    if (!isDrawn || model == nullptr || shader == nullptr || &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
+    if (!isDrawn || model == nullptr || shader == nullptr || 
+        &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
         return;
 
     glBindVertexArray(model->VAO);
