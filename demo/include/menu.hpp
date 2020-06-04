@@ -21,14 +21,11 @@ class Menu : public Resources::Scene
 {
 private:
     Game& game;
-    bool isLoadAvailable = false;
 
 public:
     Menu(Game& game);
 
     bool isMainMenuOpen{true};
-    int imageWidth = 0;
-    int imageHeight = 0;
     GLuint imageText = 0;
 
     void update() override;   

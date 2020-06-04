@@ -19,22 +19,26 @@ public:
     // the "nextScene" is nullptr.
     std::unique_ptr<Scene> nextScene;
 
-    static constexpr const char* savedFilename = "bin/world.dat";
-    bool isAzerty {false};
     bool isHighQuality = true;
     
 public:
+    // Loads Resources, 
+    // loads Menu,
+    // and runs the game loop.
     Game();
 
+    // Loads textures, models, so   unds and shaders.
     void loadResources();
 
     void loadMenu();
     void loadLevel(bool isLoaded, bool isEditorMode = false);
     void quitGame();
 
+    // Runs the game loop.
     void run();
     void inputs();
 
+    // Called every frame
     void update() override;
     void renderUI() override;
     void render() override;

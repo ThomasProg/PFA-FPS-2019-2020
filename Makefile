@@ -12,7 +12,7 @@ CFLAGS=$(CXXFLAGS)
 CC=gcc
 CXX=g++
 
-LDLIBS= -Llib -lglfw -lGL -ldl -lopenal -pg
+LDLIBS= -Llib -lglfw -lGL -ldl -lopenal
 SRC=$(wildcard demo/src/*.cpp)\
 	$(wildcard demo/src/entities/*.cpp)\
 	$(wildcard engine/src/*.cpp)\

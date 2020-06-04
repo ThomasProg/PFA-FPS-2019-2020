@@ -142,9 +142,6 @@ void Game::run()
         inputs();
 
         engine.endFrame();
-
-        // glClearColor(0.5,0.5,0.9,1.f);
-        // glClearColor(0.1,0.1,0.2,1.f);
     }
 }
 
@@ -185,10 +182,5 @@ void Game::inputs()
 {
     if(currentScene != nullptr)
         currentScene->inputs();
-
-    /*if (engine.isKeyDown(GLFW_KEY_ESCAPE))
-    {
-        loadMenu();
-    }*/
 }
 

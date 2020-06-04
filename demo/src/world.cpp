@@ -21,7 +21,7 @@
 
 
 World::World(Game& game, bool isLoaded, bool isEditorMode)
-    : game(game), entityGroup(game.engine), isLoaded(isLoaded), isEditorMode(isEditorMode)
+    : game(game), entityGroup(game.engine), isEditorMode(isEditorMode)
 {
     Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshairWidth, crosshairHeight, crosshair);
     Resources::Texture::loadTexture("resources/textures/cross.png", crossWidth, crossHeight, cross);
@@ -102,7 +102,6 @@ void World::makeNewLevel()
 
 void World::load()
 {
-    isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
 
     // lock cursor
     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
@@ -112,11 +111,6 @@ void World::load()
 
 
     updateCameraProjection();
-}
-
-World::~World()
-{
-
 }
 
 void World::inputs()

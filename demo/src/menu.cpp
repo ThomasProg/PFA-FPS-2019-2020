@@ -3,11 +3,12 @@
 #include "file.hpp"
 
 Menu::Menu(Game& game)
-    : game(game), isLoadAvailable(Resources::File::doesFileExist(Game::savedFilename))
+    : game(game)
 {
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
+    int imageWidth, imageHeight;
     Resources::Texture::loadTexture("resources/textures/background.png", imageWidth, imageHeight, imageText);
 }
 

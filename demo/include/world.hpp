@@ -55,13 +55,6 @@ private:
 
     float playTime = 0.f;
 
-    // Searching if a file exists is expensive,
-    // so at the start and each time we start the game,
-    // we modify this value to know when we open the menu.
-    bool isLoadAvailable = false; 
-
-    bool isLoaded = false;
-
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
 
@@ -69,7 +62,7 @@ private:
 
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
-    ~World();
+    ~World() = default;
 
     void setLowQualitySettings();
     void setHighQualitySettings();
