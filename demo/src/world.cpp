@@ -341,10 +341,10 @@ void World::gameWin()
     //ImGui::PushFont(font);
 
     ImGui::SetCursorPosY(game.engine.height / 2);
-    ImGui::SetCursorPosX(game.engine.width / 2);
+    ImGui::SetCursorPosX(game.engine.width / 2 - 100.f);
     ImGui::SetWindowFontScale(2.0);    
     ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(0.f, 1.f, 0.f, t/3)));
-    ImGui::Text("You win in %f seconds", playTime);
+    ImGui::Text("You win in \n %f seconds", playTime);
 
     ImGui::PopStyleColor(5);
     //ImGui::PopFont();
