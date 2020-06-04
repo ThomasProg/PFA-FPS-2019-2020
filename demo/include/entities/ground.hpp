@@ -9,25 +9,15 @@
 
 namespace Entity
 {
+    // Represents the ground, or walls.
+    // It is static.
     class Ground final : public Physics::TransformInterface,
                          public Renderer::RenderableInterface,
                          public Physics::CollisionComponentInterface<Physics::Shapes::Box>
     {
     public:
-        Ground() 
-            : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform)
-        {
-            mesh.color = Core::Maths::Vec4{0.835f, 0.650f, 0.384f,1};
-            mesh.color   = {0.301f, 0.113f, 0.f, 1};
-        }
-
-        Ground(const Core::Maths::Vec4& color) 
-            : Renderer::RenderableInterface(&transform),
-              Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform)
-        {
-            mesh.color = color;
-        }
+        Ground();
+        Ground(const Core::Maths::Vec4& color);
 
         void setResources(const DemoResourceManager&);
     };

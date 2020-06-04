@@ -13,7 +13,6 @@ using namespace Resources;
 
 Shader::Shader(const char* vsFilename, const char* fsFilename)
 {
-    // TODO : check if returning false
     GLuint vertexShader, fragmentShader;
     bool b1 = loadVertexShader(vsFilename, vertexShader);
     b1 &= loadFragmentShader(fsFilename, fragmentShader);

@@ -17,9 +17,7 @@ Resources::Model::Model(Model&& rhs)
     positions   = std::move(rhs.positions);
     normals     = std::move(rhs.normals);
     textCoords  = std::move(rhs.textCoords);
-    // indices     = std::move(rhs.indices);
 
-    // TODO : remove ? Useless ?
     rhs.VAO = 0;
     rhs.VBO = 0;
 }
@@ -181,7 +179,6 @@ void Resources::Model::setupModel()
 
     //Vertices
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(positions[0]), &positions[0], GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);

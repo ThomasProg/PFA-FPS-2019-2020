@@ -47,7 +47,6 @@ namespace Entity
 
     // Example Class for Player
     class Player final : public Physics::TransformInterface,
-                        // public Renderer::RenderableInterface,
                          public Physics::CollisionComponentInterface<Physics::Shapes::Box>,
                          public Physics::PhysicComponentInterface,
                          public Controller::ControllerInterface
@@ -95,7 +94,6 @@ namespace Entity
 
         float lastJumpPressTime = -123456789.f;
         
-        // Renderer::TPSCamera camera;
         Renderer::FPSCamera camera;
 
         std::function<void()> onPlayerDeath = nullptr;
@@ -149,40 +147,13 @@ namespace Entity
 
         void reloadAmmo();
 
-        void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
-        {
-            if (hit.normal.y > 0.5) 
-                currentGround = otherCollider;
-        }
+        inline void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override;
 
-        void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override 
-        {
-            if (currentGround == otherCollider)
-                currentGround = nullptr;
-        }
+        inline void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override;
 
+        inline void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override;
 
-        void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
-        {
-            if (data.encounteredEntityID == this)
-                return;
-
-            // if (data.hit.normal.y < 0.5)
-            // {
-            //     dealDamages(1.f);
-            // }
-        }
-
-        void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
-        {
-            if (data.movingEntityID == this)
-                return;
-
-            // if (data.hit.normal.y > - 0.5)
-            // {
-            //     dealDamages(1.f);
-            // }
-        }
+        inline void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override;
     };
 }
 

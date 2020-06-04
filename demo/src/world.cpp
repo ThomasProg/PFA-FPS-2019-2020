@@ -9,7 +9,6 @@
 #include "segment3D.hpp"
 #include "primitives.hpp"
 #include "log.hpp"
-#include "editorUtility.hpp"
 
 #include "physicComponentInterface.hpp"
 #include "collisionComponentInterface.hpp"
@@ -274,7 +273,6 @@ void World::update()
             std::vector<std::unique_ptr<Entity::RenderedEntity>>::iterator r = entityGroup.bullets.begin();
             while(entityGroup.bullets.size() != 0 && game.engine.lastTime >= r->get()->timer)
             {
-                // (*r)->mesh.erase();
                 game.engine.rendererSystem.erase((*r)->meshIt);
                 r = entityGroup.bullets.erase(r);
             }
@@ -290,10 +288,8 @@ void World::update()
 void World::gameWin()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
-    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
-    //ImGui::PushFont(font);
 
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - 100.f);
@@ -302,7 +298,6 @@ void World::gameWin()
     ImGui::Text("You win in \n %f seconds", playTime);
 
     ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
     ImGui::End();
 
     t += game.engine.deltaTime;
@@ -317,10 +312,8 @@ void World::gameWin()
 void World::gameOver()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
-    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
-    //ImGui::PushFont(font);
 
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2);
@@ -329,7 +322,6 @@ void World::gameOver()
     ImGui::Text("You Loose");
 
     ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
     ImGui::End();
 
     t += game.engine.deltaTime;
@@ -405,7 +397,6 @@ void World::hud()
 
 
     ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
     ImGui::End(); 
 }
 
@@ -414,7 +405,6 @@ void World::pauseMenu()
     Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 0.f});
     
     ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
-    //ImGui::PushFont(font);
     ImGui::SetWindowFontScale(1.0);
     ImGui::Indent(400/2 - 100);
     
@@ -441,7 +431,6 @@ void World::pauseMenu()
     }
 
     ImGui::PopStyleColor(4);
-    //ImGui::PopFont();
     ImGui::End();
 }
 

@@ -3,19 +3,19 @@
 
 #include "resourceManager.hpp"
 
-// User custom container type :
+// ====== User custom container type ====== //
 using ContainerType = unsigned int;
 
-// Forward Declarations :
+// ====== Forward Declarations ====== //
 enum class E_Model   : ContainerType;
 enum class E_Texture : ContainerType;
 enum class E_Shader  : ContainerType;
 enum class E_Audio   : ContainerType;
 
-// User custom typename
+// ====== User custom typename ====== //
 using DemoResourceManager = Resources::ResourceManager<E_Model, E_Texture, E_Shader, E_Audio>;
 
-// User custom Enums :
+// ====== User custom Enums ====== //
 enum class E_Model : ContainerType
 {
     E_SPHERE = 0,

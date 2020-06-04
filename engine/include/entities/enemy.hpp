@@ -53,8 +53,7 @@ namespace Entity
     class Enemy final : public Physics::TransformInterface,
                   public Physics::CollisionComponentInterface<Physics::Shapes::Box>, 
                   public Physics::PhysicComponentInterface, 
-                  public Renderer::RenderableInterface,
-                  public Save::SaveInterface
+                  public Renderer::RenderableInterface
     {
     private:
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.5f;
@@ -110,40 +109,11 @@ namespace Entity
         void lerpColorBackToNormal(float playTime);
 
         void kill();
-        // ~Enemy() {};
 
-        void save(Save::Saver& saver)       override {}
-        void loadData(Save::Loader& loader) override {}
+        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override;
 
-
-        // virtual void onCollisionEnter        (const SegmentHit& hit) override;
-        // virtual void onCollisionExit         () override;
-        // virtual void onOverlapEnterSelfHit   (const SegmentHit& hit) override;
-        // virtual void onOverlapEnterAnotherHit(const SegmentHit& hit) override;
-        virtual void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
-        {
-            if (data.encounteredEntityID == this)
-                return;
-
-            if (data.hit.normal.y < -0.5)
-            {
-                kill();
-            }
-        }
-
-        virtual void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override
-        {
-            if (data.movingEntityID == this)
-                return;
-
-            if (data.hit.normal.y > 0.5)
-            {
-                kill();
-            }
-        }
+        virtual void colliderOnOverlapEnter     (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override;
     };
 }
-
-#include "enemy.inl"
 
 #endif

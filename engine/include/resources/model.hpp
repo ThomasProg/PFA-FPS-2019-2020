@@ -20,7 +20,6 @@ namespace Resources
         std::vector<Core::Maths::Vec3> positions;
         std::vector<Core::Maths::Vec3> normals;
         std::vector<Core::Maths::Vec2> textCoords;
-        // std::vector<unsigned int> indices;
 
         Model() = default;
         Model(const char* pathToFile);

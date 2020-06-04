@@ -234,11 +234,6 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Physics::Shapes::S
 
     Physics::Shapes::SegmentHit hit;
     
-    // // TODO : opti with reserve
-    // std::vector<CollisionsCallbacksSentDataCpy> collisionsCallbacksSentDataList;
-    // collisionsCallbacksSentDataList.reserve(nextNbOverlapHint); 
-
-    // for (std::pair<const Entity::EntityID, Physics::CollisionComponent<Physics::Shapes::Box>>& boxCollider : boxes)
     for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
         if (boxCollider == nullptr || !boxCollider->collider.isEnabled || !boxCollider->collider.isOverlap || data.ignoredEntities.count(boxCollider) > 0)
@@ -246,9 +241,6 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Physics::Shapes::S
 
         if (Collisions::boxMovingShereCollision(boxCollider->collider.worldCollider, sphere, seg, hit))
         {
-            // // Add Callbacks to list
-            // collisionsCallbacksSentDataList.emplace_back(hit, physicCompEntityID, boxCollider.first);
-            // callbacks.onOverlap(CollisionsCallbacksSentData{hit, physicComp, boxCollider.first});
             CollisionsCallbacksSentData data {hit, physicComp, boxCollider};
             boxCollider->colliderOnOverlapEnter(data);
             physicComp->physicCompOnOverlapEnter(data);
@@ -272,7 +264,6 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
 
     Physics::Shapes::SegmentHit hit;
     hit.t = 2.f;
-    // Entity::EntityID collidedEntity; // box
     Physics::CollisionComponentInterface<Physics::Shapes::Box>* collidedMeshInterface; // box
 
     if (sphereCollisionWithBoxes(sphere, usedVelocity, data, hit, collidedMeshInterface))
@@ -295,40 +286,13 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
 
         {
             // Physical Response
-            float dot2 = Core::Maths::Vec3::dotProduct(physicComp->physicComp.velocity/* - usedVelocity * hit.t*/, hit.normal);
+            float dot2 = Core::Maths::Vec3::dotProduct(physicComp->physicComp.velocity, hit.normal);
             Core::Maths::Vec3 otherFinalLoc = sphere.center + physicComp->physicComp.velocity - dot2 * hit.normal;
             physicComp->physicComp.velocity = otherFinalLoc - (sphere.center + hit.t * usedVelocity);
             physicComp->physicComp.velocity *= linearDamping;
         }
 
         usedVelocity *= linearDamping;
-
-        // // Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
-        // // float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
-        // // Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity - dot * hit.normal * 1.001;
-
-        // Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
-        // float dot = Core::Maths::Vec3::dotProduct(hit.normal, velocityAfterContact);
-        // Core::Maths::Vec3 finalLoc = sphere.center + usedVelocity - dot * hit.normal;
-
-        // std::cout << physicComp->physicComp.velocity  << std::endl;
-
-        // std::cout << - dot << std::endl;
-        // float dot2 = Core::Maths::Vec3::dotProduct(hit.normal, physicComp->physicComp.velocity);
-        // if (dot2 > 0) 
-        //     return sphere.center;
-        // Core::Maths::Vec3 np = sphere.center - dot2 * hit.normal;
-        // Core::Maths::Vec3 nb = sphere.center + 2.f * (np - sphere.center);
-        
-        // physicComp->physicComp.velocity = nb - (sphere.center + usedVelocity * hit.t);
-        // std::cout << physicComp->physicComp.velocity  << std::endl;
-        // // physicComp->physicComp.velocity -= dot*hit.normal;
-        // physicComp->physicComp.velocity *= 0.9f;
-        // return sphere.center;
-        // // usedVelocity -= dot * hit.normal;
-        // usedVelocity *= 0.9f;
-
-        // return sphere.center;
 
         sphereFindOverlappingBoxes(sphere, finalLoc, data, physicComp);
 

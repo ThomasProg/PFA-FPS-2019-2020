@@ -12,10 +12,11 @@ class Game : public Resources::Scene
 {
 public:
     Core::Engine engine;
+    // Pointer towards the current loaded scene.
     std::unique_ptr<Scene> currentScene;
-    // std::unique_ptr<World> world;
-    // std::unique_ptr<Menu> menu;
-
+    // Pointer towards the next scene that will be loaded.
+    // If no scene is planned to be loaded, 
+    // the "nextScene" is nullptr.
     std::unique_ptr<Scene> nextScene;
 
     static constexpr const char* savedFilename = "bin/world.dat";

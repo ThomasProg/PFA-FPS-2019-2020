@@ -74,9 +74,6 @@ namespace Resources
         // Links vbos to program.
         void linkModel(const Resources::Model&) const;
 
-        // // Links texture buffer to program. 
-        // void linkTexture(const Texture<>&, const GLuint VAO) const;
-
         inline constexpr bool isValid() const noexcept;
 
         inline void use() const;

@@ -104,7 +104,7 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
             {
                 firstPointOfCircle = firstPointOfCircle.unitVector() * maxSpeed;
             }
-            // Core::Maths::Vec3 temp = firstPointOfCircle.unitVector();
+
             physicComp.velocity.x = firstPointOfCircle.x;
             physicComp.velocity.z = firstPointOfCircle.z;        
         }
@@ -116,7 +116,6 @@ void Entity::Enemy::patrol(const Core::Engine& engine)
     }
     else if (state.enemyState == EnemyState::E_PATROLLING)
     {
-        // Core::Maths::Cylindrical cylindricCoord = Core::Maths::Cylindrical::convertToCylindrical(position - patrolTarget);
         Core::Maths::Vec3 v;
 
         v.x = cos(angle);
@@ -200,53 +199,6 @@ void Entity::Enemy::kill()
     mesh.isDrawn = false;
 }
 
-
-// void Entity::Enemy::save(Save::Saver& saver)     
-// {
-//     saver.save(angle);
-
-//     // Death Data
-//     saver.save(isDead);
-//     saver.save(timeLeftTillRespawn);
-// }
-
-// void Entity::Enemy::loadData(Save::Loader& loader) 
-// {
-//     loader.load(angle);
-
-//     // Death Data
-//     loader.load(isDead);
-//     loader.load(timeLeftTillRespawn);
-
-//     loader.tryToDisplayError(__FILE__);
-// }
-
-// void Entity::Enemy::onCollisionEnter(const SegmentHit& hit) 
-// {
-    
-// }
-
-// void Entity::Enemy::onCollisionExit() 
-// {
-
-// }
-
-// void Entity::Enemy::onOverlapEnterSelfHit(const SegmentHit& hit) 
-// {
-//     if (hit.normal.y < -0.5)
-//     {
-//         kill();
-//     }
-// }
-
-// void Entity::Enemy::onOverlapEnterAnotherHit(const SegmentHit& hit) 
-// {    
-//     if (hit.normal.y > 0.5)
-//     {
-//         kill();
-//     }
-// }
-
 void Entity::Enemy::takeDamage(int damage, float playTime)
 {
     lastReceivedHitTime = playTime;
@@ -292,4 +244,26 @@ void Entity::Enemy::lerpColorBackToNormal(float playTime)
     }
     else 
         mesh.color = {1,1,1,1};
+}
+
+ void Entity::Enemy::physicCompOnOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data)
+{
+    if (data.encounteredEntityID == this)
+        return;
+
+    if (data.hit.normal.y < -0.5)
+    {
+        kill();
+    }
+}
+
+void Entity::Enemy::colliderOnOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data)
+{
+    if (data.movingEntityID == this)
+        return;
+
+    if (data.hit.normal.y > 0.5)
+    {
+        kill();
+    }
 }

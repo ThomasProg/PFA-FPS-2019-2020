@@ -52,16 +52,17 @@ void EntityGroup::removeAllDecorations()
     decorations.clear();
 }
 
-void EntityGroup::removeEnemyFromSytems(Entity::Enemy* enemy)
+void EntityGroup::removeEnemyFromSytems(Entity::Enemy& enemy)
 {
-    engine.rendererSystem.erase(enemy->meshIt);
-    engine.physicsSystem.erase(enemy->colliderIt);
-    engine.physicsSystem.erase(enemy->physicCompIt);
+    engine.rendererSystem.erase(enemy.meshIt);
+    engine.physicsSystem.erase(enemy.colliderIt);
+    engine.physicsSystem.erase(enemy.physicCompIt);
 }
 
 
 void EntityGroup::removeEnemy(unsigned int index)
 {
+    assert(index < enemies.size());
     enemies[index] = std::move(enemies.back());
     enemies.pop_back();
 }
@@ -70,9 +71,9 @@ void EntityGroup::collectGarbage()
 {
     for (unsigned int i = 0; i < enemies.size(); i++)
     {
-        if (enemies[i]->state.enemyState == Entity::EnemyState::E_DEAD)
+        if (enemies[i] && enemies[i]->state.enemyState == Entity::EnemyState::E_DEAD)
         {
-            removeEnemyFromSytems(enemies[i].get());
+            removeEnemyFromSytems(*enemies[i].get());
             removeEnemy(i);
         }
     }

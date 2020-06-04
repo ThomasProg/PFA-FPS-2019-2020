@@ -161,7 +161,3 @@ std::unique_ptr<Entity::RenderedEntity>& EntityGroup::addBullet(const Physics::T
     bullet->timer = engine.lastTime + bullet->lifeTime;
     return bullet;
 }
-
-
-
-

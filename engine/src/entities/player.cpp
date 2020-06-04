@@ -15,8 +15,7 @@
 #define _IS_MOUSE_ENABLED_ 1
 
 Entity::Player::Player() 
-    : //Renderer::RenderableInterface(&transform),
-        Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
+    :   Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
         Physics::PhysicComponentInterface(&transform)
 {
     collider.isOverlap = true;
@@ -89,10 +88,6 @@ void Entity::Player::inputs(const Core::Engine& engine)
         addedVelocity += - right; 
         hasMoved = true;
     }
-    /*if(engine.isMouseButtonDown(inputKeys.fire))
-    {
-        //shoot();
-    }*/
 
     if (hasMoved)
     {
@@ -103,13 +98,6 @@ void Entity::Player::inputs(const Core::Engine& engine)
             physicComp.setVelocityOnAxis<2>(addedVelocity.z, engine);
         }
     }
-    // else
-    // {
-    //     physicComp.velocity.x = 0.f;
-    //     physicComp.velocity.z = 0.f;        
-    // }
-
-    // camera.inputs(engine);
 
     constexpr float mouseSensibility = 10.f;
     constexpr float rotationSpeedOnKey = 3.f;
@@ -210,10 +198,9 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
 void Entity::Player::dealDamages(float damages)
 {
     lifePoints -= damages;
-    if (/*onPlayerDeath && */lifePoints <= 0.f)
+    if (lifePoints <= 0.f)
     {
         state.playerState = PlayerState::E_DEAD;
-        //onPlayerDeath();
         gOver = true;
         lifePoints = 0;
     }
@@ -223,37 +210,6 @@ void Entity::Player::reloadAmmo()
 {
     nbBullet = maxNbBullet;
 }
-
-// void Entity::Player::onCollisionEnter(const SegmentHit& hit) 
-// {
-//     state.playerState = PlayerState::E_IDLE;
-// }
-
-// void Entity::Player::onCollisionExit() 
-// {
-//     state.playerState = PlayerState::E_JUMPING;
-// }
-
-// void Entity::Player::onOverlapEnterSelfHit(const SegmentHit& hit) 
-// {
-//     if (hit.normal.y < 0.5)
-//     {
-//         dealDamages(1.f);
-//     }
-// }
-
-// void Entity::Player::onOverlapEnterAnotherHit(const SegmentHit& hit) 
-// {
-//     if (hit.normal.y > - 0.5)
-//     {
-//         dealDamages(1.f);
-//     }
-// }
-
-// void Entity::Player::onOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) 
-// {
-        
-// }
 
 
 std::array<bool, Entity::Player::nbInputKeys> Entity::Player::getDownKeysAzertyAndQwery(const Core::Engine& engine)

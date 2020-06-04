@@ -37,9 +37,6 @@ namespace Renderer
         bool enableInputs = true;
 
     public:
-
-        // void attachTo(Physics::GTransform& parent);
-
         // Runs camera inputs (camera movement and rotation).
         void inputs(const Core::Engine& engine) override;
     };

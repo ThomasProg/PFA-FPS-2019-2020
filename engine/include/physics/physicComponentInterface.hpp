@@ -32,8 +32,6 @@ namespace Physics
         {
 
         }
-        // virtual void physicCompOnOverlapEnterSelfHit   (const SegmentHit&) = 0;
-        // virtual void physicCompOnOverlapEnterAnotherHit(const SegmentHit&) = 0;
 
         void addPhysics(Physics::PhysicsSystem& physicsSystem)
         {
