@@ -457,7 +457,7 @@ void World::update()
 
 void World::gameWin()
 {
-     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
+    Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
@@ -564,9 +564,9 @@ void World::hud()
 
 void World::pauseMenu()
 {
-    Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, PURPLE, PINK, DARKERGREY);
+    Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 0.f});
     
-    ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoDecoration);
+    ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
     //ImGui::PushFont(font);
     ImGui::SetWindowFontScale(1.0);
     ImGui::Indent(400/2 - 100);
