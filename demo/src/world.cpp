@@ -262,136 +262,6 @@ void World::updateCameraProjection()
     // entityGroup.fpsCamera.projection = player.camera.projection;
 }
 
-// void World::updateEditorFunctions()
-// {
-//     if (game.engine.isKeyDown(GLFW_KEY_E))
-//     {
-//         if (!wasEditorKeyPressed)
-//         {
-//             editorMode.next();
-//             wasEditorKeyPressed = true;
-//         }
-//     }
-//     else if (game.engine.isKeyDown(GLFW_KEY_C))
-//     {
-//         if (!wasEditorKeyPressed)
-//         {
-//             editorMode.mode = EditorMode::E_TRANSLATION;
-//             wasEditorKeyPressed = true;
-//         }
-//     }
-//     else if (game.engine.isKeyDown(GLFW_KEY_V))
-//     {
-//         if (!wasEditorKeyPressed)
-//         {
-//             editorMode.nextRotation();
-//             wasEditorKeyPressed = true;
-//         }
-//     }
-//     else if (game.engine.isKeyDown(GLFW_KEY_B))
-//     {
-//         if (!wasEditorKeyPressed)
-//         {
-//             editorMode.nextScale();
-//             wasEditorKeyPressed = true;
-//         }
-//     }
-//     else if (game.engine.isKeyDown(GLFW_KEY_P))
-//     {
-//         if (!wasEditorKeyPressed)
-//         {
-//             addGround({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
-//             wasEditorKeyPressed = true;
-//         }
-//     }
-//     else if (game.engine.isKeyDown(GLFW_KEY_O))
-//     {
-//         if (!wasEditorKeyPressed)
-//         {
-//             addEnemy({fpsCamera.transform.transformMatrixNode->worldData.getTranslationVector(), {0.f,0,0}, {1,1,1}});
-//             wasEditorKeyPressed = true;
-//         }
-//     }
-//     else 
-//     {
-//         wasEditorKeyPressed = false;
-//     }
-
-//     if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) && editorSelectedEntity != nullptr)
-//     {
-//         fpsCamera.enableInputs = false;
-//         switch (editorMode.mode)
-//         {
-//         case EditorMode::E_TRANSLATION:
-//             EditorUtility::moveEntityWithCursor(fpsCamera, *editorSelectedEntity, game.engine);
-//             break;
-
-//         case EditorMode::E_ROTATION_X:
-//             EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 0);
-//             break;
-//         case EditorMode::E_ROTATION_Y:
-//             EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 1);
-//             break;
-//         case EditorMode::E_ROTATION_Z:
-//             EditorUtility::rotateEntityWithCursor(*editorSelectedEntity, game.engine, 2);
-//             break;
-
-//         case EditorMode::E_SCALE_X:
-//             EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 0);
-//             break;
-//         case EditorMode::E_SCALE_Y:
-//             EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 1);
-//             break;
-//         case EditorMode::E_SCALE_Z:
-//             EditorUtility::scaleEntityWithCursor(*editorSelectedEntity, game.engine, 2);
-//             break;
-        
-//         default:
-//             break;
-//         }
-//     }
-//     else
-//     {
-//         Entity::BasicEntity* newSelection = nullptr;
-//         SegmentHit hit;
-//         hit.t = 2.f;
-//         for (Entity::BasicEntity* ground : grounds)
-//         {
-//             SegmentHit tempHit;
-//             if (EditorUtility::isInFrontOfPlayer(fpsCamera, *ground, tempHit))
-//             {
-//                 if (tempHit.t < hit.t)
-//                 {
-//                     hit = tempHit;
-//                     newSelection = ground;
-//                 }
-//             }
-//         }
-
-//         if (newSelection != nullptr)
-//         {
-//             if (newSelection != editorSelectedEntity)
-//             {
-//                 newSelection->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
-
-//                 editorSelectedEntity = newSelection;
-//                 editorSelectedEntity->mesh.color = {0, 0.4, 0.4, 0.5};
-//                 editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_FLAT);
-//             }
-//         }
-//         else 
-//         {
-//             if (editorSelectedEntity != nullptr)
-//             {
-//                 editorSelectedEntity->mesh.shader = &game.engine.resourceManager.get(E_Shader::E_LIGHTED);
-//             }
-//             editorSelectedEntity = nullptr;
-//         }
-
-//         fpsCamera.enableInputs = true;
-//     } 
-// }
-
 void World::updatePhysics()
 {
     // === DEMO === //
@@ -413,7 +283,8 @@ void World::update()
 
     if (isPauseMenuOpen == false)
     {
-        playTime += game.engine.deltaTime;
+        if(!gWin)
+            playTime += game.engine.deltaTime;
 
         // Update entities
         for (std::unique_ptr<Entity::Enemy>& enemy : entityGroup.enemies)
@@ -455,17 +326,7 @@ void World::update()
                
         }
 
-        // // Save game
-        // if (glfwGetKey(game.engine.window, GLFW_KEY_F5))
-        // {
-        //     // saveSystem.save(Game::savedFilename);
-        //     isLoadAvailable = Resources::File::doesFileExist(Game::savedFilename);
-        // }
-
         updatePhysics();
-
-        // if (isEditorMode)
-        //     updateEditorFunctions();
 
         entityGroup.collectGarbage();
     }
@@ -482,7 +343,7 @@ void World::gameWin()
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2);
     ImGui::SetWindowFontScale(2.0);
-    ImGui::Text("You Won");
+    ImGui::Text("You win in %f seconds", playTime);
 
     ImGui::PopStyleColor(5);
     //ImGui::PopFont();
@@ -555,7 +416,6 @@ void World::render()
 void World::hud()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
@@ -581,6 +441,11 @@ void World::hud()
     ImGui::SetCursorPosY(game.engine.height / 2 - crosshairHeight / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - crosshairWidth / 2);
     ImGui::Image((void*)(intptr_t)crosshair, ImVec2(crosshairWidth, crosshairHeight));
+
+    ImGui::SetCursorPosY(0);
+    ImGui::SetCursorPosX(0);
+    ImGui::Text("%lu enemies remaining", entityGroup.enemies.size());
+
 
     ImGui::PopStyleColor(5);
     //ImGui::PopFont();
