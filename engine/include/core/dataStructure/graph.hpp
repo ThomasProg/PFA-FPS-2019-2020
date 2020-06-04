@@ -45,7 +45,12 @@ namespace Core::DataStructure
 
         inline Graph& operator=(const Graph& rhs) = delete;
 
+        // Gets a const reference to the localMatrix,
+        // and compute it again if the dirty flag is false.
+        // Turn the dirty flag to true.
         inline const Core::Maths::Matrix4x4& getLocalMatrix() const noexcept;
+        // Sets local matrix value, by move or by copy,
+        // and sets the dirty flag to false.
         inline void setLocalMatrix(Core::Maths::Matrix4x4&& mat);
         inline void setLocalMatrix(const Core::Maths::Matrix4x4& mat);
 
