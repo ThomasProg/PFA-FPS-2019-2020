@@ -62,7 +62,7 @@ namespace Physics
         static constexpr float gravityAcc = 9.81f; 
         static constexpr float linearDamping  = 0.90f;
 
-        static constexpr float epsilon = 0.0001;
+        static constexpr float epsilon = 0.001;
 
     public:
         // reserve vector to prevent too much move

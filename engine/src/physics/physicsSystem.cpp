@@ -275,22 +275,25 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
             collidedMeshInterface->colliderOnCollisionEnter(hit);
         }
 
-        Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
-        float dot = Core::Maths::Vec3::dotProduct(velocityAfterContact, hit.normal);
-        Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * epsilon;
+        const Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
+        const float dot = Core::Maths::Vec3::dotProduct(velocityAfterContact, hit.normal);
+        const Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity - velocityAfterContact.unitVector() * epsilon;
+
+        Core::Maths::Vec3 nextVelo;
 
         {
             Core::Maths::Vec3 otherFinalLoc = sphere.center + usedVelocity - dot * hit.normal;
-            usedVelocity = otherFinalLoc - (sphere.center + hit.t * usedVelocity);
+            nextVelo = otherFinalLoc - (sphere.center + hit.t * usedVelocity);
         }
 
         {
             // Physical Response
-            float dot2 = Core::Maths::Vec3::dotProduct(physicComp->physicComp.velocity, hit.normal);
-            Core::Maths::Vec3 otherFinalLoc = sphere.center + physicComp->physicComp.velocity - dot2 * hit.normal;
-            physicComp->physicComp.velocity = otherFinalLoc - (sphere.center + hit.t * usedVelocity);
+            Core::Maths::Vec3 otherFinalLoc = sphere.center + physicComp->physicComp.velocity - dot * hit.normal;
+            physicComp->physicComp.velocity = otherFinalLoc - finalLoc;
             physicComp->physicComp.velocity *= linearDamping;
         }
+
+        usedVelocity = nextVelo;
 
         usedVelocity *= linearDamping;
 
