@@ -19,7 +19,7 @@ namespace Entity
         RenderedEntity()
             : RenderableInterface(&transform)
         {
-
+            mesh.color   = {0.988f, 1.f, 0.478f, 1};
         }
 
         void setResources(const DemoResourceManager&);

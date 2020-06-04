@@ -34,7 +34,7 @@ namespace Entity
         };
 
         public:
-            E_State enemyState = E_IDLE;
+            E_State enemyState = E_PATROLLING;
             
     };
 
