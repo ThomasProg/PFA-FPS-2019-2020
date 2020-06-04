@@ -18,7 +18,7 @@ Core::Engine::Engine()
         return;
     }
 
-    const char* glsl_version = "#version 150";
+    const char* glslVersion = "#version 150";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
@@ -41,7 +41,7 @@ Core::Engine::Engine()
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplOpenGL3_Init(glslVersion);
 
     // Save mouse location
     glfwGetCursorPos(window, &currentMouseLocX, &currentMouseLocY);
