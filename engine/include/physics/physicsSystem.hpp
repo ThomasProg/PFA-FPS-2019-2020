@@ -62,7 +62,8 @@ namespace Physics
         static constexpr float gravityAcc = 9.81f; 
         static constexpr float linearDamping  = 0.90f;
 
-        static constexpr float epsilon = 0.001;
+        static constexpr float wallKnockbackEpsilon = 0.001;
+        static constexpr float stopMovementEpsilon = 0.0001;
 
     public:
         // reserve vector to prevent too much move
@@ -88,12 +89,7 @@ namespace Physics
 
         public:
             iterator() = default;
-
-            iterator(unsigned int index)
-                : arrayIndex(index)
-            {
-
-            }
+            iterator(unsigned int index);
 
             friend PhysicsSystem;
         };
@@ -150,5 +146,7 @@ namespace Physics
         void reset();
     };
 }
+
+#include "physicsSystem.inl"
 
 #endif

@@ -5,8 +5,6 @@
 #include "GLFW/glfw3.h"
 #include "utilities.hpp"
 
-#define _IS_MOUSE_ENABLED_ 1
-
 void Renderer::FPSCamera::inputs(const Core::Engine& engine)
 {
     if (!enableInputs)
@@ -35,13 +33,17 @@ void Renderer::FPSCamera::inputs(const Core::Engine& engine)
         transform.transform.location -= right * (translationSpeed * engine.deltaTime);
     }
 
-    #if _IS_MOUSE_ENABLED_
-    float deltaMouseX = - engine.deltaMouseLoc.x * mouseSensibility;
-    float deltaMouseY = - engine.deltaMouseLoc.y * mouseSensibility; 
-    #else
-    float deltaMouseX = 0;
-    float deltaMouseY = 0;
-    #endif
+    float deltaMouseX, deltaMouseY;
+    if (isMouseEnabled)
+    {
+        deltaMouseX = - engine.deltaMouseLoc.x * mouseSensibility;
+        deltaMouseY = - engine.deltaMouseLoc.y * mouseSensibility; 
+    }
+    else 
+    {
+        deltaMouseX = 0;
+        deltaMouseY = 0;
+    }
 
     if (glfwGetKey(engine.window, GLFW_KEY_I))
         deltaMouseY = rotationSpeedOnKey;

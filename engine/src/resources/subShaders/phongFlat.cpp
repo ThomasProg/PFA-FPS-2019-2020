@@ -3,6 +3,8 @@
 #include "mesh.hpp"
 #include "lightManager.hpp"
 
+#include "log.hpp"
+
 Resources::PhongFlat::PhongFlat(const char* vsFilename, const char* fsFilename)
     : Shader(vsFilename, fsFilename)
 {
@@ -13,7 +15,7 @@ void Resources::PhongFlat::loadUniformValuesLocation()
 {
     nbCurrentLightsID = getUniformLocation("nbCurrentLights");
     if (nbCurrentLightsID == GLint(GL_INVALID_INDEX))
-        std::cout << "Could not set uniform value : " "nbCUrrentLights\n";
+        Core::Debug::Log::addMessage("SetUniformValueFail");
 
     // ===== ===== ===== //
 
@@ -25,7 +27,7 @@ void Resources::PhongFlat::loadUniformValuesLocation()
 
     lightsBlockID = glGetUniformBlockIndex(getProgramID(), "lightsBlock");
     if (nbCurrentLightsID == GLint(GL_INVALID_INDEX))
-        std::cout << "Could not set uniform value : " "lightsBlock\n";
+        Core::Debug::Log::addMessage("SetUniformValueFailLightBlocks");
 }
 
 void Resources::PhongFlat::useUniformValues(const Renderer::Camera& cam, const Renderer::Mesh& mesh) const

@@ -4,6 +4,7 @@
 
 #include "loader.hpp"
 #include "saver.hpp"
+#include  "log.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -28,7 +29,7 @@ void Save::SaveSystem::save(const char* filename)
     Saver saver {std::ofstream{filename, std::ios::out | std::ios::binary}};
     if(!saver.saveFile) 
     {
-        std::cout << "Can't open file." << std::endl;
+        Core::Debug::Log::addMessage("Can't open file.");
         return;
     }
 
@@ -39,7 +40,7 @@ void Save::SaveSystem::save(const char* filename)
 
     if(!saver.saveFile.good()) 
     {
-        std::cout << "An error occurred while saving items." << std::endl;
+        Core::Debug::Log::addMessage("An error occurred while saving items.");
         return;
     }
     }
@@ -50,7 +51,6 @@ void Save::SaveSystem::save(const char* filename)
 void Save::SaveSystem::load(const char* filename)
 {
     loadData(filename);
-    // loadLinks();
 }
 
 void Save::SaveSystem::loadData(const char* filename)
@@ -60,7 +60,7 @@ void Save::SaveSystem::loadData(const char* filename)
     Loader loader {std::ifstream{filename, std::ios::out | std::ios::binary}};
     if(!loader.loadedFile) 
     {
-        std::cout << "Can't open file." << std::endl;
+        Core::Debug::Log::addMessage("Can't open file.");
         return;
     }
 
@@ -71,7 +71,7 @@ void Save::SaveSystem::loadData(const char* filename)
 
     if(!loader.loadedFile.good()) 
     {
-        std::cout << "An error occurred while loading data." << std::endl;
+        Core::Debug::Log::addMessage("An error occurred while loading data.");
         return;
     }
     }

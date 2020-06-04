@@ -1,5 +1,6 @@
 #include "saver.hpp"
 
+#include "log.hpp"
 
 // This function can be used to write a variable in the file easily.
 // Pointers are not accepted, since they become invalid after loaded.
@@ -21,7 +22,7 @@ inline void Save::Saver::tryToDisplayError(const char* errorMessageAdded) const
 {
     if(!saveFile.good()) 
     {
-        std::cout << "An error occurred while saving data " << errorMessageAdded << std::endl;
+        Core::Debug::Log::addMessage("An error occurred while saving data " + std::string(errorMessageAdded));
         return;
     }
 }

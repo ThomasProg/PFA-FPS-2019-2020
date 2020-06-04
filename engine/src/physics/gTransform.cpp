@@ -2,7 +2,6 @@
 
 void Physics::GTransform::UpdateLocalTransformMatrix()
 {
-    // assert(transformMatrixNode.isValid());
     if (!transformMatrixNode.isValid())
         return;
 

@@ -1,4 +1,5 @@
 #include "audioData.hpp"
+#include "log.hpp"
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -49,7 +50,7 @@ bool Resources::AudioData::loadWAV(const char* filename)
         || strncmp(&dataInfo.fmtHeader [0], "fmt ", 4) != 0
         || strncmp(&dataInfo.dataHeader[0], "data", 4) != 0)
     {
-        std::cout << "Invalid format for a wave file." << std::endl;
+        Core::Debug::Log::addMessage("Invalid format for a wave file");
         return false;
     }
 

@@ -12,6 +12,9 @@ namespace Renderer
     struct FPSCamera : public Camera, 
                        public Controller::ControllerInterface
     {
+    private:
+        static constexpr bool isMouseEnabled = true;
+
     public:
         static constexpr size_t nbInputKeys = 4;
 

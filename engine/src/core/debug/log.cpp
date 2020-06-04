@@ -6,6 +6,7 @@
 
 #include <ctime>
 #include <vector>
+#include <iostream>
 
 #include <fstream>
 
@@ -74,7 +75,7 @@ void Core::Debug::Log::addTitle(const std::string& str) noexcept
 
     logFile.close();
 }
-#include <iostream>
+
 void Core::Debug::Log::addMessage(const std::string& str, bool printInTerminal) noexcept
 {
     std::ofstream logFile;

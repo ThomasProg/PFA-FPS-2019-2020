@@ -118,6 +118,7 @@ void Physics::PhysicsSystem::simulatePhysics(Core::Engine& engine)
         box->collider.aabb.setFrom(box->collider.worldCollider);
     }
 
+    // Simulate physics for all physic components
     for (Physics::PhysicComponentInterface* physicComp : physicComponents)
     {
         if (physicComp == nullptr || !physicComp->physicComp.isEnabled)
@@ -132,7 +133,7 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
 {
     assert(physicComp != nullptr);
 
-    // Resets colliding entities
+    // Resets colliding entities for callbacks
     std::map<CollisionComponentInterface<Physics::Shapes::Box>*, bool>::iterator it = physicComp->physicComp.collider.collidingEntities.begin();
     while (it != physicComp->physicComp.collider.collidingEntities.end())
     {
@@ -229,7 +230,7 @@ void Physics::PhysicsSystem::sphereFindOverlappingBoxes(const Physics::Shapes::S
                                                       Physics::PhysicComponentInterface* physicComp)
 {
     Physics::Shapes::Segment3D seg{sphere.center, lastLoc};
-    if (seg.squaredLength() < 0.0001)
+    if (seg.squaredLength() < stopMovementEpsilon)
         return;
 
     Physics::Shapes::SegmentHit hit;
@@ -257,7 +258,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
     Physics::Shapes::Sphere& sphere = physicComp->physicComp.collider.worldCollider;
     std::map<Physics::CollisionComponentInterface<Physics::Shapes::Box>*, bool>& collidingEntities = physicComp->physicComp.collider.collidingEntities;
 
-    if (usedVelocity.vectorSquareLength() < 0.00001f)
+    if (usedVelocity.vectorSquareLength() < stopMovementEpsilon)
     {
         return sphere.center;
     }
@@ -277,7 +278,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
 
         const Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
         const float dot = Core::Maths::Vec3::dotProduct(velocityAfterContact, hit.normal);
-        const Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * epsilon;
+        const Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * wallKnockbackEpsilon;
 
         Core::Maths::Vec3 nextVelo;
 

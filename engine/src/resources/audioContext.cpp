@@ -3,18 +3,20 @@
 #include <cassert>
 #include <iostream>
 
+#include "log.hpp"
+
 Resources::AudioContext::AudioContext()
 {
     device = alcOpenDevice(NULL);
     if (device == NULL)
     {
-        std::cout << "cannot open sound card" << std::endl;
+        Core::Debug::Log::addMessage("cannot open sound card");
         return;
     }
     context = alcCreateContext(device, NULL);
     if (context == NULL)
     {
-        std::cout << "cannot open context" << std::endl;
+        Core::Debug::Log::addMessage("cannot open context");
         return;
     }
     alcMakeContextCurrent(context);

@@ -29,8 +29,7 @@ inline void Save::Loader::tryToDisplayError(const char* errorMessageAdded) const
 {
     if(!loadedFile.good()) 
     {
-        std::cout << "An error occurred while loading data " << errorMessageAdded << std::endl;
-        return;
+        Core::Debug::Log::addMessage("An error occurred while loading data " + std::string(errorMessageAdded));
     }
 }
 
