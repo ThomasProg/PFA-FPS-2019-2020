@@ -474,7 +474,7 @@ void World::update()
 void World::gameWin()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
@@ -482,6 +482,7 @@ void World::gameWin()
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2);
     ImGui::SetWindowFontScale(2.0);
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(0.f, 1.f, 0.f, t/3)));
     ImGui::Text("You Won");
 
     ImGui::PopStyleColor(5);
@@ -489,7 +490,7 @@ void World::gameWin()
     ImGui::End();
 
     t += game.engine.deltaTime;
-    if (t >= 3)
+    if (t >= 4)
     {
         entityGroup.player->gOver = false;
         game.loadMenu();
@@ -499,8 +500,8 @@ void World::gameWin()
 
 void World::gameOver()
 {
-    Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
+    Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
+    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
@@ -508,6 +509,7 @@ void World::gameOver()
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2);
     ImGui::SetWindowFontScale(2.0);
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, t/3)));
     ImGui::Text("You Loose");
 
     ImGui::PopStyleColor(5);
@@ -515,7 +517,7 @@ void World::gameOver()
     ImGui::End();
 
     t += game.engine.deltaTime;
-    if (t >= 3)
+    if (t >= 4)
     {
         entityGroup.player->gOver = false;
         game.loadMenu();
@@ -555,7 +557,6 @@ void World::render()
 void World::hud()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
-    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
     //ImGui::PushFont(font);
@@ -564,7 +565,7 @@ void World::hud()
     ImGui::SetWindowFontScale(1.0);
     
     ImDrawList* drawList = ImGui::GetBackgroundDrawList();
-    drawList->AddRectFilled(ImVec2(50.f, game.engine.height - 50.f), ImVec2(250.f, game.engine.height - 20.f), ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f)), 50.f);
+    drawList->AddRectFilled(ImVec2(50.f, game.engine.height - 50.f), ImVec2(300.f, game.engine.height - 20.f), ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f)), 50.f);
     drawList->AddRectFilled(ImVec2(50.f + 1.f, game.engine.height - 50.f + 1.f), ImVec2(50.f + (250.f - 1.f) * (entityGroup.player->lifePoints / entityGroup.player->maxLifePoints), game.engine.height - 20.f - 1.f), ImGui::GetColorU32(ImVec4(1.f - entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, 0.f, 1.f)), 50.f);
 
     ImGui::SetCursorPosY(game.engine.height - crossHeight/5);
