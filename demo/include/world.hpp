@@ -47,6 +47,9 @@ private:
     int crossWidth = 0;
     int crossHeight = 0;
     GLuint cross = 0;
+    int bulletWidth = 0;
+    int bulletHeight = 0;
+    GLuint bullet = 0;
     float t = 0;
     //////////////////////////////
 

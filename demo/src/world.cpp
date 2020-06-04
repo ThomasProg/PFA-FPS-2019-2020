@@ -26,6 +26,7 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
 {
     Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshairWidth, crosshairHeight, crosshair);
     Resources::Texture::loadTexture("resources/textures/cross.png", crossWidth, crossHeight, cross);
+    Resources::Texture::loadTexture("resources/textures/bullet.png", bulletWidth, bulletHeight, bullet);
 }
 
 void World::makeNewLevel()
@@ -394,6 +395,10 @@ void World::hud()
     ImGui::SetCursorPosX(game.engine.width - 130.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
+
+    ImGui::SetCursorPosY(game.engine.height - 10.f - bulletHeight/10);
+    ImGui::SetCursorPosX(game.engine.width - 135.f - bulletWidth/10);
+    ImGui::Image((void*)(intptr_t)bullet, ImVec2(bulletWidth/10, bulletHeight/10));
 
     ImGui::SetCursorPosY(game.engine.height / 2 - crosshairHeight / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - crosshairWidth / 2);
