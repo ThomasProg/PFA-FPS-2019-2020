@@ -1,4 +1,5 @@
 #include "texture.hpp"
+#include "log.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -16,7 +17,7 @@ Resources::Texture::Texture(const char* pathToFile)
     image = stbi_load(pathToFile, &w, &h, nullptr, STBI_rgb_alpha);
 
     if(image == nullptr)
-        std::cout << "fail to load texture" << std::endl;
+        Core::Debug::Log::newLog("fail to load texture");
         
     glGenTextures(1, &textureData);
     glBindTexture(GL_TEXTURE_2D, textureData);

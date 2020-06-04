@@ -18,7 +18,7 @@ Shader::Shader(const char* vsFilename, const char* fsFilename)
     b1 &= loadFragmentShader(fsFilename, fragmentShader);
 
     if (!b1) 
-        std::cout << "Error loading shaders" << std::endl;
+        Core::Debug::Log::newLog("ShaderLoadError");
 
     programID = createProgram(vertexShader, fragmentShader);
 }
