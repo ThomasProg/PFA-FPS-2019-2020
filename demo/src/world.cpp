@@ -151,7 +151,10 @@ void World::makeNewLevel()
     // === Add Player === //
     entityGroup.addPlayer({{0,-26,10.0 + 0.0}});
 
-    setHighQualitySettings();
+    if (game.isHighQuality)
+        setHighQualitySettings();
+    else 
+        setLowQualitySettings();
 }
 
 void World::load()
