@@ -72,8 +72,8 @@ namespace Physics
         struct CollisionsCallbacksSentData
         {
             const Physics::Shapes::SegmentHit& hit;
-            const Physics::PhysicComponentInterface* movingEntityID; // PhysicComponent
-            const Physics::CollisionComponentInterface<Physics::Shapes::Box>* encounteredEntityID; // CollisionComponent
+            Physics::PhysicComponentInterface* movingEntityID; // PhysicComponent
+            Physics::CollisionComponentInterface<Physics::Shapes::Box>* encounteredEntityID; // CollisionComponent
         };
 
         template<typename T>

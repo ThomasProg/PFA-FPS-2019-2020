@@ -154,7 +154,7 @@ namespace Entity
 
         void reloadAmmo();
 
-        inline void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override;
+        inline void physicCompOnCollisionEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& hit) override;
 
         inline void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override;
     };

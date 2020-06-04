@@ -20,7 +20,7 @@ namespace Physics
 
         }
     
-        virtual void physicCompOnCollisionEnter (const Physics::Shapes::SegmentHit&, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) 
+        virtual void physicCompOnCollisionEnter (const Physics::PhysicsSystem::CollisionsCallbacksSentData& otherCollider) 
         {
 
         }

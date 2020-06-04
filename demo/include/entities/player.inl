@@ -10,10 +10,10 @@ inline void Entity::Player::removeRendering(Renderer::RendererSystem& rendererSy
     rendererSystem.erase(gun.meshIt);
 }
 
-inline void Entity::Player::physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) 
+inline void Entity::Player::physicCompOnCollisionEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& hit) 
 {
-    if (hit.normal.y > 0.5) 
-        currentGround = otherCollider;
+    if (hit.hit.normal.y > 0.5) 
+        currentGround = hit.encounteredEntityID;
 }
 
 inline void Entity::Player::physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) 

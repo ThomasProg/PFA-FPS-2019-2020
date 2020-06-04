@@ -266,8 +266,9 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
         std::pair<std::map<CollisionComponentInterface<Physics::Shapes::Box>*, bool>::iterator, bool> it = collidingEntities.emplace(collidedMeshInterface, true);
         if (it.second)
         {
-            physicComp->physicCompOnCollisionEnter(hit, collidedMeshInterface);
-            collidedMeshInterface->colliderOnCollisionEnter(hit);
+            CollisionsCallbacksSentData data {hit, physicComp, collidedMeshInterface};
+            physicComp->physicCompOnCollisionEnter(data);
+            collidedMeshInterface->colliderOnCollisionEnter(data);
         }
 
         // Physics Response
