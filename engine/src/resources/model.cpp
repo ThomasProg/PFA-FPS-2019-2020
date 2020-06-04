@@ -1,6 +1,7 @@
 #include "model.hpp"
 
 #include "primitives.hpp"
+#include "log.hpp"
 
 #include <string>
 #include <iostream>
@@ -60,7 +61,7 @@ void Resources::Model::loadOBJ(const char* pathToFile)
     std::vector<unsigned int>vertexIndices, uvIndicies, normalIndices;
 
     if(!file.is_open())
-        std::cout << "FAIL TO READ OBJ FILE" << std::endl;
+        Core::Debug::Log::newLog("FAIL TO READ OBJ FILE");
 
     std::string head;
     char slash;

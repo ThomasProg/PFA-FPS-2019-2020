@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "log.hpp"
 
 #include <iostream>
 
@@ -14,7 +15,7 @@ Core::Engine::Engine()
 {
     if (!glfwInit())
     {
-        std::cout << "Fail to init GLFW" << std::endl;
+        Core::Debug::Log::newLog("Fail_Init_GLFW");
         return;
     }
 
@@ -22,11 +23,12 @@ Core::Engine::Engine()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-    window = glfwCreateWindow(width, height, "Platformer", NULL, NULL);
+    window = glfwCreateWindow(width, height, "Wild Dogs", NULL, NULL);
 
     if (!window)
     {
         // Window or OpenGL context creation failed
+        Core::Debug::Log::newLog("errorLog");
         glfwTerminate();
     }
 
