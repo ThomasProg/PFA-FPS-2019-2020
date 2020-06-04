@@ -66,7 +66,6 @@ void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
         mesh.texture = &resourceManager.get(E_Texture::E_CAT);
         attackSound.setAudio(resourceManager.get(E_Audio::E_BOSS_ATTACK));
     }
-   
     mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED); 
     mesh.linkShaderWithModel();
 }

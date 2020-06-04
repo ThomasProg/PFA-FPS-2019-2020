@@ -91,10 +91,18 @@ void Game::loadResources()
     }
 
     {
-        engine.resourceManager.add(std::make_unique<Resources::FlatShader>("resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"), E_Shader::E_FLAT);
-        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>("resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"), E_Shader::E_LIGHTED_FLATCOLOR);
-        engine.resourceManager.add(std::make_unique<Resources::Shader>("resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"), E_Shader::E_TEXTURED);
-        engine.resourceManager.add(std::make_unique<Resources::PhongFlat>("resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"), E_Shader::E_LIGHTED);
+        engine.resourceManager.add(std::make_unique<Resources::FlatShader>
+            ("resources/shaders/flatColor.vert", "resources/shaders/flatColor.frag"), E_Shader::E_FLAT);
+            
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat> 
+            ("resources/shaders/vs.vert", "resources/shaders/lightsFlatColor.frag"), E_Shader::E_LIGHTED_FLATCOLOR);
+
+        // works with flatShader; texture is bound as long as it is not nullptr
+        engine.resourceManager.add(std::make_unique<Resources::FlatShader>
+            ("resources/shaders/vs.vert", "resources/shaders/fsWithoutLight.frag"), E_Shader::E_TEXTURED); 
+
+        engine.resourceManager.add(std::make_unique<Resources::PhongFlat> 
+            ("resources/shaders/vs.vert", "resources/shaders/dynamicLightsEffects.frag"), E_Shader::E_LIGHTED);
     }
 
     {
