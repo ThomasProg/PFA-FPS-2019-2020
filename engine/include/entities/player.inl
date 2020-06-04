@@ -21,15 +21,3 @@ inline void Entity::Player::physicCompOnCollisionExit(CollisionComponentInterfac
     if (currentGround == otherCollider)
         currentGround = nullptr;
 }
-
-inline void Entity::Player::physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data)
-{
-    if (data.encounteredEntityID == this)
-        return;
-}
-
-inline void Entity::Player::colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data)
-{
-    if (data.movingEntityID == this)
-        return;
-}

@@ -204,6 +204,7 @@ void Entity::Enemy::takeDamage(int damage, float playTime)
     lastReceivedHitTime = playTime;
     mesh.color = {1,0,0,1};
     life = clamp(life - damage, 0, life);
+
     if(life == 0)
         kill();
 }
@@ -251,10 +252,9 @@ void Entity::Enemy::lerpColorBackToNormal(float playTime)
     if (data.encounteredEntityID == this)
         return;
 
+    //kill when player jump over the enemy
     if (data.hit.normal.y < -0.5)
-    {
         kill();
-    }
 }
 
 void Entity::Enemy::colliderOnOverlapEnter(const Physics::PhysicsSystem::CollisionsCallbacksSentData& data)
