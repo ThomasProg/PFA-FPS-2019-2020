@@ -291,10 +291,8 @@ void World::update()
 void World::gameWin()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
-    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
-    //ImGui::PushFont(font);
 
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - 100.f);
@@ -303,7 +301,6 @@ void World::gameWin()
     ImGui::Text("You win in \n %f seconds", playTime);
 
     ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
     ImGui::End();
 
     t += game.engine.deltaTime;
@@ -318,10 +315,8 @@ void World::gameWin()
 void World::gameOver()
 {
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.5f,0.5f,0.5f,0.5f});
-    //ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.f,0.f,0.f,0.f));
 
     ImGui::Begin("Pause", &entityGroup.player->gOver, ImGuiWindowFlags_NoDecoration);
-    //ImGui::PushFont(font);
 
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2);
@@ -330,7 +325,6 @@ void World::gameOver()
     ImGui::Text("You Loose");
 
     ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
     ImGui::End();
 
     t += game.engine.deltaTime;
@@ -376,41 +370,40 @@ void World::hud()
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
-    //ImGui::PushFont(font);
     ImGui::SetCursorPosY(game.engine.height - 30.f);
     assert(entityGroup.player->maxLifePoints != 0.f);
     ImGui::SetWindowFontScale(1.0);
-    
+
+    // Lifebar   
     ImDrawList* drawList = ImGui::GetBackgroundDrawList();
     drawList->AddRectFilled(ImVec2(50.f, game.engine.height - 50.f), ImVec2(300.f, game.engine.height - 20.f), ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f)), 50.f);
     drawList->AddRectFilled(ImVec2(50.f + 1.f, game.engine.height - 50.f + 1.f), ImVec2(50.f + (250.f - 1.f) * (entityGroup.player->lifePoints / entityGroup.player->maxLifePoints), game.engine.height - 20.f - 1.f), ImGui::GetColorU32(ImVec4(1.f - entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, 0.f, 1.f)), 50.f);
-
     ImGui::SetCursorPosY(game.engine.height - crossHeight/5);
     ImGui::SetCursorPosX(0.f);
     ImGui::Image((void*)(intptr_t)cross, ImVec2(crossWidth/5, crossHeight/5));
 
+    // Nb of bullets
     ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, 1.f)));
-
     ImGui::SetCursorPosY(game.engine.height - 50.f);
     ImGui::SetCursorPosX(game.engine.width - 130.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
-
     ImGui::SetCursorPosY(game.engine.height - 10.f - bulletHeight/10);
     ImGui::SetCursorPosX(game.engine.width - 135.f - bulletWidth/10);
     ImGui::Image((void*)(intptr_t)bullet, ImVec2(bulletWidth/10, bulletHeight/10));
 
+    // Crosshair
     ImGui::SetCursorPosY(game.engine.height / 2 - crosshairHeight / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - crosshairWidth / 2);
     ImGui::Image((void*)(intptr_t)crosshair, ImVec2(crosshairWidth, crosshairHeight));
 
+    // Nb of enemies
     ImGui::SetCursorPosY(0);
     ImGui::SetCursorPosX(0);
     ImGui::Text("%lu enemies remaining", entityGroup.enemies.size());
 
 
     ImGui::PopStyleColor(5);
-    //ImGui::PopFont();
     ImGui::End(); 
 }
 
@@ -419,7 +412,6 @@ void World::pauseMenu()
     Menu::preparePanel(ImVec2(game.engine.width / 2 - 200, game.engine.height / 2 - 150), {400, 350}, {0.f, 0.f, 0.f, 0.f}, {0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f, 0.f});
     
     ImGui::Begin("Pause", &isPauseMenuOpen, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
-    //ImGui::PushFont(font);
     ImGui::SetWindowFontScale(1.0);
     ImGui::Indent(400/2 - 100);
     
@@ -446,7 +438,6 @@ void World::pauseMenu()
     }
 
     ImGui::PopStyleColor(4);
-    //ImGui::PopFont();
     ImGui::End();
 }
 

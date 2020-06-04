@@ -35,6 +35,7 @@ void Menu::render()
 
 }
 
+// This fonction is for initialize the location of window and the color of the differents elements
 void Menu::preparePanel(ImVec2 pos, ImVec2 size, ImVec4 buttonColor, ImVec4 buttonColorActive, ImVec4 windowColor)
 {
     ImGui::SetNextWindowPos(pos, 0, ImVec2(0.0, 0.0));
@@ -62,16 +63,15 @@ bool Menu::setupMainMenuButtons()
     ImGui::SetCursorPosX(0);
     ImGui::Image((void*)(intptr_t)imageText, ImVec2(game.engine.width, game.engine.height));
 
-    //////////////////////////////////////
     ImGui::PushFont(game.engine.font);
+
     ImGui::SetCursorPosY(50.0f);
     ImGui::SetCursorPosX(100.0f);
     ImGui::PushStyleColor(ImGuiCol_Text, PURPLE);
     ImGui::SetWindowFontScale(3.0);
     ImGui::Text("Wild Dogs");
-    ImGui::PopStyleColor(1);
+    
     ImGui::SetWindowFontScale(1);
-    //////////////////////////////////////
 
     ImGui::SetCursorPosY(game.engine.height / 3);
     if (ImGui::Button("Start", ImVec2(game.engine.width / 5, game.engine.height / 10)))
@@ -85,7 +85,7 @@ bool Menu::setupMainMenuButtons()
         game.quitGame();
     }
 
-    ImGui::PopStyleColor(4);
+    ImGui::PopStyleColor(5);
     ImGui::PopFont();
     ImGui::End();
 
