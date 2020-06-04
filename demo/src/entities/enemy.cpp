@@ -58,17 +58,17 @@ void Entity::Enemy::setResources(const DemoResourceManager& resourceManager)
 {
     if (type.enemyType == EnemyType::E_NORMAL)
     {
-        mesh.model   = &resourceManager.get(E_Model::E_DOG);
-        mesh.texture = &resourceManager.get(E_Texture::E_DOG_TEXTURE);
-        attackSound.setAudio(resourceManager.get(E_Audio::E_DOG_ATTACK));
+        mesh.model   = &resourceManager.get(defaultModel);
+        mesh.texture = &resourceManager.get(defaultTexture);
+        attackSound.setAudio(resourceManager.get(defaultAttackSound));
     }
     else if (type.enemyType == EnemyType::E_BOSS)
     {
-        mesh.model   = &resourceManager.get(E_Model::E_CAT);
-        mesh.texture = &resourceManager.get(E_Texture::E_CAT);
-        attackSound.setAudio(resourceManager.get(E_Audio::E_BOSS_ATTACK));
+        mesh.model   = &resourceManager.get(bossDefaultModel);
+        mesh.texture = &resourceManager.get(bossDefaultTexture);
+        attackSound.setAudio(resourceManager.get(bossDefaultAttackSound));
     }
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED); 
+    mesh.shader  = &resourceManager.get(defaultShader); 
     mesh.linkShaderWithModel();
 }
 

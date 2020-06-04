@@ -17,6 +17,8 @@ namespace Entity
     {
     private:
         static constexpr Core::Maths::Vec4 defaultColor = {0.301f, 0.113f, 0.f, 1};
+        static constexpr E_Model defaultModel   = E_Model::E_BOX;
+        static constexpr E_Shader defaultShader = E_Shader::E_LIGHTED_FLATCOLOR;
 
     public:
         Ground();

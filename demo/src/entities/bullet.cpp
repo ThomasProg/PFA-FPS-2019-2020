@@ -1,8 +1,14 @@
 #include "bullet.hpp"
 
+Entity::Bullet::Bullet()
+    : RenderableInterface(&transform)
+{
+    mesh.color = defaultColor;
+}
+
 void Entity::Bullet::setResources(const DemoResourceManager& resourceManager)
 {
-    mesh.model   = &resourceManager.get(E_Model::E_BOX);
-    mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED_FLATCOLOR);
+    mesh.model  = &resourceManager.get(defaultModel);
+    mesh.shader = &resourceManager.get(defaultShader);
     mesh.linkShaderWithModel();
 }

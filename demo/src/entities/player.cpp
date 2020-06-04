@@ -14,6 +14,25 @@
 
 #define _IS_MOUSE_ENABLED_ 1
 
+constexpr Physics::Transform Entity::Player::Gun::highQualityTransform;
+constexpr Physics::Transform Entity::Player::Gun::lowQualityTransform;
+
+Entity::Player::Gun::Gun() 
+    : Renderer::RenderableInterface(&transform)
+{}
+
+void Entity::Player::Gun::setHighQuality(const DemoResourceManager& resourceManager)
+{
+    mesh.model = &resourceManager.get(E_Model::E_GUN);
+    setTransform(highQualityTransform);
+}
+
+void Entity::Player::Gun::setLowQuality(const DemoResourceManager& resourceManager)
+{
+    mesh.model = &resourceManager.get(E_Model::E_BOX);
+    setTransform({{2, -1, 1}, {0.f,0.f,0.f}, {0.4, 0.4, 5}});
+}
+
 Entity::Player::Player() 
     :   Physics::CollisionComponentInterface<Physics::Shapes::Box>(&transform),
         Physics::PhysicComponentInterface(&transform)
@@ -46,12 +65,12 @@ bool Entity::PlayerState::isOnGround() const noexcept
 
 void Entity::Player::setResources(const DemoResourceManager& resourceManager)
 {
-    gun.mesh.model   = &resourceManager.get(E_Model::E_GUN);
-    gun.mesh.shader  = &resourceManager.get(E_Shader::E_LIGHTED);
-    gun.mesh.texture = &resourceManager.get(E_Texture::E_GUN);
+    gun.mesh.model   = &resourceManager.get(defaultModel);
+    gun.mesh.texture = &resourceManager.get(defaultTexture);
+    gun.mesh.shader  = &resourceManager.get(defaultShader);
     gun.mesh.linkShaderWithModel();
 
-    audio.setAudio(resourceManager.get(E_Audio::E_SHOOT));
+    audio.setAudio(resourceManager.get(defaultShootSound));
 }
 
 void Entity::Player::inputs(const Core::Engine& engine)
@@ -99,17 +118,17 @@ void Entity::Player::inputs(const Core::Engine& engine)
         }
     }
 
-    constexpr float mouseSensibility = 10.f;
-    constexpr float rotationSpeedOnKey = 3.f;
-    constexpr float rotationSpeed = 0.1;
-
-    #if _IS_MOUSE_ENABLED_
-    float deltaMouseX = - engine.deltaMouseLoc.x * mouseSensibility;
-    float deltaMouseY = - engine.deltaMouseLoc.y * mouseSensibility; 
-    #else
-    float deltaMouseX = 0;
-    float deltaMouseY = 0;
-    #endif
+    float deltaMouseX, deltaMouseY;
+    if (isMouseEnabled)
+    {
+        deltaMouseX = - engine.deltaMouseLoc.x * mouseSensibility;
+        deltaMouseY = - engine.deltaMouseLoc.y * mouseSensibility; 
+    }
+    else 
+    {
+        deltaMouseX = 0;
+        deltaMouseY = 0;
+    }
 
     if (glfwGetKey(engine.window, GLFW_KEY_I))
         deltaMouseY = rotationSpeedOnKey;
@@ -175,7 +194,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
                 {
                     //hit: add a box during 2s
                     (*it)->takeDamage(5, playTime);
-                    entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.05f,0.05f,0.05f}});
+                    entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {shootBulletScaleOnEntity,shootBulletScaleOnEntity,shootBulletScaleOnEntity}});
                 }
                 else 
                 {
@@ -187,7 +206,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
                     }
                     if (it != entityGroup.grounds.end())
                     {
-                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.1f,0.1f,0.1f}});
+                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {shootBulletScaleOnWall,shootBulletScaleOnWall,shootBulletScaleOnWall}});
                     }
                 }
             }

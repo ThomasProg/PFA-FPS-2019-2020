@@ -57,32 +57,38 @@ namespace Entity
         class Gun : public Physics::TransformInterface,
                     public Renderer::RenderableInterface
         {
+        private:
+            static constexpr Physics::Transform highQualityTransform = {{1.4f,-0.5f,0.f}, {0.f,0.f,0.f}, {1,1,1}};
+            static constexpr Physics::Transform lowQualityTransform = {{2, -1, 1}, {0.f,0.f,0.f}, {0.4, 0.4, 5}};
+
         public:
-            Gun() 
-                : Renderer::RenderableInterface(&transform)
-            {}
+            Gun();
 
-            void setHighQuality(const DemoResourceManager& resourceManager)
-            {
-                mesh.model = &resourceManager.get(E_Model::E_GUN);
-                setTransform({{1.4f,-0.5f,0.f}, {0.f,0.f,0.f}, {1,1,1}});
-            }
-
-            void setLowQuality(const DemoResourceManager& resourceManager)
-            {
-                mesh.model = &resourceManager.get(E_Model::E_BOX);
-                setTransform({{2, -1, 1}, {0.f,0.f,0.f}, {0.4, 0.4, 5}});
-            }
+            void setHighQuality(const DemoResourceManager& resourceManager);
+            void setLowQuality(const DemoResourceManager& resourceManager);
         };
 
     public:
         Gun gun;
 
     private:
+        static constexpr bool isMouseEnabled = true;
+        static constexpr float mouseSensibility = 10.f;
+        static constexpr float rotationSpeedOnKey = 3.f;
+        static constexpr float rotationSpeed = 0.1;
+
         static constexpr float movementSpeed  = 10.f * 1.f;
         static constexpr float jumpSpeed      = 7.0f;
         static constexpr float jumpCoyoteTime = 0.1f;
+
         static constexpr float shootRayLength = 100.f;
+        static constexpr float shootBulletScaleOnWall = 0.1f;  
+        static constexpr float shootBulletScaleOnEntity = 0.05f;  
+
+        static constexpr E_Model   defaultModel   = E_Model::E_GUN;
+        static constexpr E_Texture defaultTexture = E_Texture::E_GUN;
+        static constexpr E_Shader  defaultShader  = E_Shader::E_LIGHTED;
+        static constexpr E_Audio   defaultShootSound = E_Audio::E_SHOOT;
 
     public:
         float lifePoints    = 10.f;

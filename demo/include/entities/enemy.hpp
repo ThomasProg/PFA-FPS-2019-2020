@@ -70,6 +70,16 @@ namespace Entity
         static constexpr float maxSpeed = 7.5f;
         static constexpr float respawnCooldown = 4.f;
 
+        static constexpr E_Model   defaultModel       = E_Model::E_DOG;
+        static constexpr E_Texture defaultTexture     = E_Texture::E_DOG_TEXTURE;
+        static constexpr E_Audio   defaultAttackSound = E_Audio::E_DOG_ATTACK;
+
+        static constexpr E_Model   bossDefaultModel       = E_Model::E_CAT;
+        static constexpr E_Texture bossDefaultTexture     = E_Texture::E_CAT;
+        static constexpr E_Audio   bossDefaultAttackSound = E_Audio::E_BOSS_ATTACK;
+
+        static constexpr E_Shader defaultShader = E_Shader::E_LIGHTED; 
+
         int maxLife = 10;
         float angle = 0.f;
         float timeLeftTillRespawn = 0.f;
