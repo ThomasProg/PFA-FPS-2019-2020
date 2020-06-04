@@ -6,7 +6,7 @@ CXXFLAGS+=-Idemo/include -Idemo/include/entities\
 		  -Iengine/include/resources -Iengine/include/resources/subShaders -Iengine/include/renderer\
 		  -Iengine/include/physics -Iengine/include/physics/shapes\
 		  -Iengine/include/core/debug -Iengine/include/core/dataStructure -Iengine/include/primitives\
-		  -Iengine/include/entities -Iengine/include/controllers -Iengine/include/save -Iengine/include/imgui
+		  -Iengine/include/controllers -Iengine/include/save -Iengine/include/imgui
 
 CFLAGS=$(CXXFLAGS)
 CC=gcc
@@ -26,7 +26,6 @@ SRC=$(wildcard demo/src/*.cpp)\
 	$(wildcard engine/src/physics/shapes/*.cpp)\
 	$(wildcard engine/src/core/dataStructure/*.cpp)\
 	$(wildcard engine/src/primitives/*.cpp)\
-	$(wildcard engine/src/entities/*.cpp)\
 	$(wildcard engine/include/imgui/*.cpp)\
 	$(wildcard engine/src/save/*.cpp)
 SRC_C=
