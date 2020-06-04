@@ -56,31 +56,29 @@ namespace Entity
                   public Renderer::RenderableInterface
     {
     private:
+        int maxLife = 10;
         static constexpr float epsilonReturnPatrolDistanceToPoint = 0.5f;
         static constexpr float maxSpeed = 7.5f;
-
-        float angle = 0.f;
-
-        float timeLeftTillRespawn = 0.f;
         static constexpr float respawnCooldown = 4.f;
-        int maxLife = 10;
+        float angle = 0.f;
+        float timeLeftTillRespawn = 0.f;
         float lastReceivedHitTime = -1.f;
+        //use for Boss enemy
         float timeBetweenHitBoss = 2.0f;
         float timeForHit = 0.0f;
 
     public:
-        float attackCooldown = 1.f;
-        float lastAttackTime = -attackCooldown;
-
-    public:
         int life = 10;
-        float speed = 3.f; 
         EnemyState state;
         EnemyType type;
+        float speed = 3.f;
         float detectionRadius = 20.0f;
         float attackRadius    = 2.f;
         float patrolRadius    = 5.f;
+        float attackCooldown = 1.f;
+        float lastAttackTime = -attackCooldown;
         Core::Maths::Vec3 position;
+        //position of where the enemy should circle around
         Core::Maths::Vec3 patrolTarget = {0.f, 0.f, 0.f};
         Core::Maths::Vec3 chaseTarget = {0.f,0.f,0.f};
 
@@ -105,7 +103,8 @@ namespace Entity
         void takeDamage(int damage, float playTime);
         void tryToAttack(float playTime);
         void tryToRespawn();
-
+        
+        //use when the player hit the enemy to add visual feedback
         void lerpColorBackToNormal(float playTime);
 
         void kill();

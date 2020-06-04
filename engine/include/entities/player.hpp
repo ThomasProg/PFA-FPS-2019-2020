@@ -15,6 +15,7 @@
 #include "audioSource.hpp"
 
 #include <array>
+#include <limits>
 
 class EntityGroup;
 
@@ -52,6 +53,7 @@ namespace Entity
                          public Controller::ControllerInterface
     {
     private: 
+        //which model to use for the gun
         class Gun : public Physics::TransformInterface,
                     public Renderer::RenderableInterface
         {
@@ -82,7 +84,6 @@ namespace Entity
         static constexpr float jumpCoyoteTime = 0.1f;
         static constexpr float shootRayLength = 100.f;
 
-
     public:
         float lifePoints    = 10.f;
         float maxLifePoints = 10.f;
@@ -91,12 +92,12 @@ namespace Entity
 
         float shootCooldown = 0.3f;
         float lastShootTime = - shootCooldown;
-
-        float lastJumpPressTime = -123456789.f;
+        float lastJumpPressTime = std::numeric_limits<float>::min();
         
         Renderer::FPSCamera camera;
 
         std::function<void()> onPlayerDeath = nullptr;
+
         PlayerState state;
 
         //// UI ///////
@@ -126,7 +127,6 @@ namespace Entity
         std::array<bool, nbInputKeys> (*getDownKeys) (const Core::Engine& engine) = getDownKeysAzertyAndQwery;
 
     public:
-        
         Player();
 
         inline void addRendering(Renderer::RendererSystem& rendererSystem);
@@ -141,6 +141,7 @@ namespace Entity
         void setResources(const DemoResourceManager&);
 
         Physics::Shapes::Segment3D getShootRay() const;
+
         void shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& entityGroup, float playTime);
 
         void dealDamages(float damages);
@@ -150,10 +151,6 @@ namespace Entity
         inline void physicCompOnCollisionEnter(const Physics::Shapes::SegmentHit& hit, CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override;
 
         inline void physicCompOnCollisionExit(CollisionComponentInterface<Physics::Shapes::Box>* otherCollider) override;
-
-        inline void physicCompOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override;
-
-        inline void colliderOnOverlapEnter   (const Physics::PhysicsSystem::CollisionsCallbacksSentData& data) override;
     };
 }
 
