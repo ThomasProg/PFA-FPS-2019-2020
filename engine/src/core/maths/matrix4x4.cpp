@@ -7,7 +7,6 @@
 
 #include "vec3.hpp"
 #include "vec4.hpp"
-// #include "transform.hpp"
 
 using namespace Core::Maths;
 
@@ -28,7 +27,6 @@ Matrix4x4::Matrix4x4()
 }
 
 Matrix4x4::Matrix4x4 (const Matrix4x4& copiedMatrix) 
-    //: Matrix(copiedMatrix)
 {
     this->nbColumns = copiedMatrix.nbColumns;
     this->nbLines   = copiedMatrix.nbLines;
@@ -36,22 +34,24 @@ Matrix4x4::Matrix4x4 (const Matrix4x4& copiedMatrix)
     
     memcpy(this->matrix, copiedMatrix.matrix, sizeof(float) * this->nbColumns * this->nbLines);
 
-    // LOGIC_ASSERT(copiedMatrix.nbLines == 4 && copiedMatrix.nbColumns == 4, "Matrix should not be 4x4 if movedMatrix is not.");
+    // Matrix should not be 4x4 if movedMatrix is not.
+    assert(copiedMatrix.nbLines == 4 && copiedMatrix.nbColumns == 4);
 }
 
 Matrix4x4::Matrix4x4(Matrix&& movedMatrix)
     : Matrix(std::move(movedMatrix))
 {
-    // LOGIC_ASSERT(movedMatrix.nbLines == 4 && movedMatrix.nbColumns == 4, "Matrix should not be 4x4 if movedMatrix is not.");
+    // Matrix should not be 4x4 if movedMatrix is not.
+    assert(movedMatrix.nbLines == 4 && movedMatrix.nbColumns == 4);
 }
 
 Matrix4x4& Matrix4x4::operator=(const Matrix4x4& rhs)
 {
-    // LOGIC_ASSERT(rhs.matrix != nullptr, 
-    //             "The copied matrix should not be invalid!");
+    // The copied matrix should not be invalid!"
+    assert(rhs.matrix != nullptr); 
 
-    // LOGIC_ASSERT(this->nbColumns == rhs.nbColumns && this->nbLines == rhs.nbLines, 
-    //             "Height and Width should already be the same if they are both Matrix4x4");
+    // Height and Width should already be the same if they are both Matrix4x4
+    assert(this->nbColumns == rhs.nbColumns && this->nbLines == rhs.nbLines);
 
     if (this->matrix == nullptr)
         this->matrix = new float[nbElements];
@@ -72,8 +72,8 @@ Matrix4x4& Matrix4x4::operator=(Matrix4x4&& rhs)
     this->matrix = rhs.matrix; 
     rhs.matrix   = nullptr;
 
-    // LOGIC_ASSERT(this->nbColumns == rhs.nbColumns && this->nbLines == rhs.nbLines, 
-    //             "Height and Width should already be the same if they are both Matrix4x4");
+    // Height and Width should already be the same if they are both Matrix4x4
+    assert(this->nbColumns == rhs.nbColumns && this->nbLines == rhs.nbLines);
 
     return *this;
 }
@@ -382,8 +382,6 @@ Matrix4x4 Matrix4x4::CreateZRotationMatrix(float angleZ)
 
 Matrix4x4 Matrix4x4::CreateFixedAngleEulerRotationMatrix(Vec3 angles)
 {
-    //convert Matrix to Matrix4x4 calling Matrix4x4::Matrix4x4 (const Matrix& copiedMatrix);
-    //not opti
     return CreateYRotationMatrix(angles.y) * CreateXRotationMatrix(angles.x) * CreateZRotationMatrix(angles.z);
 }
 
@@ -406,8 +404,8 @@ Matrix4x4 Matrix4x4::CreateAxisRotationMatrix(const Vec3& axis, float angle)
 {
     Matrix4x4 mat;
 
-    float c = std::cos(angle);
-    float s = std::sin(angle);
+    const float c = std::cos(angle);
+    const float s = std::sin(angle);
 
     mat[0][0] = pow(axis.x, 2) * (1 - c) + c;
     mat[0][1] = axis.x * axis.y * (1 - c) - axis.z * s;
