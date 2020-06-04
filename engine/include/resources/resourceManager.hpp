@@ -41,13 +41,8 @@ namespace Resources
         inline void add(std::unique_ptr<Shader>&& shader,   SHADER_ENUM key);
         inline void add(Audio&& audio,     AUDIO_ENUM key);
 
-        void clear()
-        {
-            models.clear();
-            textures.clear();
-            shaders.clear();    
-            audios.clear();
-        }
+        // Clears all resources
+        void clear();
     };
 }
 

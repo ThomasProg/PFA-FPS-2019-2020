@@ -56,3 +56,11 @@ inline void Resources::ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AU
     audios.emplace(std::make_pair(key, std::move(audio)));
 }
 
+template<typename MODEL_ENUM,typename TEXTURE_ENUM,typename SHADER_ENUM,typename AUDIO_ENUM>
+inline void Resources::ResourceManager<MODEL_ENUM, TEXTURE_ENUM, SHADER_ENUM, AUDIO_ENUM>::clear()
+{
+    models.clear();
+    textures.clear();
+    shaders.clear();    
+    audios.clear();
+}

@@ -7,14 +7,27 @@
 
 #include <cassert>
 
-Resources::AudioSource::AudioSource()
-{
-
-}
-
 Resources::AudioSource::AudioSource(const Resources::Audio& audio)
 { 
     setAudio(audio);
+}
+
+Resources::AudioSource::AudioSource(AudioSource&& rhs) noexcept
+    : source(rhs.source)
+{
+    rhs.source = 0;
+}
+
+Resources::AudioSource& Resources::AudioSource::operator=(AudioSource&& rhs) noexcept
+{   
+    if (source != 0)
+        alDeleteSources(1, &source);
+
+    source = rhs.source;
+
+    rhs.source = 0;
+
+    return *this;
 }
 
 Resources::AudioSource::~AudioSource()

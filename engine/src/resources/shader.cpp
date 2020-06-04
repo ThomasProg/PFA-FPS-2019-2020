@@ -122,35 +122,9 @@ void Resources::Shader::setAttributePointer(GLuint programID, GLuint attributeVB
 
 void Resources::Shader::linkModel(const Resources::Model& model) const 
 {
-    glBindVertexArray(model.VAO);
+    glBindVertexArray(model.vao);
 
-    setAttributePointer(programID, model.VBO, "v_loc", 3);
-
-    // if (isTextured)
-    // {
-    //     // setAttributePointer(programID, model.colorID,    "v_color",   3);
-    //     setAttributePointer(programID, model.uvsID,      "v_uvs",     2);
-    //     setAttributePointer(programID, model.normalsID,  "v_normals", 3);
-    // }
+    setAttributePointer(programID, model.vbo, "v_loc", 3);
 
     glBindVertexArray(0);
 }
-
-// void Resources::Shader::linkTexture(const Texture<>&texture, const GLuint VAO) const
-// {
-//     glBindVertexArray(VAO);
-
-//     glActiveTexture(GL_TEXTURE0);
-//     glBindTexture(GL_TEXTURE_2D, texture.textureID);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-//     if (texture.nbComposites == 4) // in case of RGBA image
-//         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.pixels);
-//     else if (texture.nbComposites == 3) // in case of RGB image
-//         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture.pixels);
-    
-//     glGenerateMipmap(GL_TEXTURE_2D);
-
-//     glBindVertexArray(0);
-// }

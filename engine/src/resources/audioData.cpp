@@ -8,6 +8,26 @@ Resources::AudioData::AudioData(const char* filename)
     loadWAV(filename);
 }
 
+Resources::AudioData::AudioData(Resources::AudioData&& rhs) noexcept
+{
+    data     = rhs.data;
+    dataInfo = rhs.dataInfo;
+    rhs.data = nullptr;
+}
+
+Resources::AudioData& Resources::AudioData::operator=(AudioData&& rhs)
+{
+    if (data != nullptr)
+    {
+        delete[] data;
+    }
+
+    data     = rhs.data;
+    dataInfo = rhs.dataInfo;
+    rhs.data = nullptr;
+    return *this;
+}
+
 Resources::AudioData::~AudioData()
 {
     if (data != nullptr)

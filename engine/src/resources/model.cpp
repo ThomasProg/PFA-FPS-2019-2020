@@ -11,15 +11,15 @@
 
 Resources::Model::Model(Model&& rhs)
 {
-    VAO = rhs.VAO;
-    VBO = rhs.VBO;
+    vao = rhs.vao;
+    vbo = rhs.vbo;
 
     positions   = std::move(rhs.positions);
     normals     = std::move(rhs.normals);
     textCoords  = std::move(rhs.textCoords);
 
-    rhs.VAO = 0;
-    rhs.VBO = 0;
+    rhs.vao = 0;
+    rhs.vbo = 0;
 }
 
 Resources::Model::Model(Primitives&& primitive)
@@ -41,11 +41,11 @@ Resources::Model::Model(const char* pathToFile)
 
 Resources::Model::~Model()
 {
-    if (VAO != 0)
-        glDeleteVertexArrays(1, &VAO);
+    if (vao != 0)
+        glDeleteVertexArrays(1, &vao);
 
-    if (VBO != 0)
-        glDeleteBuffers(1, &VBO);
+    if (vbo != 0)
+        glDeleteBuffers(1, &vbo);
 }
 
 void Resources::Model::loadOBJ(const char* pathToFile)
@@ -166,7 +166,7 @@ void Resources::Model::loadOBJ(const char* pathToFile)
 
 void Resources::Model::setupModel()
 {
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &vbo);
 
     GLuint colorBuffer;
     glGenBuffers(1, &colorBuffer);
@@ -174,11 +174,11 @@ void Resources::Model::setupModel()
     GLuint normalBuffer;
     glGenBuffers(1, &normalBuffer);
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
     //Vertices
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(positions[0]), &positions[0], GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);

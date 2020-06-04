@@ -27,7 +27,7 @@ void Renderer::Mesh::draw(const Renderer::Camera& cam, Renderer::LightManager& l
         &(*transform->transformMatrixNode) == nullptr || !transform->transformMatrixNode.isValid())
         return;
 
-    glBindVertexArray(model->VAO);
+    glBindVertexArray(model->vao);
 
 
     if(texture != nullptr)

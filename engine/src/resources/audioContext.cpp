@@ -26,10 +26,8 @@ Resources::AudioContext::~AudioContext()
     alcCloseDevice(device);
 }
 
-Resources::AudioContext::operator bool() const
+Resources::AudioContext::operator bool() const noexcept
 {
-    // Either context is invalid (and so device is too),
-    // Either
     assert(context == nullptr || device != nullptr);
     return context != nullptr;
 } 

@@ -8,8 +8,8 @@ namespace Resources
     class FlatShader : public Shader
     {
     private:
-        GLint mvpID;             // index of "mvp"
-        GLint colorID;           // index of "color"
+        GLint mvpID;   // index of "mvp"
+        GLint colorID; // index of "color"
 
     public:
         FlatShader(const char* vsFilename, const char* fsFilename);

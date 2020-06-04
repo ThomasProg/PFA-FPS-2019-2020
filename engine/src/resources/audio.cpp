@@ -16,10 +16,17 @@ Resources::Audio::Audio(const Resources::AudioData& audioData)
     sendCPUAudioToGPU(audioData);
 }
 
-Resources::Audio::Audio(Audio&& rhs)
-    : audioDataID(rhs.audioDataID)
+Resources::Audio::Audio(Audio&& rhs) noexcept
+    : audioDataID(rhs.audioDataID) 
 {
     rhs.audioDataID = 0;
+}
+
+Resources::Audio& Resources::Audio::operator=(Resources::Audio&& rhs) noexcept
+{
+    audioDataID = rhs.audioDataID;
+    rhs.audioDataID = 0;
+    return *this;
 }
 
 

@@ -6,6 +6,7 @@
 
 namespace Resources
 {
+    // Should be used to use AudioSource and other classes working with the sound.
     class AudioContext
     {
     public:
@@ -13,10 +14,13 @@ namespace Resources
         ALCcontext* context = nullptr;
 
     public:
+        // Opens the AL context.
         AudioContext();
+
+        // Destroys the AL context.
         ~AudioContext();
 
-        operator bool() const;
+        operator bool() const noexcept;
     };
 }
 

@@ -76,8 +76,10 @@ namespace Resources
 
         inline constexpr bool isValid() const noexcept;
 
+        // Loads the shader.
         inline void use() const;
 
+        // Gets the location of an uniform value corresponding to the "str".
         inline GLint getUniformLocation(const char* str) const;
     };
 }
