@@ -56,6 +56,7 @@ private:
     // Stops when the game is paused.
     float playTime = 0.f;
 
+    // True if P is pressed
     bool isPKeyPressed = false;
 
 public:

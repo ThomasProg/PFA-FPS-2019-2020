@@ -9,14 +9,14 @@ namespace Save
 
     class SaveSystem
     {
-    private:
-
     public: 
+        // List of the items that will be saved. 
         std::list<SaveInterface*> savedItems;
-        using SavedItemIt = std::list<SaveInterface*>::iterator;
+        
+        using iterator = std::list<SaveInterface*>::iterator;
 
-        SavedItemIt add(SaveInterface* savedItem);
-        void remove(const SavedItemIt& it);
+        iterator add(SaveInterface* savedItem);
+        void remove(const iterator& it);
 
         // save any data you want with this function
         void save(const char* filename);
@@ -24,8 +24,6 @@ namespace Save
         void load(const char* filename);
         // loads the data loaded from the save file
         void loadData(const char* filename);
-        // // after loading data, this function will be called to set pointers, iterators, references...
-        // void loadLinks();
     };
 }
 

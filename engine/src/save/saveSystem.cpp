@@ -8,13 +8,13 @@
 #include <fstream>
 #include <iostream>
 
-Save::SaveSystem::SavedItemIt Save::SaveSystem::add(SaveInterface* savedItem)
+Save::SaveSystem::iterator Save::SaveSystem::add(SaveInterface* savedItem)
 {
     savedItems.push_back(savedItem);
     return savedItems.end();
 }
 
-void Save::SaveSystem::remove(const SavedItemIt& it)
+void Save::SaveSystem::remove(const iterator& it)
 {
     savedItems.erase(it);
 }
