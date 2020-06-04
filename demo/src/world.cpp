@@ -25,6 +25,7 @@ World::World(Game& game, bool isLoaded, bool isEditorMode)
 {
     Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshairWidth, crosshairHeight, crosshair);
     Resources::Texture::loadTexture("resources/textures/cross.png", crossWidth, crossHeight, cross);
+    Resources::Texture::loadTexture("resources/textures/bullet.png", bulletWidth, bulletHeight, bullet);
 }
 
 void World::makeNewLevel()
@@ -367,30 +368,34 @@ void World::hud()
     Menu::preparePanel(ImVec2(0, 0), {float(game.engine.width), float(game.engine.height)}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f}, {0.f,0.f,0.f,0.f});
 
     ImGui::Begin("Pause", &inGame, ImGuiWindowFlags_NoDecoration);
-    //ImGui::PushFont(font);
     ImGui::SetCursorPosY(game.engine.height - 30.f);
     assert(entityGroup.player->maxLifePoints != 0.f);
     ImGui::SetWindowFontScale(1.0);
-    
+
+    // Lifebar   
     ImDrawList* drawList = ImGui::GetBackgroundDrawList();
     drawList->AddRectFilled(ImVec2(50.f, game.engine.height - 50.f), ImVec2(300.f, game.engine.height - 20.f), ImGui::GetColorU32(ImVec4(0.2f, 0.2f, 0.2f, 0.5f)), 50.f);
     drawList->AddRectFilled(ImVec2(50.f + 1.f, game.engine.height - 50.f + 1.f), ImVec2(50.f + (250.f - 1.f) * (entityGroup.player->lifePoints / entityGroup.player->maxLifePoints), game.engine.height - 20.f - 1.f), ImGui::GetColorU32(ImVec4(1.f - entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, entityGroup.player->lifePoints / entityGroup.player->maxLifePoints, 0.f, 1.f)), 50.f);
-
     ImGui::SetCursorPosY(game.engine.height - crossHeight/5);
     ImGui::SetCursorPosX(0.f);
     ImGui::Image((void*)(intptr_t)cross, ImVec2(crossWidth/5, crossHeight/5));
 
+    // Nb of bullets
     ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, 1.f)));
-
     ImGui::SetCursorPosY(game.engine.height - 50.f);
     ImGui::SetCursorPosX(game.engine.width - 130.f);
     ImGui::SetWindowFontScale(1.5);
     ImGui::Text("%i / %i", entityGroup.player->nbBullet, entityGroup.player->maxNbBullet);
+    ImGui::SetCursorPosY(game.engine.height - 10.f - bulletHeight/10);
+    ImGui::SetCursorPosX(game.engine.width - 135.f - bulletWidth/10);
+    ImGui::Image((void*)(intptr_t)bullet, ImVec2(bulletWidth/10, bulletHeight/10));
 
+    // Crosshair
     ImGui::SetCursorPosY(game.engine.height / 2 - crosshairHeight / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - crosshairWidth / 2);
     ImGui::Image((void*)(intptr_t)crosshair, ImVec2(crosshairWidth, crosshairHeight));
 
+    // Nb of enemies
     ImGui::SetCursorPosY(0);
     ImGui::SetCursorPosX(0);
     ImGui::Text("%lu enemies remaining", entityGroup.enemies.size());
