@@ -20,12 +20,12 @@
 #include <array>
 
 
-World::World(Game& game, bool isLoaded, bool isEditorMode)
-    : game(game), entityGroup(game.engine), isEditorMode(isEditorMode)
+World::World(Game& game)
+    : game(game), entityGroup(game.engine)
 {
-    Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshairWidth, crosshairHeight, crosshair);
-    Resources::Texture::loadTexture("resources/textures/cross.png", crossWidth, crossHeight, cross);
-    Resources::Texture::loadTexture("resources/textures/bullet.png", bulletWidth, bulletHeight, bullet);
+    Resources::Texture::loadTexture("resources/textures/crosshair.png", crosshair, &crosshairWidth, &crosshairHeight);
+    Resources::Texture::loadTexture("resources/textures/cross.png", cross, &crossWidth, &crossHeight);
+    Resources::Texture::loadTexture("resources/textures/bullet.png", bullet, &bulletWidth, &bulletHeight);
 }
 
 void World::makeNewLevel()
@@ -288,19 +288,19 @@ void World::gameWin()
 
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2 - 100.f);
-    ImGui::SetWindowFontScale(2.0);    
-    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(0.f, 1.f, 0.f, t/3)));
+    ImGui::SetWindowFontScale(2.0);
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(0.f, 1.f, 0.f, timeAfterGameIsFinished/3)));
     ImGui::Text("You win in \n %f seconds", playTime);
 
     ImGui::PopStyleColor(5);
     ImGui::End();
 
-    t += game.engine.deltaTime;
-    if (t >= 4)
+    timeAfterGameIsFinished += game.engine.deltaTime;
+    if (timeAfterGameIsFinished >= 4)
     {
         entityGroup.player->gOver = false;
         game.loadMenu();
-        t = 0;
+        timeAfterGameIsFinished = 0;
     } 
 }
 
@@ -313,18 +313,18 @@ void World::gameOver()
     ImGui::SetCursorPosY(game.engine.height / 2);
     ImGui::SetCursorPosX(game.engine.width / 2);
     ImGui::SetWindowFontScale(2.0);
-    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, t/3)));
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImVec4(1.f, 0.f, 0.f, timeAfterGameIsFinished/3)));
     ImGui::Text("You Loose");
 
     ImGui::PopStyleColor(5);
     ImGui::End();
 
-    t += game.engine.deltaTime;
-    if (t >= 4)
+    timeAfterGameIsFinished += game.engine.deltaTime;
+    if (timeAfterGameIsFinished >= 4)
     {
         entityGroup.player->gOver = false;
         game.loadMenu();
-        t = 0;
+        timeAfterGameIsFinished = 0;
     } 
 }
 

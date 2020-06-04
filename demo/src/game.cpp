@@ -117,9 +117,9 @@ void Game::loadMenu()
     nextScene = std::make_unique<Menu>(*this);
 }
     
-void Game::loadLevel(bool isLoaded, bool isEditorMode)
+void Game::loadLevel()
 {
-    nextScene = std::make_unique<World>(*this, isLoaded, isEditorMode);
+    nextScene = std::make_unique<World>(*this);
 }
     
 void Game::quitGame()

@@ -8,8 +8,8 @@ Menu::Menu(Game& game)
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
-    int imageWidth, imageHeight;
-    Resources::Texture::loadTexture("resources/textures/background.png", imageWidth, imageHeight, imageText);
+    int w, h;
+    Resources::Texture::loadTexture("resources/textures/background.png", imageText, &w, &h);
 }
 
 void Menu::update()
@@ -77,7 +77,7 @@ bool Menu::setupMainMenuButtons()
 
     ImGui::SetCursorPosY(game.engine.height / 3);
     if (ImGui::Button("Start", ImVec2(game.engine.width / 5, game.engine.height / 10)))
-        game.loadLevel(false);
+        game.loadLevel();
 
     bool bQuit = false;
     ImGui::SetCursorPosY(game.engine.height / 2);

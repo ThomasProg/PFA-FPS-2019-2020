@@ -4,6 +4,7 @@
 // Instead of enum class, 
 // we can convert enums of E_Layers to unsigned int with no cast;
 // we deal with unsigned int for layers.
+// Used for collisions.
 struct LayersEnum
 {
     enum E_Layers : unsigned int

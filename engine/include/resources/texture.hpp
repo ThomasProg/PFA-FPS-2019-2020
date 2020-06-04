@@ -15,7 +15,7 @@ namespace Resources
         Texture(const char* pathToFile);
         ~Texture() {};
 
-        static bool loadTexture(const char* filename, int& width, int& height, GLuint& data);
+        static bool loadTexture(const char* filename, GLuint& data, int* width = nullptr, int* height = nullptr);
     };
 }
 

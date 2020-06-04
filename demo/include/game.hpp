@@ -31,7 +31,7 @@ public:
     void loadResources();
 
     void loadMenu();
-    void loadLevel(bool isLoaded, bool isEditorMode = false);
+    void loadLevel();
     void quitGame();
 
     // Runs the game loop.

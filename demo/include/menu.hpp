@@ -26,6 +26,7 @@ public:
     Menu(Game& game);
 
     bool isMainMenuOpen{true};
+    // Index of the texture on opengl
     GLuint imageText = 0;
 
     void update() override;   

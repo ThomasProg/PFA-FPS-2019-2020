@@ -28,12 +28,17 @@ Resources::Texture::Texture(const char* pathToFile)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);   
 }
 
-bool Resources::Texture::loadTexture(const char* filename, int& width, int& height, GLuint& data)
+bool Resources::Texture::loadTexture(const char* filename, GLuint& data, int* width, int* height)
 {
     // Load from file
-    int imageWidth = 0;
-    int imageHeight = 0;
-    unsigned char* image_data = stbi_load(filename, &imageWidth, &imageHeight, NULL, 4);
+    unsigned char* image_data;
+    if (width != nullptr && height != nullptr)
+        image_data = stbi_load(filename,width, height, NULL, 4);
+    else 
+    {
+        int tempWidth, tempHeight;
+        image_data = stbi_load(filename, &tempWidth, &tempHeight, NULL, 4);
+    }
 
     if (image_data == NULL)
         return false;
@@ -42,7 +47,6 @@ bool Resources::Texture::loadTexture(const char* filename, int& width, int& heig
     GLuint image_texture;
     glGenTextures(1, &image_texture);
     glBindTexture(GL_TEXTURE_2D, image_texture);
-    // std::cout << image_texture << std::endl;
 
     // Setup filtering parameters for display
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -50,12 +54,11 @@ bool Resources::Texture::loadTexture(const char* filename, int& width, int& heig
 
     // Upload pixels into texture
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
     stbi_image_free(image_data);
 
     data = image_texture;
-    width = imageWidth;
-    height = imageHeight;
+
 
     return true;
 }

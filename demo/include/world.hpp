@@ -35,8 +35,6 @@ private:
 
     EntityGroup entityGroup;
 
-    Entity::BasicEntity* editorSelectedEntity = nullptr;
-
     /////////// UI ////////////////
     bool isPauseMenuOpen {false};
     bool inGame {true};
@@ -50,18 +48,18 @@ private:
     int bulletWidth = 0;
     int bulletHeight = 0;
     GLuint bullet = 0;
-    float t = 0;
+    // Time in seconds after the game is finished (lose or victory).
+    float timeAfterGameIsFinished = 0;
     //////////////////////////////
 
+    // Time since the world has been loaded in seconds.
+    // Stops when the game is paused.
     float playTime = 0.f;
-
-    bool isEditorMode = false;
-    bool wasEditorKeyPressed = false;
 
     bool isPKeyPressed = false;
 
 public:
-    World(Game& game, bool isLoaded, bool isEditorMode);
+    World(Game& game);
     ~World() = default;
 
     void setLowQualitySettings();
