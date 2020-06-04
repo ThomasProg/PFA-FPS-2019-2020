@@ -14,27 +14,24 @@ EntityGroup::~EntityGroup()
 
     for (std::unique_ptr<Entity::Ground>& ground : grounds)
     {
-        // if (ground)
-        {
-            engine.rendererSystem.erase(ground->meshIt);
-            engine.physicsSystem.erase(ground->colliderIt);
-        }
+        assert(ground);
+        engine.rendererSystem.erase(ground->meshIt);
+        engine.physicsSystem.erase(ground->colliderIt);
     }
 
     removeAllDecorations();
 
     for (std::unique_ptr<Entity::Enemy>& enemy : enemies)
     {
-        // if (enemy)
-        {
-            engine.rendererSystem.erase(enemy->meshIt);
-            engine.physicsSystem.erase(enemy->colliderIt);
-            engine.physicsSystem.erase(enemy->physicCompIt);
-        }
+        assert(enemy);
+        engine.rendererSystem.erase(enemy->meshIt);
+        engine.physicsSystem.erase(enemy->colliderIt);
+        engine.physicsSystem.erase(enemy->physicCompIt);
     }
 
     for (std::unique_ptr<Entity::RenderedEntity>& bullet : bullets)
     {
+        assert(bullet);
         engine.rendererSystem.erase(bullet->meshIt);
     }
 
