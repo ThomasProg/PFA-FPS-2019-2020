@@ -8,7 +8,7 @@ Menu::Menu(Game& game)
     glfwSetInputMode(game.engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
-    Resources::Texture::loadTexture("resources/textures/background.png", imageText);
+    Resources::Texture::loadTexture("resources/textures/background2.jpg", imageText);
 }
 
 void Menu::renderUI()
