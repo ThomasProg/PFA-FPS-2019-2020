@@ -1,5 +1,5 @@
-#ifndef _RENDERED_ENTITY_HPP_
-#define _RENDERED_ENTITY_HPP_
+#ifndef _BULLET_HPP_
+#define _BULLET_HPP_
 
 #include "demoResourceManager.hpp"
 
@@ -8,15 +8,15 @@
 
 namespace Entity
 {
-    class RenderedEntity : public Physics::TransformInterface,
-                           public Renderer::RenderableInterface
+    class Bullet : public Physics::TransformInterface,
+                   public Renderer::RenderableInterface
     {
     public:
 
         float lifeTime = 2.0f;
         float timer;
         
-        RenderedEntity()
+        Bullet()
             : RenderableInterface(&transform)
         {
             mesh.color   = {0.988f, 1.f, 0.478f, 1};
@@ -24,7 +24,7 @@ namespace Entity
 
         void setResources(const DemoResourceManager&);
 
-        ~RenderedEntity() = default;
+        ~Bullet() = default;
     };
 }
 

@@ -12,7 +12,7 @@
 #include "fpsCamera.hpp"
 #include "tpsCamera.hpp"
 
-#include "renderedEntity.hpp"
+#include "bullet.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
 #include "ground.hpp"

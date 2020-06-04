@@ -265,7 +265,7 @@ void World::update()
 
         if(entityGroup.bullets.size() > 0)
         {
-            std::vector<std::unique_ptr<Entity::RenderedEntity>>::iterator r = entityGroup.bullets.begin();
+            std::vector<std::unique_ptr<Entity::Bullet>>::iterator r = entityGroup.bullets.begin();
             while(entityGroup.bullets.size() != 0 && game.engine.lastTime >= r->get()->timer)
             {
                 game.engine.rendererSystem.erase((*r)->meshIt);

@@ -29,7 +29,7 @@ EntityGroup::~EntityGroup()
         engine.physicsSystem.erase(enemy->physicCompIt);
     }
 
-    for (std::unique_ptr<Entity::RenderedEntity>& bullet : bullets)
+    for (std::unique_ptr<Entity::Bullet>& bullet : bullets)
     {
         assert(bullet);
         engine.rendererSystem.erase(bullet->meshIt);

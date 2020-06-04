@@ -147,11 +147,11 @@ Entity::Enemy* EntityGroup::addEnemyBoss(const Physics::Transform& transform, AR
 }
 
 template<class... ARGS>
-std::unique_ptr<Entity::RenderedEntity>& EntityGroup::addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs)
+std::unique_ptr<Entity::Bullet>& EntityGroup::addBullet(const Physics::Transform& transform, ARGS&&... bulletArgs)
 {
-    bullets.emplace_back(std::make_unique<Entity::RenderedEntity>(std::forward<ARGS>(bulletArgs)...));
+    bullets.emplace_back(std::make_unique<Entity::Bullet>(std::forward<ARGS>(bulletArgs)...));
 
-    std::unique_ptr<Entity::RenderedEntity>& bullet = bullets.back();
+    std::unique_ptr<Entity::Bullet>& bullet = bullets.back();
 
     bullet->setResources(engine.resourceManager);
     bullet->addRendering(engine.rendererSystem);
