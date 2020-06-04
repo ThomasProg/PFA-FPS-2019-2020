@@ -6,6 +6,11 @@ void EntityGroup::addLight(ARGS&&... lightArgs)
     lightManager.getLightsToModifyThem().emplace_back(std::forward<ARGS>(lightArgs)...);
 }
 
+inline void EntityGroup::removeAllLights()
+{
+    lightManager.getLightsToModifyThem().clear();
+}
+
 template<class... ARGS>
 Entity::Player* EntityGroup::addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs)
 {

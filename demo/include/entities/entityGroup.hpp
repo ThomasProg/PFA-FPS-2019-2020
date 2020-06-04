@@ -53,6 +53,7 @@ public:
     // or the dirty flag would become pointless.
     template<class... ARGS>
     void addLight (ARGS&&... lightArgs);
+    inline void removeAllLights();
 
     template<class... ARGS>
     Entity::Player* addPlayer(const Physics::Transform& transform, ARGS&&... playerArgs);

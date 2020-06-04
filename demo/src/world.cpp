@@ -240,7 +240,7 @@ void World::setLowQualitySettings()
     glClearColor(0.5,0.5,0.9, 1.f);
 
     entityGroup.removeAllDecorations();
-    entityGroup.lightManager.getLightsToModifyThem().clear();
+    entityGroup.removeAllLights();
 
     Renderer::LightData light;
     light.lightType = 1;
@@ -256,7 +256,7 @@ void World::setHighQualitySettings()
 
     glClearColor(0.1,0.1,0.2,1.f); // dark blue, night sky color
 
-    entityGroup.lightManager.getLightsToModifyThem().clear();
+    entityGroup.removeAllLights();
 
     entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
     for (uint i = 0; i < 5; i++)
