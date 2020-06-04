@@ -23,11 +23,7 @@ namespace Physics::Shapes
         AABB operator+(const AABB&) const;
     };
 
-    inline std::ostream& operator<<(std::ostream& stream, const AABB& aabb)
-    {
-        stream << "location : " << aabb.location << "\tsize  : " << aabb.centeredAABB.size << std::endl;
-        return stream;
-    }
+    std::ostream& operator<<(std::ostream& stream, const AABB& aabb);
 }
 
 #endif

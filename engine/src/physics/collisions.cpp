@@ -535,7 +535,6 @@ bool Collisions::centeredAABBSegmentCollision(const Physics::Shapes::CenteredAAB
                         && hitPoint[axisIDn2] * hitPoint[axisIDn2] <= aabb.size[axisIDn2] * aabb.size[axisIDn2]) 
                     {
                         hit.t = newHitT;
-                        // TODO : add static Core::Maths::Vec3 getAxis(unsigned int id) in Core::Maths::Vec3 class ? 
 
                         hit.normal = Core::Maths::Vec3::getAxis(axisID);
 

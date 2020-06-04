@@ -9,40 +9,17 @@ namespace Physics::Shapes
     {
         float min, max;
 
-        Range2D()
-            : min(std::numeric_limits<float>::max()), max(std::numeric_limits<float>::min())
-        {
+        inline Range2D();
+        inline Range2D(float rhs);
 
-        }
+        inline Range2D& operator=(float rhs);
 
-        Range2D(float rhs)
-            : min(rhs), max(rhs)
-        {
+        inline Range2D& operator+=(float rhs);
 
-        }
-
-        Range2D& operator=(float rhs)
-        {
-            min = max = rhs;
-
-            return *this;
-        }
-
-        Range2D& operator+=(float rhs)
-        {
-            if (rhs < min)
-                min = rhs;
-            else if (rhs > max)
-                max = rhs;
-
-            return *this;
-        }
-
-        static bool isIntersecting(const Range2D& lhs, const Range2D& rhs)
-        {
-            return rhs.min < lhs.max && rhs.max > lhs.min;
-        }
+        static inline bool isIntersecting(const Range2D& lhs, const Range2D& rhs);
     };
 }
+
+#include "range2D.inl"
 
 #endif

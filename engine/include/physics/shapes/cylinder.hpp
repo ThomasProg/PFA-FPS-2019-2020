@@ -12,11 +12,9 @@ namespace Physics::Shapes
         float radius;
     };
 
-    inline std::ostream& operator<<(std::ostream& stream, const Cylinder& cylinder)
-    {
-        stream << "p1 : " << cylinder.location << '\t' << "p2 : " << cylinder.dirInWorldLoc << '\t' << "Radius : " << cylinder.radius;
-        return stream;
-    }
+    inline std::ostream& operator<<(std::ostream& stream, const Cylinder& cylinder);
 }
+
+#include "cylinder.inl"
 
 #endif

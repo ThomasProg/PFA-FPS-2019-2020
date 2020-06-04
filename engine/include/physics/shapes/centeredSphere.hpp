@@ -10,11 +10,10 @@ namespace Physics::Shapes
     {
         float radius;
 
-        inline bool isInside(const Core::Maths::Vec3& v) const
-        {
-            return v.vectorSquareLength() < radius * radius;
-        }
+        inline bool isInside(const Core::Maths::Vec3& v) const noexcept;
     };
 }
+
+#include "centeredSphere.inl"
 
 #endif

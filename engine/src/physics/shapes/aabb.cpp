@@ -44,3 +44,9 @@ Physics::Shapes::AABB Physics::Shapes::AABB::operator+(const Physics::Shapes::AA
 
     return newAabb;
 }
+
+std::ostream& Physics::Shapes::operator<<(std::ostream& stream, const Physics::Shapes::AABB& aabb)
+{
+    stream << "location : " << aabb.location << "\tsize  : " << aabb.centeredAABB.size << std::endl;
+    return stream;
+}
