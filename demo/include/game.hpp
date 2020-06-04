@@ -20,7 +20,7 @@ public:
 
     static constexpr const char* savedFilename = "bin/world.dat";
     bool isAzerty {false};
-    bool isHighQuality = false;
+    bool isHighQuality = true;
     
 public:
     Game();
