@@ -277,7 +277,7 @@ Core::Maths::Vec3 Physics::PhysicsSystem::simulateCollisionsForASphere(
 
         const Core::Maths::Vec3 velocityAfterContact = usedVelocity * (1.f - hit.t);
         const float dot = Core::Maths::Vec3::dotProduct(velocityAfterContact, hit.normal);
-        const Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity - velocityAfterContact.unitVector() * epsilon;
+        const Core::Maths::Vec3 finalLoc = sphere.center + hit.t * usedVelocity + hit.normal * epsilon;
 
         Core::Maths::Vec3 nextVelo;
 
