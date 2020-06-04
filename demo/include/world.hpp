@@ -100,12 +100,15 @@ private:
     bool wasEditorKeyPressed = false;
     // EditorMode editorMode {EditorMode::E_TRANSLATION};
 
+    bool isPKeyPressed = false;
 
 public:
     World(Game& game, bool isLoaded, bool isEditorMode);
     ~World();
 
     void setLowQualitySettings();
+    void setHighQualitySettings();
+    void switchQualitySettings();
 
     void loadFromSavefile(const char* savedFilename);
     void makeNewLevel();

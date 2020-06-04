@@ -89,62 +89,15 @@ void World::makeNewLevel()
 {
     // ===== Set up Entities ===== //
 
-    // entityGroup.addLight();
-    // {
-    //     Renderer::LightData data;
-    //     data.location = {20.f, -27.f, 12, 0.0}; 
-    //     data.lightType = 0;
-    //     data.ambient = {0.2, 0.2,0.2,0};
-    //     entityGroup.addLight(std::move(data));
-    // }
-
-     Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
-     Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
-     Core::Maths::Vec4 stoneColor = {0.2f, 0.2f, 0.2f,1.f};
+    Core::Maths::Vec4 pathColor = {0.835f, 0.650f, 0.384f,1};
+    Core::Maths::Vec4 grassColor = {0.3f, 0.42f, 0.3f,1.f};
+    Core::Maths::Vec4 stoneColor = {0.2f, 0.2f, 0.2f,1.f};
 
     entityGroup.addGround({{0, -30, 40}, {0.f,0,0}, {10,1,40}}, grassColor);
     entityGroup.addGround({{0, -30, -10}, {0.f,0,0}, {10,5,10}}, stoneColor);
     entityGroup.addGround({{20, -30, 20}, {0.f,0,0}, {10,5,40}}, stoneColor);
     entityGroup.addGround({{-20, -30, 40}, {0.f,0,0}, {10,5,60}}, stoneColor);
     
-    entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
-    for (uint i = 0; i < 5; i++)
-    {
-        entityGroup.addTree({{6+std::sin(float(i)*10)*2.f, -30, 5+float(i)*13},     {0.f,std::cos(float(i)),0}, {1,1,1}});
-        entityGroup.addTree({{-6-std::sin(10+float(i)*10)*2.f, -30, 5+float(i)*13}, {0.f,std::sin(float(i)),0}, {1,1,1}});
-    }
-    entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addRock({{4.4, -29, 36}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addRock({{-5, -29, 60}, {0.f,0,0}, {1,1,1}});
-    entityGroup.addRock({{-6, -29, 40}, {0.f,0,0}, {1,1,1}});
-
-    auto addFireflyWithLight = [&](const Core::Maths::Vec3& loc = {0, -26, 0.15}) 
-    {
-        entityGroup.addFirefly({loc, {0.f,0,0}, {0.4,0.4,0.4}});
-        {
-            Renderer::LightData data;
-            data.location = Core::Maths::Vec4{loc, 1};
-            data.ambient  = Core::Maths::Vec4{1, 1, 1, 1};
-            entityGroup.addLight(std::move(data));
-        }
-    };
-
-    // addFireflyWithLight();
-    addFireflyWithLight({0, -26, 0.15});
-
-    entityGroup.addLight(Core::Maths::Vec3{0, -26, 70});
-    entityGroup.addLight(Core::Maths::Vec3{50, -26, 70});
-    entityGroup.addLight(Core::Maths::Vec3{100, -20, 70});
-    for (unsigned int i = 0; i < 5; i++)
-    {
-        const float size = std::sin(i*3)/5 + 1; 
-        entityGroup.addRock({{52 - 7 * float(i), -33, 75 + 2 * std::cos(float(i * 2))}, {size,0,0}, {size,size,size}});
-        entityGroup.addRock({{58 - 7 * float(i), -33, 63 + 2 * std::cos(float(i * 7))}, {size,0,0}, {size,size,size}});
-    }
-
-    entityGroup.addTree({{87, -29, 78}, {0.f,0.f,0.f}, {1,1,1}});
-    entityGroup.addTree({{87, -29, 63}, {0.f,0.f,0.f}, {1,1,1}});
-
     entityGroup.addGround({{19, -32, 70}, {0.f,0,-0.2}, {10,1,10}}, grassColor);
     entityGroup.addGround({{45, -34, 70}, {0.f,0,0.f}, {20,1,10}}, grassColor);
     entityGroup.addGround({{74, -32, 70}, {0.f,0,0.2}, {10,1,10}}, grassColor);
@@ -197,6 +150,8 @@ void World::makeNewLevel()
 
     // === Add Player === //
     entityGroup.addPlayer({{0,-26,10.0 + 0.0}});
+
+    setHighQualitySettings();
 }
 
 void World::load()
@@ -280,7 +235,10 @@ void World::updatePhysics()
 
 void World::setLowQualitySettings()
 {
+    game.isHighQuality = false;
+
     glClearColor(0.5,0.5,0.9, 1.f);
+
     entityGroup.removeAllDecorations();
     entityGroup.lightManager.getLightsToModifyThem().clear();
 
@@ -292,26 +250,73 @@ void World::setLowQualitySettings()
     entityGroup.addLight(light);
 }
 
-void World::setLowQualitySettings()
+void World::setHighQualitySettings()
 {
-    glClearColor(0.5,0.5,0.9, 1.f);
-    entityGroup.removeAllDecorations();
+    game.isHighQuality = true;
+
+    glClearColor(0.1,0.1,0.2,1.f); // dark blue, night sky color
+
     entityGroup.lightManager.getLightsToModifyThem().clear();
 
-    Renderer::LightData light;
-    light.lightType = 1;
-    light.ambient   = {0.4, 0.4, 0.4, 1};
-    light.dif       = {0.6, 0.6, 0.6, 1};
-    light.location  = {-1,-1,-1,1};
-    entityGroup.addLight(light);
+    entityGroup.addTree({{-15, -25, 20}, {0.f,0,0}, {1,1,1}});
+    for (uint i = 0; i < 5; i++)
+    {
+        entityGroup.addTree({{6+std::sin(float(i)*10)*2.f, -30, 5+float(i)*13},     {0.f,std::cos(float(i)),0}, {1,1,1}});
+        entityGroup.addTree({{-6-std::sin(10+float(i)*10)*2.f, -30, 5+float(i)*13}, {0.f,std::sin(float(i)),0}, {1,1,1}});
+    }
+    entityGroup.addRock({{4, -29, 20}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{4.4, -29, 36}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{-5, -29, 60}, {0.f,0,0}, {1,1,1}});
+    entityGroup.addRock({{-6, -29, 40}, {0.f,0,0}, {1,1,1}});
+
+    auto addFireflyWithLight = [&](const Core::Maths::Vec3& loc = {0, -26, 0.15}) 
+    {
+        entityGroup.addFirefly({loc, {0.f,0,0}, {0.4,0.4,0.4}});
+        {
+            Renderer::LightData data;
+            data.location = Core::Maths::Vec4{loc, 1};
+            data.ambient  = Core::Maths::Vec4{1, 1, 1, 1};
+            entityGroup.addLight(std::move(data));
+        }
+    };
+
+    addFireflyWithLight({0, -26, 0.15});
+
+    entityGroup.addLight(Core::Maths::Vec3{0, -26, 70});
+    entityGroup.addLight(Core::Maths::Vec3{50, -26, 70});
+    entityGroup.addLight(Core::Maths::Vec3{100, -20, 70});
+    
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        const float size = std::sin(i*3)/5 + 1; 
+        entityGroup.addRock({{52 - 7 * float(i), -33, 75 + 2 * std::cos(float(i * 2))}, {size,0,0}, {size,size,size}});
+        entityGroup.addRock({{58 - 7 * float(i), -33, 63 + 2 * std::cos(float(i * 7))}, {size,0,0}, {size,size,size}});
+    }
+
+    entityGroup.addTree({{87, -29, 78}, {0.f,0.f,0.f}, {1,1,1}});
+    entityGroup.addTree({{87, -29, 63}, {0.f,0.f,0.f}, {1,1,1}});
+}
+
+void World::switchQualitySettings()
+{
+    if (game.isHighQuality)
+        setLowQualitySettings();
+    else 
+        setHighQualitySettings();
 }
 
 void World::update()   
 {
     if (game.engine.isKeyDown(GLFW_KEY_P))
     {
-        setLowQualitySettings();
+        if (!isPKeyPressed)
+        {
+            isPKeyPressed = true;
+            switchQualitySettings();
+        }
     }
+    else 
+        isPKeyPressed = false;
 
     if (game.engine.hasWindowSizeChanged)
         updateCameraProjection();
