@@ -29,9 +29,6 @@ void Game::loadResources()
         engine.resourceManager.add(std::move(m), E_Model::E_SPHERE);
     }
     {
-        engine.resourceManager.add(Resources::Texture{"resources/textures/ground.jpg"}, E_Texture::E_GROUND);
-    }
-    {
         engine.resourceManager.add(Resources::Model{"resources/obj/singleTree.obj"}, E_Model::E_TREE);
         engine.resourceManager.add(Resources::Model{"resources/obj/treeWithoutLeaves.obj"}, E_Model::E_TREE_NO_LEAVES);
         engine.resourceManager.add(Resources::Model{"resources/obj/rock1.obj"}, E_Model::E_ROCK1);
@@ -46,10 +43,6 @@ void Game::loadResources()
             pos /= 30.f;
             std::swap(pos.y, pos.z);
 
-            // pos.y -= 1.1f;
-            // pos.z /= 2.f;
-            // pos.y /= 1.3f;
-
             pos.z *= -1;
             pos.y -= 1;
         }
@@ -57,10 +50,6 @@ void Game::loadResources()
         for (Core::Maths::Vec3& normal : model.normals)
         {
             std::swap(normal.y, normal.z);
-
-            // pos.y -= 1.1f;
-            // pos.z /= 2.f;
-            // pos.y /= 1.3f;
 
             normal.z *= -1;
         }

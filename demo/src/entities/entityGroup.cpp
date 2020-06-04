@@ -63,7 +63,7 @@ void EntityGroup::removeEnemy(unsigned int index)
 
 void EntityGroup::collectGarbage()
 {
-    for (uint i = 0; i < enemies.size(); i++)
+    for (unsigned int i = 0; i < enemies.size(); i++)
     {
         if (enemies[i]->state.enemyState == Entity::EnemyState::E_DEAD)
         {

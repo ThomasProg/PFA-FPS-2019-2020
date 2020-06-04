@@ -201,7 +201,7 @@ void Entity::Player::shoot(Physics::PhysicsSystem& physicsSystem, EntityGroup& e
                     }
                     if (it != entityGroup.grounds.end())
                     {
-                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.5f,0.5f,0.5f}});
+                        entityGroup.addBullet({{hit.collisionPoint}, {0,0,0.f}, {0.1f,0.1f,0.1f}});
                     }
                 }
             }
