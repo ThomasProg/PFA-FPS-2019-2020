@@ -255,7 +255,7 @@ Matrix4x4 Matrix4x4::getInverse() const
 
     det = 1.0 / det;
 
-    for (uint i = 0; i < 16; i++)
+    for (unsigned int i = 0; i < 16; i++)
         mInv.matrix[i] = mInv.matrix[i] * det;
 
     return mInv;
