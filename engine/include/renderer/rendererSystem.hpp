@@ -5,14 +5,12 @@
 
 #include "mesh.hpp"
 
-#include "saveInterface.hpp"
-
 namespace Renderer
 {   
     // We have a system for some reasons :
     // - we want to sort meshes in a specific order before rendering 
     // - because of that, we have to access to all the meshes 
-    class RendererSystem : public Save::SaveInterface
+    class RendererSystem
     {
     private:
         static constexpr size_t maxChildrenAtLoad = 100;
@@ -62,20 +60,15 @@ namespace Renderer
 
         void draw(const Camera& camera, Renderer::LightManager& lightManager);
 
-        void save(Save::Saver& saver) override;
-        void loadData(Save::Loader& loader) override;
-
         void reset()
         {
             meshes.clear();
             freeMeshIndices.clear();
         }
-
-        //friend iterator;
     };
 
     // MeshComponents are used by the RendererSystem.
-    using MeshIt = RendererSystem::iterator;//std::unordered_map<Entity::Entity, Mesh>::iterator;
+    using MeshIt = RendererSystem::iterator;
 }
 
 #endif

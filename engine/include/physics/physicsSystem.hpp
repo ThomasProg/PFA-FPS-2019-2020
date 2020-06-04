@@ -123,10 +123,6 @@ namespace Physics
         void simulatePhysics(Core::Engine& engine);
         void simulateGravity(PhysicComponent& physicComp, const Core::Engine& engine);
 
-        // Core::Maths::Vec3 collisionPhysicalResponse(Physics::PhysicComponent& physicCompIt, 
-        //                                             const Core::Maths::Vec3& startLoc, 
-        //                                             SegmentHit& hit);
-
         void simulatePhysicsForPhysicComp(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine);
         void simulatePhysicsForASphere(Physics::PhysicComponentInterface* physicComp, Core::Engine& engine);
 

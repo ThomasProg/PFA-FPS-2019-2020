@@ -148,7 +148,6 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
     {
         if (!itColliding->second)
         {
-            // callbacks.onCollisionExit(physicComp);//it->first);
             physicComp->physicCompOnCollisionExit(itColliding->first);  
             itColliding = physicComp->physicComp.collider.collidingEntities.erase(itColliding);
         }
@@ -157,9 +156,6 @@ void Physics::PhysicsSystem::simulatePhysicsForPhysicComp(Physics::PhysicCompone
             ++itColliding;
         }
     }
-
-    // if (physicComp.second.collider.isColliding)
-    //     physicComp.second.velocity *= linearDamping;
 
     simulateGravity(physicComp->physicComp, engine);
 
@@ -191,7 +187,6 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Physics::Shapes::Sph
     bool hasCollided = false;
     Physics::Shapes::SegmentHit segmentHit;
 
-    // TODO : Remove and replace args
     Physics::Shapes::AABB aabbFromSphere;
     aabbFromSphere.setFrom(sphere);  
 
@@ -207,7 +202,7 @@ bool Physics::PhysicsSystem::sphereCollisionWithBoxes(const Physics::Shapes::Sph
 
     for (Physics::CollisionComponentInterface<Physics::Shapes::Box>* boxCollider : boxes)
     {
-        if (boxCollider == nullptr || !boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)// || data.ignoredEntities.count(boxCollider.first) > 0) // TODO : ignored entities
+        if (boxCollider == nullptr || !boxCollider->collider.isEnabled || boxCollider->collider.isOverlap)
             continue;
 
         if (!Collisions::aabbAabbCollision(boxCollider->collider.aabb, totalAabb))

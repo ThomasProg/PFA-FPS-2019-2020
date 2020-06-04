@@ -26,47 +26,10 @@
 
 class Game;
 
-// class EditorMode
-// {
-// public:
-//     using EnumType = unsigned char;
-
-//     enum : EnumType
-//     {
-//         E_TRANSLATION = 0,
-//         E_ROTATION_X,
-//         E_ROTATION_Y,
-//         E_ROTATION_Z,
-//         E_SCALE_X,
-//         E_SCALE_Y,
-//         E_SCALE_Z,
-//         E_LAST
-//     } mode;
-
-//     void next()
-//     {
-//         mode = static_cast<decltype(mode)>((static_cast<EnumType>(mode) + 1) % E_LAST); 
-//     }
-
-//     void nextRotation()
-//     {
-//         mode = static_cast<decltype(mode)>(static_cast<EnumType>(mode) + 1); 
-//         if (static_cast<EnumType>(mode) > E_ROTATION_Z || static_cast<EnumType>(mode) < E_ROTATION_X)
-//             mode = E_ROTATION_X;
-//     }
-
-//     void nextScale()
-//     {
-//         mode = static_cast<decltype(mode)>(static_cast<EnumType>(mode) + 1); 
-//         if (static_cast<EnumType>(mode) > E_SCALE_Z || static_cast<EnumType>(mode) < E_SCALE_X)
-//             mode = E_SCALE_X;
-//     }
-// };
 
 class World : public Resources::Scene
 {
 private:
-    // Entity::EntityID nextEntity = 10u;
 
     Game& game;
 
@@ -98,7 +61,6 @@ private:
 
     bool isEditorMode = false;
     bool wasEditorKeyPressed = false;
-    // EditorMode editorMode {EditorMode::E_TRANSLATION};
 
     bool isPKeyPressed = false;
 
@@ -110,7 +72,6 @@ public:
     void setHighQualitySettings();
     void switchQualitySettings();
 
-    void loadFromSavefile(const char* savedFilename);
     void makeNewLevel();
 
     void load()     override;
@@ -121,7 +82,6 @@ public:
     void init();
 
     void updatePhysics();
-    // void updateEditorFunctions();
     void updateCameraProjection();
     
     void pauseMenu();
@@ -129,9 +89,6 @@ public:
     void gameWin();
     void gameOver();
 
-    // void addGround(const Physics::Transform& transform);
-    // void addEnemy(const Physics::Transform& transform);
-    // void addBullet(const Physics::Transform& transform);
 };
 
 #endif

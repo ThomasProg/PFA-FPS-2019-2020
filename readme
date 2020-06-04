@@ -1,12 +1,12 @@
 ////////////////////////////
-        Plateformer
+        FPS
 ////////////////////////////
 
 ////////////////////////////
         Authors
 ////////////////////////////
 - Jérémy Grondin
-- Thomas Dallard 
+- Thomas Dallard
 - Amélie Pichard
 
 ////////////////////////////
@@ -18,40 +18,66 @@
 - Type the command "make run" in the root of the project
 
 ////////////////////////////
+        Goal
+////////////////////////////
+You have to kill all your enemies to win the game
+
+////////////////////////////
         How to use
 ////////////////////////////
 - mouse or keyboard to navigate in menu
 - ESC to close or open the in-game menu
+- wasd / zqsd to move in game, mouse to rotate
+- left mouse click for shooting
+- right mouse click for reloading
+- press P in game to change the quality settings (low / high)
+
+////////////////////////////
+        Technology
+////////////////////////////
+- C++
+- OpenGL
+- OpenAL
+- GLFW
+- stb_image
+- Imgui
 
 ////////////////////////////
         Features
 ////////////////////////////
-- A world, with collisions
-- A player, controllable with TPS / FPS camera
+- A world, with collisions 
+- A player, controlled with a fps camera
 - Enemy patrols around a point and chases the player when he is in range
-- if player jump over the enemy, the enemy dies
-- if the player touches the the enemy on the rear, the player loses hp
+- Shooting
+- If player jump over the enemy or shoot at the enemy, it will dies if it has no health points left
+- If the player touches the enemy, the player loses hp
 - Collisions applied to player and enemies
-- Gliding
+- Gliding with slopes
 - Menu (naviguation with mouse or keyboard)
 - In-game menu
-- UX (progress bar displaying the player's life)
+- UX (progress bar displaying the player's life / ammo / crosshair for aiming, )
 - Inputs rebinding
-- Save and load
-- Editing: 
-    - The editor loads the saved level
-    - Add an enemy with O 
-    - Add a wall with P 
-    - Transform a wall by clicking on it and moving the mouse 
-        - E = next mode 
-        - C = translation mode 
-        - V = next rotation mode 
-        - B = next scale mode
+- Timer
+- Lights (spot lights directional light)
+- Home made sounds
+- Enemy flashing when hit
+- Aabb collisions
+- A secret attack (which is, when you jump on the enemy, he dies)
+
+////////////////////////////
+        Resources
+////////////////////////////
+- cat: https://free3d.com/fr/3d-model/cat-v1--579827.html
+- weapon: https://free3d.com/fr/3d-model/energy---m14-713978.html
+- environement: https://free3d.com/fr/3d-model/blender-lowpoly-nature-assets-pack-36502.html
+- dog: https://www.renderhub.com/mohan/dog-model
+
+- Audio: home-made
+
+- Font: https://www.dafont.com/naughty-monster.font
 
 ////////////////////////////
         KNOWN BUGS
 ////////////////////////////
-When the player or an enemy is colliding with two walls at the same time,
-it will go through one of them. 
-The reason is that the physics response is done for only one of the collisions,
-so we should have a recursion function.
+- Weapon go through the walls when the player going through a wall (visual effect only);
+- There is a bug with the collisions with the walls when the player go in the corner

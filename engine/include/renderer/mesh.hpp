@@ -22,7 +22,6 @@ namespace Renderer
 {
     class Mesh 
     {
-        // TODO : let public?
     public:
         const Resources::Model*  model  = nullptr;
         const Resources::Shader* shader = nullptr;
